@@ -1,0 +1,49 @@
+{
+  "name": "mobx-collection-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/store.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress",
+    "build:test": "webpack --config webpack.test.js",
+    "build:add": "npm run build && git add dist/store.js",
+    "run:test": "mocha --require source-map-support/register dist/test.js",
+    "lint": "eslint src/* tests/* webpack.*",
+    "test": "npm run build:test && npm run run:test",
+    "precommit": "npm run lint && npm test && npm run build:add"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/mobx-collection-store.git"
+  },
+  "keywords": [
+    "mobx",
+    "collection",
+    "store",
+    "observable"
+  ],
+  "bugs": {
+    "url": "https://github.com/infinum/mobx-collection-store/issues"
+  },
+  "homepage": "https://github.com/infinum/mobx-collection-store#readme",
+  "author": "Infinum <javascript.team@infinum.co>",
+  "contributors": [
+    {
+      "name": "Darko Kukovec",
+      "email": "darko@infinum.co"
+    }
+  ],
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.0.0-beta.17",
+    "chai": "^3.5.0",
+    "mobx": "^2.7.0",
+    "mocha": "^3.2.0",
+    "typescript": "^2.1.4",
+    "typescript-eslint-parser": "^1.0.0",
+    "webpack": "^2.2.0-rc.1"
+  },
+  "peerDependencies": {
+    "mobx": "^2.7.0"
+  }
+}
