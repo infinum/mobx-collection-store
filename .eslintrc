@@ -1,16 +1,12 @@
 {
   "parser": "typescript-eslint-parser",
   "env": {
-
-    # You can change environment depending on the project you are working on
     "browser": true,
     "node": true,
     "commonjs": true,
     "es6": true
   },
   "parserOptions": {
-
-    # If you are using ES5 change ecmaVersion to 5 and comment last block of rules (ECMAScript 6 block)
     "ecmaVersion": 6,
     "ecmaFeatures": {
       "arrowFunctions": true,

@@ -1,7 +1,7 @@
 const path = require('path');
 
 const config = {
-  entry: path.join(__dirname, 'tests/CollectionStore.test.ts'),
+  entry: path.join(__dirname, 'tests/main.test.ts'),
   output: {
     filename: 'test.js',
     path: path.join(__dirname, 'dist')

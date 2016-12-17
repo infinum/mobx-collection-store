@@ -1,20 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
     "removeComments": true,
     "experimentalDecorators": true,
     "noLib": false,
-    "outDir": "dist",
-
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "src/*"
-      ]
-    }
+    "outDir": "dist"
   },
   "exclude": [
     "node_modules"

@@ -13,6 +13,19 @@ const config = {
       'process.env': {
         'NODE_ENV': DEV ? JSON.stringify('production') : null
       }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      acorn: true,
+      'screw-ie8': true,
+      compress: {
+        warnings: false,
+        drop_console: true // eslint-disable-line camelcase
+      },
+      comments: false
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
     })
   ],
   output: {
@@ -26,17 +39,20 @@ const config = {
   module: {
     loaders: [{
       test: /\.ts?$/,
-      loaders: ['awesome-typescript-loader']
+      loaders: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: 'latest'
+          }
+        },
+        'awesome-typescript-loader'
+      ]
     }]
+  },
+  externals: {
+    mobx: 'commonjs mobx'
   }
 };
-
-if (!DEV) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false
-    }
-  }));
-}
 
 module.exports = config;
