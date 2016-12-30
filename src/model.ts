@@ -6,7 +6,7 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import {TYPE} from './consts';
 
-export abstract class Model implements IModel {
+abstract class Model implements IModel {
   id: string | number
   collection?: ICollection = null
   static idAttribute: string = 'id'
@@ -124,3 +124,5 @@ export abstract class Model implements IModel {
     return data;
   }
 };
+
+export {Model};

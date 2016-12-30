@@ -30,22 +30,19 @@ const config = {
   ],
   output: {
     path: `${ctx}/dist`,
-    filename: 'store.js'
+    filename: 'store.js',
+    library: 'mobx-collection-store',
+    libraryTarget: 'commonjs'
   },
   resolve: {
     modules: [`${ctx}/app`, 'node_modules'],
-    extensions: ['.js', '.ts']
+    extensions: ['.ts']
   },
   module: {
     loaders: [{
       test: /\.ts?$/,
       loaders: [
-        {
-          loader: 'babel-loader',
-          query: {
-            presets: 'latest'
-          }
-        },
+        'babel-loader',
         'awesome-typescript-loader'
       ]
     }]

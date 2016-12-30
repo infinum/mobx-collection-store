@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Data collection store for MobX",
   "main": "dist/store.js",
+  "typings": "typings.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",

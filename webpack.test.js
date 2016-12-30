@@ -12,12 +12,7 @@ const config = {
     loaders: [{
       test: /\.ts?$/,
       loaders: [
-        {
-          loader: 'babel-loader',
-          query: {
-            presets: 'latest'
-          }
-        },
+        'babel-loader',
         'awesome-typescript-loader'
       ]
     }]
@@ -30,7 +25,7 @@ const config = {
   },
   resolve: {
     modules: [`${ctx}/app`, 'node_modules'],
-    extensions: ['.js', '.ts']
+    extensions: ['.ts']
   },
   devtool: 'cheap-module-source-map'
 };
