@@ -1,4 +1,4 @@
 node_modules/*
 .DS_Store
-dist/test.js
+dist/test.*
 npm-debug.log

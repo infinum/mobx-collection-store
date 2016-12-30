@@ -1,7 +1,7 @@
 {
   "name": "mobx-collection-store",
   "version": "1.0.0",
-  "description": "",
+  "description": "Data collection store for MobX",
   "main": "dist/store.js",
   "license": "MIT",
   "scripts": {
@@ -9,9 +9,8 @@
     "build:test": "webpack --config webpack.test.js",
     "build:add": "npm run build && git add dist/store.js",
     "run:test": "mocha --require source-map-support/register dist/test.js",
-    "lint": "eslint src/* tests/* webpack.*",
     "test": "npm run build:test && npm run run:test",
-    "precommit": "npm run lint && npm test && npm run build:add"
+    "precommit": "npm test && npm run build:add"
   },
   "repository": {
     "type": "git",
@@ -41,11 +40,11 @@
     "babel-loader": "^6.2.10",
     "babel-preset-latest": "^6.16.0",
     "chai": "^3.5.0",
-    "eslint": "^3.12.2",
     "mobx": "^2.7.0",
     "mocha": "^3.2.0",
+    "mocha-typescript": "^1.0.14",
+    "source-map-support": "^0.4.6",
     "typescript": "^2.1.4",
-    "typescript-eslint-parser": "^1.0.0",
     "webpack": "^2.2.0-rc.1"
   },
   "peerDependencies": {

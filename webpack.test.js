@@ -1,5 +1,7 @@
 const path = require('path');
 
+const ctx = path.join(__dirname);
+
 const config = {
   entry: path.join(__dirname, 'tests/main.test.ts'),
   output: {
@@ -9,16 +11,29 @@ const config = {
   module: {
     loaders: [{
       test: /\.ts?$/,
-      loaders: ['awesome-typescript-loader']
+      loaders: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: 'latest'
+          }
+        },
+        'awesome-typescript-loader'
+      ]
     }]
   },
   plugins: [],
   externals: {
     mobx: 'commonjs mobx',
-    mocha: 'commonjs mocha',
+    'mocha-typescript': 'commonjs mocha-typescript',
     chai: 'commonjs chai'
   },
-  devtool: 'cheap-module-source-map'
+  resolve: {
+    modules: [`${ctx}/app`, 'node_modules'],
+    extensions: ['.js', '.ts']
+  },
+  devtool: 'cheap-module-source-map',
+  stats: false
 };
 
 module.exports = config;

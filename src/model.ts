@@ -1,10 +1,10 @@
-import {observable, extendObservable, toJS, runInAction} from 'mobx';
+import {observable, extendObservable, toJS, action} from 'mobx';
 
 import IModel from './interfaces/IModel';
 import ICollection from './interfaces/ICollection';
 import {TYPE} from './consts';
 
-abstract class Model implements IModel {
+export abstract class Model implements IModel {
   id: string | number
   idAttribute: string = 'id'
   collection?: ICollection = null
@@ -13,16 +13,12 @@ abstract class Model implements IModel {
   abstract type: string
 
   private getRef(ref: string): Function {
-    return () => this.collection.find(ref, this.data[ref]);
+    return () => this.collection.find(this.refs[ref], this.data[ref]);
   }
 
-  private setRef(ref: string): Function {
-    return (val) => {
-      runInAction(() => {
-        this.data[ref] = val instanceof Model ? val.id : val;
-      });
-      return this.collection.find(ref, this.data[ref]);
-    };
+  @action private setRef(ref: string, val: IModel | string | number): IModel {
+    this.data[ref] = val instanceof Model ? val.id : val;
+    return this.collection.find(this.refs[ref], this.data[ref]);
   }
 
   constructor(data: Object) {
@@ -34,16 +30,37 @@ abstract class Model implements IModel {
     const computedProps = {};
     for (const key in keys) {
       computedProps[key] = () => this.data[key];
-      computedProps[key] = (val) => this.data[key] = val;
     }
 
     const refKeys: Array<string> = Object.keys(this.refs);
     for (const ref in refKeys) {
       computedProps[ref] = this.getRef(ref);
-      computedProps[ref] = this.setRef(ref);
+      computedProps[`${ref}Id`] = () => this.data[ref];
     }
 
     extendObservable(this, computedProps);
+  }
+
+  @action set(key: string, value: any) {
+    if (key in this.refs) {
+      this.setRef(key, value);
+    } else {
+      this.data[key] = value;
+    }
+
+    // Add getters if they don't exist yet
+    if (!(key in this.data)) {
+      if (key in this.refs) {
+        extendObservable(this, {
+          [key]: this.getRef(key),
+          [`${key}Id`]: () => this.data[key]
+        });
+      } else {
+        extendObservable(this, {
+          [key]: () => this.data[key]
+        });
+      }
+    }
   }
 
   toJS(): Object {
@@ -52,5 +69,3 @@ abstract class Model implements IModel {
     return data;
   }
 };
-
-export default Model;

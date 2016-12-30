@@ -6,7 +6,7 @@ const DEV = process.env.NODE_ENV === 'development';
 
 const config = {
   entry: [
-    `${ctx}/src/main.ts`
+    `${ctx}/src/index.ts`
   ],
   plugins: [
     new webpack.DefinePlugin({

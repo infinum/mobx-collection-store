@@ -3,10 +3,10 @@ import {extendObservable} from 'mobx';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
-import Model from './model';
+import {Model} from './Model';
 import {TYPE} from './consts';
 
-class Collection implements ICollection {
+export class Collection implements ICollection {
   types: Array<IModelConstructor> = []
   private data: Array<IModel> = []
 
@@ -20,7 +20,7 @@ class Collection implements ICollection {
     return new TypeModel(item);
   }
 
-  constructor(data: Array<Object>) {
+  constructor(data: Array<Object> = []) {
     this.data.push(...data.map(this.initItem));
 
     const computedProps = {};
@@ -58,5 +58,3 @@ class Collection implements ICollection {
     return this.data.map((item) => item.toJS());
   }
 };
-
-export default Collection;
