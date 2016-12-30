@@ -3,7 +3,7 @@ import {useStrict} from 'mobx';
 import {suite, test} from 'mocha-typescript';
 import {expect} from 'chai';
 
-import {Collection, Model, IModelConstructor} from '../src';
+import {Collection, Model} from '../src';
 
 @suite
 class CollectionTest {
@@ -21,7 +21,7 @@ class CollectionTest {
     }
 
     class TestCollection extends Collection {
-      types: Array<IModelConstructor> = [FooModel]
+      types = [FooModel]
     }
 
     const collection = new TestCollection();
@@ -35,6 +35,33 @@ class CollectionTest {
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
     expect(model.id).to.equal(1);
+    expect(model['foo']).to.equal(1);
     expect(model['bar']).to.equal(0);
+  }
+
+  @test
+  'basic relations'() {
+    class FooModel extends Model {
+      static type = 'foo'
+      static refs = {bar: 'foo'}
+    }
+
+    class TestCollection extends Collection {
+      types = [FooModel]
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add({
+      id: 1,
+      foo: 0,
+      bar: 1,
+      fooBar: 0.5
+    }, 'foo');
+
+    expect(collection.length).to.equal(1);
+    expect(collection.find('foo', 1)).to.equal(model);
+    expect(model.id).to.equal(1);
+    expect(model['foo']).to.equal(0);
+    expect(model['bar']).to.equal(model);
   }
 }

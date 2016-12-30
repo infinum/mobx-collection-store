@@ -10,7 +10,7 @@ export abstract class Model implements IModel {
   id: string | number
   idAttribute: string = 'id'
   collection?: ICollection = null
-  refs: IReferences = {}
+  static refs: IReferences = {}
   private data: IObservableObject = observable({})
   static type: string
 
@@ -67,6 +67,10 @@ export abstract class Model implements IModel {
 
   @computed get type(): string {
     return (<typeof Model>this.constructor).type;
+  }
+
+  @computed get refs(): IReferences {
+    return (<typeof Model>this.constructor).refs;
   }
 
   set(key: string, value: any): any {
