@@ -8,11 +8,11 @@ import {TYPE} from './consts';
 
 export abstract class Model implements IModel {
   id: string | number
-  idAttribute: string = 'id'
   collection?: ICollection = null
+  static idAttribute: string = 'id'
   static refs: IReferences = {}
-  private data: IObservableObject = observable({})
   static type: string
+  private data: IObservableObject = observable({})
 
   constructor(initialData: Object) {
     this.data = observable(initialData);
@@ -65,12 +65,37 @@ export abstract class Model implements IModel {
     });
   }
 
+  @computed get idAttribute(): string {
+    return (<typeof Model>this.constructor).idAttribute;
+  }
+
   @computed get type(): string {
     return (<typeof Model>this.constructor).type;
   }
 
   @computed get refs(): IReferences {
     return (<typeof Model>this.constructor).refs;
+  }
+
+  @computed get keys(): Array<string> {
+    return Object.keys(this.data);
+  }
+
+  update(data: IModel): Object
+  update(data: Object): Object
+  update(data: Object): Object {
+    const vals = {};
+    const keys = data instanceof Model ? data.keys : Object.keys(data);
+
+    transaction(() => {
+      keys.forEach((key) => {
+        if (key !== this.idAttribute) {
+          vals[key] = this.set(key, data[key]);
+        }
+      });
+    });
+
+    return vals;
   }
 
   set(key: string, value: any): any {

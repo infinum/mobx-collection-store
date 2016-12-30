@@ -7,6 +7,7 @@ interface IModel {
   refs: Object
   type: string
 
+  update(data: Object): Object
   toJS(): Object;
 }
 

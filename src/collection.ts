@@ -58,6 +58,7 @@ export class Collection implements ICollection {
     }
     const existing = this.find(modelInstance.type, modelInstance.id);
     if (existing) {
+      existing.update(model);
       return existing;
     }
     this.data.push(modelInstance);

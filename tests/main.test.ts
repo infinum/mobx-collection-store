@@ -40,6 +40,38 @@ class CollectionTest {
   }
 
   @test
+  'upsert models'() {
+    class FooModel extends Model {
+      static type = 'foo'
+    }
+
+    class TestCollection extends Collection {
+      types = [FooModel]
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add({
+      id: 1,
+      foo: 1,
+      bar: 0,
+      fooBar: 0.5
+    }, 'foo');
+
+    const model2 = collection.add({
+      id: 1,
+      foo: 2,
+      bar: 1,
+      fooBar: 1.5
+    }, 'foo');
+
+    expect(collection.length).to.equal(1);
+    expect(collection.find('foo', 1)).to.equal(model);
+    expect(model.id).to.equal(1);
+    expect(model['foo']).to.equal(2);
+    expect(model['bar']).to.equal(1);
+  }
+
+  @test
   'basic relations'() {
     class FooModel extends Model {
       static type = 'foo'
