@@ -67,9 +67,9 @@ export class Collection implements ICollection {
 
   find(type: string, id?: string | number) {
     if (id) {
-      return this.data.find((item) => item.type === type && item.id === id);
+      return this.data.find((item) => item.type === type && item.id === id) || null;
     } else {
-      return this.findAll(type)[0];
+      return this.findAll(type)[0] || null;
     }
   }
 

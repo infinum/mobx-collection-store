@@ -43,7 +43,7 @@ class CollectionTest {
   'basic relations'() {
     class FooModel extends Model {
       static type = 'foo'
-      static refs = {bar: 'foo'}
+      static refs = {bar: 'foo', fooBar: 'foo'}
     }
 
     class TestCollection extends Collection {
@@ -63,5 +63,8 @@ class CollectionTest {
     expect(model.id).to.equal(1);
     expect(model['foo']).to.equal(0);
     expect(model['bar']).to.equal(model);
+    expect(model['barId']).to.equal(1);
+    expect(model['fooBar']).to.equal(null);
+    expect(model['fooBarId']).to.equal(0.5);
   }
 }
