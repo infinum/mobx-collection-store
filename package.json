@@ -42,10 +42,10 @@
     "chai": "^3.5.0",
     "mobx": "^2.7.0",
     "mocha": "^3.2.0",
-    "mocha-typescript": "^1.0.14",
-    "source-map-support": "^0.4.6",
+    "mocha-typescript": "^1.0.15",
+    "source-map-support": "^0.4.8",
     "typescript": "^2.1.4",
-    "webpack": "^2.2.0-rc.1"
+    "webpack": "^2.2.0-rc.3"
   },
   "peerDependencies": {
     "mobx": "^2.7.0"
