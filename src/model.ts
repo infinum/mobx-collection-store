@@ -13,29 +13,32 @@ export abstract class Model implements IModel {
   static refs: IReferences = {}
   static type: string
   private data: IObservableObject = observable({})
+  attrs: IObservableObject = observable({})
+  refs: IObservableObject = observable({})
 
-  constructor(initialData: Object) {
-    this.data = observable(initialData);
-    this.id = initialData[this.idAttribute];
+  constructor(initialData: Object, collection?: ICollection) {
+    transaction(() => {
 
-    const keys: Array<string> = Object.keys(initialData);
+      // No need for them to be observable
+      this.id = initialData[this.idAttribute];
+      this.collection = collection;
 
-    const computedProps = {};
-    for (const key of keys) {
-      computedProps[key] = this.getProp(key);
-    }
+      this.update(initialData);
+      this.initRefGetters();
+    });
+  }
 
-    const refKeys: Array<string> = Object.keys(this.refs);
+  private initRefGetters() {
+    const refGetters = {};
+    const refKeys: Array<string> = Object.keys(this.refDefs);
     for (const ref of refKeys) {
-      computedProps[ref] = this.getRef(ref);
-      computedProps[`${ref}Id`] = this.getProp(ref)
+      refGetters[ref] = this.getRef(ref);
     }
-
-    extendObservable(this, computedProps);
+    extendObservable(this.refs, refGetters);
   }
 
   private getRef(ref: string): IComputedValue<IModel> {
-    return computed(() => this.collection.find(this.refs[ref], this.data[ref]));
+    return computed(() => this.collection.find(this.refDefs[ref], this.data[ref]));
   }
 
   private getProp(key: string): IComputedValue<IModel> {
@@ -44,52 +47,52 @@ export abstract class Model implements IModel {
 
   private setRef(ref: string, val: IModel | string | number | Object): IModel {
     return transaction(() => {
-      if (typeof val === 'object' && !(val instanceof Model)) {
+      if (val instanceof Model) {
+        // Make sure we have the same model in the collection
+        const model = this.collection.add(val);
+        this.data[ref] = model.id;
+      } else if (typeof val === 'object') {
         // Add the object to collection if it's not a model yet
-        const type = this.refs[ref];
+        const type = this.refDefs[ref];
         const model = this.collection.add(val, type);
         this.data[ref] = model.id;
       } else {
         // Add a reference to the existing model
-        this.data[ref] = val instanceof Model ? val.id : val;
+        this.data[ref] = val;
       }
 
       // Find the referenced model in collection
-      let innerModel = this.collection.find(this.refs[ref], this.data[ref]);
-      if (val instanceof Model && !innerModel) {
-        // If we have a model, and it isn't in the collection yet, add it
-        this.collection.add(val);
-        innerModel = val;
-      }
-      return innerModel;
+      return this.collection.find(this.refDefs[ref], this.data[ref]);
     });
   }
 
+  private get static(): typeof Model {
+    return <typeof Model>this.constructor;
+  }
+
   @computed get idAttribute(): string {
-    return (<typeof Model>this.constructor).idAttribute;
+    return this.static.idAttribute;
   }
 
   @computed get type(): string {
-    return (<typeof Model>this.constructor).type;
+    return this.static.type;
   }
 
-  @computed get refs(): IReferences {
-    return (<typeof Model>this.constructor).refs;
+  @computed get refDefs(): IReferences {
+    return this.static.refs;
   }
 
   @computed get keys(): Array<string> {
     return Object.keys(this.data);
   }
 
-  update(data: IModel): Object
-  update(data: Object): Object
-  update(data: Object): Object {
+  update(data: IModel | Object): Object {
     const vals = {};
     const keys = data instanceof Model ? data.keys : Object.keys(data);
 
     transaction(() => {
       keys.forEach((key) => {
-        if (key !== this.idAttribute) {
+        if (key !== this.idAttribute || !this.data[this.idAttribute]) {
           vals[key] = this.set(key, data[key]);
         }
       });
@@ -100,29 +103,18 @@ export abstract class Model implements IModel {
 
   set(key: string, value: any): any {
     let val = value;
+    if (key in this.refDefs) {
+      val = this.setRef(key, value);
+    } else {
+      this.data[key] = value;
+    }
 
-    transaction(() => {
-      if (key in this.refs) {
-        val = this.setRef(key, value);
-      } else {
-        this.data[key] = value;
-      }
-
-      // Add getters if they don't exist yet
-      if (!(key in this.data)) {
-        if (key in this.refs) {
-          extendObservable(this, {
-            [key]: this.getRef(key),
-            [`${key}Id`]: this.getProp(key)
-          });
-        } else {
-          extendObservable(this, {
-            [key]: this.getProp(key)
-          });
-        }
-      }
-    });
-
+    // Add getter if it doesn't exist yet
+    if (!(key in this.attrs)) {
+      extendObservable(this.attrs, {
+        [key]: this.getProp(key)
+      });
+    }
     return val;
   }
 

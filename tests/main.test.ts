@@ -35,8 +35,8 @@ class CollectionTest {
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
     expect(model.id).to.equal(1);
-    expect(model['foo']).to.equal(1);
-    expect(model['bar']).to.equal(0);
+    expect(model.attrs['foo']).to.equal(1);
+    expect(model.attrs['bar']).to.equal(0);
   }
 
   @test
@@ -67,8 +67,8 @@ class CollectionTest {
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
     expect(model.id).to.equal(1);
-    expect(model['foo']).to.equal(2);
-    expect(model['bar']).to.equal(1);
+    expect(model.attrs['foo']).to.equal(2);
+    expect(model.attrs['bar']).to.equal(1);
   }
 
   @test
@@ -93,10 +93,10 @@ class CollectionTest {
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
     expect(model.id).to.equal(1);
-    expect(model['foo']).to.equal(0);
-    expect(model['bar']).to.equal(model);
-    expect(model['barId']).to.equal(1);
-    expect(model['fooBar']).to.equal(null);
-    expect(model['fooBarId']).to.equal(0.5);
+    expect(model.attrs['foo']).to.equal(0);
+    expect(model.refs['bar']).to.equal(model);
+    expect(model.attrs['bar']).to.equal(1);
+    expect(model.refs['fooBar']).to.equal(null);
+    expect(model.attrs['fooBar']).to.equal(0.5);
   }
 }

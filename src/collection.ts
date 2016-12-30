@@ -32,7 +32,7 @@ export class Collection implements ICollection {
   private initItem(item): IModel {
     const type = item[TYPE];
     const TypeModel: IModelConstructor = this.getModel(type);
-    return new TypeModel(item);
+    return new TypeModel(item, this);
   }
 
   @computed get length(): number {
@@ -52,7 +52,7 @@ export class Collection implements ICollection {
     let modelInstance: IModel;
     if (type) {
       const TypeModel: IModelConstructor = this.getModel(type);
-      modelInstance = new TypeModel(model);
+      modelInstance = new TypeModel(model, this);
     } else {
       modelInstance = model;
     }

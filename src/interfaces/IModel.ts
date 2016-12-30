@@ -1,4 +1,7 @@
+import {IObservableObject} from 'mobx';
+
 import ICollection from './ICollection';
+import IDictionary from './IDictionary';
 
 interface IModel {
   id: string | number
@@ -6,6 +9,7 @@ interface IModel {
   collection?: ICollection
   refs: Object
   type: string
+  attrs: IDictionary
 
   update(data: Object): Object
   toJS(): Object;
