@@ -48,6 +48,6 @@
     "webpack": "^2.2.0-rc.3"
   },
   "peerDependencies": {
-    "mobx": "^2.7.0"
+    "mobx": "^2.7.0 || ^3"
   }
 }

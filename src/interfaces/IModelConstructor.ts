@@ -3,7 +3,7 @@ import IModel from './IModel';
 interface IModelConstructor {
   type: string
 
-  new (d: Object): IModel;
+  new (initialData: Object): IModel;
 }
 
 export default IModelConstructor;

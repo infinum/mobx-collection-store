@@ -32,8 +32,7 @@ const config = {
     modules: [`${ctx}/app`, 'node_modules'],
     extensions: ['.js', '.ts']
   },
-  devtool: 'cheap-module-source-map',
-  stats: false
+  devtool: 'cheap-module-source-map'
 };
 
 module.exports = config;
