@@ -6,7 +6,7 @@ const DEV = process.env.NODE_ENV === 'development';
 
 const config = {
   entry: [
-    `${ctx}/src/index.ts`
+    `${ctx}/dist/index.js`
   ],
   plugins: [
     new webpack.DefinePlugin({
@@ -36,14 +36,13 @@ const config = {
   },
   resolve: {
     modules: [`${ctx}/app`, 'node_modules'],
-    extensions: ['.ts']
+    extensions: ['.js']
   },
   module: {
     loaders: [{
-      test: /\.ts?$/,
+      test: /\.js?$/,
       loaders: [
-        'babel-loader',
-        'awesome-typescript-loader'
+        'babel-loader'
       ]
     }]
   },

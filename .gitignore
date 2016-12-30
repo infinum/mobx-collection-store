@@ -1,4 +1,11 @@
-node_modules/*
 .DS_Store
-dist/test.*
+
+node_modules/*
 npm-debug.log
+
+dist/*
+!dist/store.js
+!dist/*.d.ts
+!dist/interfaces
+dist/interfaces/*
+!dist/interfaces/*.d.ts

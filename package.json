@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Data collection store for MobX",
   "main": "dist/store.js",
-  "typings": "typings.d.ts",
+  "typings": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "NODE_ENV=production webpack --progress",
+    "build": "ntsc -p . && NODE_ENV=production webpack --progress",
     "build:test": "webpack --config webpack.test.js",
-    "build:add": "npm run build && git add dist/store.js",
+    "build:add": "npm run build && git add dist/",
     "run:test": "mocha --require source-map-support/register dist/test.js",
     "test": "npm run build:test && npm run run:test",
     "precommit": "npm test && npm run build:add"
@@ -45,6 +45,7 @@
     "mobx": "^2.7.0",
     "mocha": "^3.2.0",
     "mocha-typescript": "^1.0.15",
+    "ntypescript": "^1.201609302242.1",
     "source-map-support": "^0.4.8",
     "typescript": "^2.1.4",
     "webpack": "^2.2.0-rc.3"
