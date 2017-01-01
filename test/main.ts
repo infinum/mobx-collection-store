@@ -1,3 +1,5 @@
+import {computed} from 'mobx';
+
 const expect = require('chai').expect;
 
 import {Collection, Model} from '../src';
@@ -128,5 +130,69 @@ describe('MobX Collection Store', function() {
     // Remove all models of the foo type
     collection2.removeAll('foo');
     expect(collection2.length).to.equal(0);
+  });
+
+  it('should work for the readme example', function() {
+    class Person extends Model {
+      static type = 'person'
+      static refs = {spouse: 'person'}
+
+      @computed get fullName() {
+        return `${this.attrs['firstName']} ${this.attrs['lastName']}`;
+      }
+    }
+
+    class Pet extends Model {
+      static type = 'pet';
+      static refs = {
+        owner: 'person'
+      }
+    }
+
+    class MyCollection extends Collection {
+      static types = [Person, Pet]
+    }
+
+    const collection = new MyCollection();
+
+    const john = collection.add({
+      id: 1,
+      spouse: 2,
+      firstName: 'John',
+      lastName: 'Doe'
+    }, 'person');
+
+    const fido = collection.add({
+      id: 1,
+      owner: john,
+      name: 'Fido'
+    }, 'pet');
+
+    const jane = new Person({
+      id: 2,
+      spouse: 1,
+      firstName: 'Jane',
+      lastName: 'Doe'
+    });
+    collection.add(jane);
+
+    expect(john.refs['spouse'].fullName).to.equal('Jane Doe');
+    expect(fido.refs['owner'].fullName).to.equal('John Doe');
+    expect(fido.refs['owner'].refs.spouse.fullName).to.equal('Jane Doe');
+    expect(collection['person'].length).to.equal(2);
+    expect(collection.length).to.equal(3);
+
+    fido.set('owner', {
+      id: 3,
+      firstName: 'Dave',
+      lastName: 'Jones'
+    });
+
+    expect(fido.refs['owner'].fullName).to.equal('Dave Jones');
+    expect(collection['person'].length).to.equal(3);
+    expect(collection.length).to.equal(4);
+
+    fido.set('owner', jane);
+    expect(fido.refs['owner'].fullName).to.equal('Jane Doe');
   });
 });

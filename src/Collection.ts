@@ -86,6 +86,7 @@ export class Collection implements ICollection {
     let modelInstance: IModel;
     if (model instanceof Model) {
       modelInstance = model;
+      modelInstance.collection = this;
     } else {
       const TypeModel: IModelConstructor = this.__getModel(type);
       modelInstance = new TypeModel(model, this);
@@ -98,7 +99,6 @@ export class Collection implements ICollection {
     }
 
     this.data.push(modelInstance);
-    modelInstance.collection = this;
     return modelInstance;
   }
 
@@ -157,7 +157,7 @@ export class Collection implements ICollection {
   }
 
   /**
-   * Convert the collection (and containing models) into a plain JS Object in roder to be serialized
+   * Convert the collection (and containing models) into a plain JS Object in order to be serialized
    *
    * @returns {Object} Plain JS Object representing the collection and all its models
    */

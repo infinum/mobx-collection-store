@@ -27,7 +27,7 @@ interface IModel {
      */
     set(key: string, value: any): any;
     /**
-     * Convert the model into a plain JS Object in roder to be serialized
+     * Convert the model into a plain JS Object in order to be serialized
      *
      * @returns {Object} Plain JS Object representing the model
      */

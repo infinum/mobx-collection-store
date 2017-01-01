@@ -76,6 +76,7 @@ var Collection = (function () {
         var modelInstance;
         if (model instanceof Model_1.Model) {
             modelInstance = model;
+            modelInstance.collection = this;
         }
         else {
             var TypeModel = this.__getModel(type);
@@ -87,7 +88,6 @@ var Collection = (function () {
             return existing;
         }
         this.data.push(modelInstance);
-        modelInstance.collection = this;
         return modelInstance;
     };
     /**
@@ -141,7 +141,7 @@ var Collection = (function () {
         return models;
     };
     /**
-     * Convert the collection (and containing models) into a plain JS Object in roder to be serialized
+     * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *
      * @returns {Object} Plain JS Object representing the collection and all its models
      */

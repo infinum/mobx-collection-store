@@ -65,7 +65,9 @@ class Model implements IModel {
    * @returns {IComputedValue<IModel>} Getter function
    */
   private __getRef(ref: string): IComputedValue<IModel> {
-    return computed(() => this.collection.find(this.static.refs[ref], this.data[ref]));
+    return computed(() => this.collection
+      ?this.collection.find(this.static.refs[ref], this.data[ref])
+      : null);
   }
 
   /**
@@ -103,7 +105,9 @@ class Model implements IModel {
       }
 
       // Find the referenced model in collection
-      return this.collection.find(this.static.refs[ref], this.data[ref]);
+      return this.collection
+        ? this.collection.find(this.static.refs[ref], this.data[ref])
+        : null;
     });
   }
 
@@ -165,7 +169,7 @@ class Model implements IModel {
   }
 
   /**
-   * Convert the model into a plain JS Object in roder to be serialized
+   * Convert the model into a plain JS Object in order to be serialized
    *
    * @returns {Object} Plain JS Object representing the model
    */

@@ -42,7 +42,9 @@ var Model = (function () {
      */
     Model.prototype.__getRef = function (ref) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.collection.find(_this.static.refs[ref], _this.data[ref]); });
+        return mobx_1.computed(function () { return _this.collection
+            ? _this.collection.find(_this.static.refs[ref], _this.data[ref])
+            : null; });
     };
     /**
      * Getter for the computed property value
@@ -81,7 +83,9 @@ var Model = (function () {
                 _this.data[ref] = val;
             }
             // Find the referenced model in collection
-            return _this.collection.find(_this.static.refs[ref], _this.data[ref]);
+            return _this.collection
+                ? _this.collection.find(_this.static.refs[ref], _this.data[ref])
+                : null;
         });
     };
     Object.defineProperty(Model.prototype, "static", {
@@ -146,7 +150,7 @@ var Model = (function () {
         var _a;
     };
     /**
-     * Convert the model into a plain JS Object in roder to be serialized
+     * Convert the model into a plain JS Object in order to be serialized
      *
      * @returns {Object} Plain JS Object representing the model
      */

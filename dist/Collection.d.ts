@@ -74,7 +74,7 @@ export declare class Collection implements ICollection {
      */
     removeAll(type: string): Array<IModel>;
     /**
-     * Convert the collection (and containing models) into a plain JS Object in roder to be serialized
+     * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *
      * @returns {Object} Plain JS Object representing the collection and all its models
      */
