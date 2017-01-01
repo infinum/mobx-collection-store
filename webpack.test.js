@@ -3,7 +3,7 @@ const path = require('path');
 const ctx = path.join(__dirname);
 
 const config = {
-  entry: path.join(__dirname, 'tests/main.test.ts'),
+  entry: path.join(__dirname, 'src/test.ts'),
   output: {
     filename: 'test.js',
     path: path.join(__dirname, 'dist')

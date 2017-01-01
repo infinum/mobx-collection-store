@@ -4,34 +4,34 @@ import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import {Model} from './Model';
-import {TYPE} from './consts';
+import {TYPE_PROP, DEFAULT_TYPE} from './consts';
 
 export class Collection implements ICollection {
   types: Array<IModelConstructor> = []
   private data: IObservableArray<IModel> = observable([])
 
   constructor(data: Array<Object> = []) {
-    this.data.push(...data.map(this.initItem));
+    this.data.push(...data.map(this.__initItem));
 
     const computedProps = {};
     for (const model of this.types) {
-      computedProps[model.type] = this.getByType(model.type);
+      computedProps[model.type] = this.__getByType(model.type);
     }
 
     extendObservable(this, computedProps);
   }
 
-  private getByType(type: string): IComputedValue<Array<IModel>> {
+  private __getByType(type: string): IComputedValue<Array<IModel>> {
     return computed(() => this.data.filter((item) => item.type === type));
   }
 
-  private getModel(type : string): IModelConstructor {
-    return this.types.find((item) => item.type === type);
+  private __getModel(type : string): IModelConstructor {
+    return this.types.find((item) => item.type === type) || Model;
   }
 
-  private initItem(item): IModel {
-    const type = item[TYPE];
-    const TypeModel: IModelConstructor = this.getModel(type);
+  private __initItem(item): IModel {
+    const type = item[TYPE_PROP];
+    const TypeModel: IModelConstructor = this.__getModel(type);
     return new TypeModel(item, this);
   }
 
@@ -39,22 +39,22 @@ export class Collection implements ICollection {
     return this.data.length;
   }
 
-  add(model: Object, type: string): IModel;
+  add(model: Object, type?: string): IModel;
   add(model: IModel): IModel;
-  add(model: Array<Object>, type: string): Array<IModel>;
+  add(model: Array<Object>, type?: string): Array<IModel>;
   add(model: Array<IModel>): Array<IModel>;
-  add(model: any, type?: string) {
+  add(model: any, type: string = DEFAULT_TYPE) {
     if (model instanceof Array) {
       return transaction(() => {
         return model.map((item) => this.add(item, type));
       });
     }
     let modelInstance: IModel;
-    if (type) {
-      const TypeModel: IModelConstructor = this.getModel(type);
-      modelInstance = new TypeModel(model, this);
-    } else {
+    if (model instanceof Model) {
       modelInstance = model;
+    } else {
+      const TypeModel: IModelConstructor = this.__getModel(type);
+      modelInstance = new TypeModel(model, this);
     }
     const existing = this.find(modelInstance.type, modelInstance.id);
     if (existing) {
@@ -66,7 +66,7 @@ export class Collection implements ICollection {
     return modelInstance;
   }
 
-  find(type: string, id?: string | number) {
+  find(type: string, id?: string | number): IModel {
     if (id) {
       return this.data.find((item) => item.type === type && item.id === id) || null;
     } else {

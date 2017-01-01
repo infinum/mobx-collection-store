@@ -37,6 +37,7 @@ class CollectionTest {
     expect(model.id).to.equal(1);
     expect(model.attrs['foo']).to.equal(1);
     expect(model.attrs['bar']).to.equal(0);
+    expect(model.type).to.equal('foo');
   }
 
   @test

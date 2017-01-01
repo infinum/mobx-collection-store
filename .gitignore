@@ -6,6 +6,7 @@ npm-debug.log
 dist/*
 !dist/store.js
 !dist/*.d.ts
+dist/test.d.ts
 !dist/interfaces
 dist/interfaces/*
 !dist/interfaces/*.d.ts

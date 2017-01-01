@@ -4,14 +4,14 @@ import IReferences from './interfaces/IReferences';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
-import {TYPE} from './consts';
+import {TYPE_PROP, DEFAULT_TYPE} from './consts';
 
-abstract class Model implements IModel {
+class Model implements IModel {
   id: string | number
   collection?: ICollection = null
   static idAttribute: string = 'id'
   static refs: IReferences = {}
-  static type: string
+  static type: string = DEFAULT_TYPE
   private data: IObservableObject = observable({})
   attrs: IObservableObject = observable({})
   refs: IObservableObject = observable({})
@@ -20,32 +20,32 @@ abstract class Model implements IModel {
     transaction(() => {
 
       // No need for them to be observable
-      this.id = initialData[this.idAttribute];
+      this.id = initialData[this.static.idAttribute];
       this.collection = collection;
 
       this.update(initialData);
-      this.initRefGetters();
+      this.__initRefGetters();
     });
   }
 
-  private initRefGetters() {
+  private __initRefGetters() {
     const refGetters = {};
-    const refKeys: Array<string> = Object.keys(this.refDefs);
+    const refKeys: Array<string> = Object.keys(this.static.refs);
     for (const ref of refKeys) {
-      refGetters[ref] = this.getRef(ref);
+      refGetters[ref] = this.__getRef(ref);
     }
     extendObservable(this.refs, refGetters);
   }
 
-  private getRef(ref: string): IComputedValue<IModel> {
-    return computed(() => this.collection.find(this.refDefs[ref], this.data[ref]));
+  private __getRef(ref: string): IComputedValue<IModel> {
+    return computed(() => this.collection.find(this.static.refs[ref], this.data[ref]));
   }
 
-  private getProp(key: string): IComputedValue<IModel> {
+  private __getProp(key: string): IComputedValue<IModel> {
     return computed(() => this.data[key]);
   }
 
-  private setRef(ref: string, val: IModel | string | number | Object): IModel {
+  private __setRef(ref: string, val: IModel | string | number | Object): IModel {
     return transaction(() => {
       if (val instanceof Model) {
         // Make sure we have the same model in the collection
@@ -53,7 +53,7 @@ abstract class Model implements IModel {
         this.data[ref] = model.id;
       } else if (typeof val === 'object') {
         // Add the object to collection if it's not a model yet
-        const type = this.refDefs[ref];
+        const type = this.static.refs[ref];
         const model = this.collection.add(val, type);
         this.data[ref] = model.id;
       } else {
@@ -62,7 +62,7 @@ abstract class Model implements IModel {
       }
 
       // Find the referenced model in collection
-      return this.collection.find(this.refDefs[ref], this.data[ref]);
+      return this.collection.find(this.static.refs[ref], this.data[ref]);
     });
   }
 
@@ -70,29 +70,19 @@ abstract class Model implements IModel {
     return <typeof Model>this.constructor;
   }
 
-  @computed get idAttribute(): string {
-    return this.static.idAttribute;
-  }
-
-  @computed get type(): string {
+  get type(): string {
     return this.static.type;
-  }
-
-  @computed get refDefs(): IReferences {
-    return this.static.refs;
-  }
-
-  @computed get keys(): Array<string> {
-    return Object.keys(this.data);
   }
 
   update(data: IModel | Object): Object {
     const vals = {};
-    const keys = data instanceof Model ? data.keys : Object.keys(data);
+    const dataObj = data instanceof Model ? data.attrs : data;
+    const keys = Object.keys(dataObj);
+    const idAttribute = this.static.idAttribute;
 
     transaction(() => {
       keys.forEach((key) => {
-        if (key !== this.idAttribute || !this.data[this.idAttribute]) {
+        if (key !== idAttribute || !this.data[idAttribute]) {
           vals[key] = this.set(key, data[key]);
         }
       });
@@ -103,8 +93,8 @@ abstract class Model implements IModel {
 
   set(key: string, value: any): any {
     let val = value;
-    if (key in this.refDefs) {
-      val = this.setRef(key, value);
+    if (key in this.static.refs) {
+      val = this.__setRef(key, value);
     } else {
       this.data[key] = value;
     }
@@ -112,7 +102,7 @@ abstract class Model implements IModel {
     // Add getter if it doesn't exist yet
     if (!(key in this.attrs)) {
       extendObservable(this.attrs, {
-        [key]: this.getProp(key)
+        [key]: this.__getProp(key)
       });
     }
     return val;
@@ -120,7 +110,7 @@ abstract class Model implements IModel {
 
   toJS(): Object {
     const data = toJS(this.data);
-    data[TYPE] = this.type;
+    data[TYPE_PROP] = this.type;
     return data;
   }
 };

@@ -1,3 +1,4 @@
+/// <reference types="chai" />
 import IModel from './IModel';
 import ICollection from './ICollection';
 interface IModelConstructor {

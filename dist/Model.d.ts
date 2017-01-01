@@ -1,8 +1,9 @@
+/// <reference types="chai" />
 import { IObservableObject } from 'mobx';
 import IReferences from './interfaces/IReferences';
 import IModel from './interfaces/IModel';
 import ICollection from './interfaces/ICollection';
-declare abstract class Model implements IModel {
+declare class Model implements IModel {
     id: string | number;
     collection?: ICollection;
     static idAttribute: string;
@@ -12,15 +13,12 @@ declare abstract class Model implements IModel {
     attrs: IObservableObject;
     refs: IObservableObject;
     constructor(initialData: Object, collection?: ICollection);
-    private initRefGetters();
-    private getRef(ref);
-    private getProp(key);
-    private setRef(ref, val);
+    private __initRefGetters();
+    private __getRef(ref);
+    private __getProp(key);
+    private __setRef(ref, val);
     private readonly static;
-    readonly idAttribute: string;
     readonly type: string;
-    readonly refDefs: IReferences;
-    readonly keys: Array<string>;
     update(data: IModel | Object): Object;
     set(key: string, value: any): any;
     toJS(): Object;

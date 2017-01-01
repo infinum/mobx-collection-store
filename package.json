@@ -35,6 +35,7 @@
     }
   ],
   "devDependencies": {
+    "@types/chai": "^3.4.34",
     "awesome-typescript-loader": "^3.0.0-beta.17",
     "babel": "^6.5.2",
     "babel-core": "^6.21.0",
