@@ -1,5 +1,5 @@
 interface IReferences {
-  [name: string]: string
+  [name: string]: string;
 };
 
 export default IReferences;

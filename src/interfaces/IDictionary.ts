@@ -1,5 +1,5 @@
 interface IDictionary {
-  [name: string]: any
+  [name: string]: any;
 };
 
 export default IDictionary;
