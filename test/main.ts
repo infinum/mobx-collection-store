@@ -1,4 +1,4 @@
-import {computed} from 'mobx';
+import {computed, extendObservable} from 'mobx';
 
 const expect = require('chai').expect;
 
@@ -134,13 +134,16 @@ describe('MobX Collection Store', function() {
 
   it('should work for the readme example', function() {
     class Person extends Model {
-      static type = 'person'
-      static refs = {spouse: 'person'}
-
-      @computed get fullName() {
-        return `${this.attrs['firstName']} ${this.attrs['lastName']}`;
+      constructor(initialData: Object, collection?: Collection) {
+        super(initialData, collection);
+        extendObservable(this, {
+          fullName: computed(() => `${this.attrs['firstName']} ${this.attrs['lastName']}`)
+        });
       }
     }
+
+    Person.type = 'person';
+    Person.refs = {spouse: 'person'};
 
     class Pet extends Model {
       static type = 'pet';

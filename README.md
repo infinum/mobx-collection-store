@@ -58,28 +58,34 @@ Don't forget to minify your code before production for better performance!
 In order to use relationships, you'll need to create new model and collection classes that extend the original ones:
 
 ```javascript
-import {computed} from 'mobx';
+import {computed, extendObservable} from 'mobx';
 import {Model, Collection} from 'mobx-collection-store';
 
 class Person extends Model {
-  static type = 'person'
-  static refs = {spouse: 'person'}
 
-  @computed get fullName() {
-    return `${this.attrs.firstName} ${this.attrs.lastName}`;
+  // The ES5/ES2015 way to add a computed property
+  // This is not a requirement for the library, but it's a very useful mobx feature
+  constructor(...args) {
+    super(...args);
+    extendObservable(this, {
+      fullName: computed(() => `${this.attrs.firstName} ${this.attrs.lastName}`)
+    });
   }
-}
 
-class Pet extends Model {
-  static type = 'pet';
-  static refs = {
-    owner: 'person'
-  }
+  // Cleaner synthax if you're using decorators
+  // @computed get fullName() {
+  //   return `${this.attrs.firstName} ${this.attrs.lastName}`;
+  // }
 }
+Person.type = 'person';
+Person.refs = {spouse: 'person'};
 
-class MyCollection extends Collection {
-  static types = [Person, Pet]
-}
+class Pet extends Model {}
+Pet.type = 'pet';
+Pet.refs = {owner: 'person'};
+
+class MyCollection extends Collection {}
+MyCollection.types = [Person, Pet];
 
 const collection = new MyCollection();
 
