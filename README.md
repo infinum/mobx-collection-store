@@ -164,18 +164,18 @@ class MyCollection extends Collection {
 
 const collection = new MyCollection();
 
-const john = collection.add({
+const john = collection.add<Person>({
   id: 1,
   spouse: 2,
   firstName: 'John',
   lastName: 'Doe'
-}, 'person') as Person;
+}, 'person');
 
-const fido = collection.add({
+const fido = collection.add<Pet>({
   id: 1,
   owner: john,
   name: 'Fido'
-}, 'pet') as Pet;
+}, 'pet');
 
 const jane = new Person({
   id: 2,

@@ -162,9 +162,10 @@ var Collection = (function () {
     /**
      * Find a specific model
      *
+     * @template T
      * @argument {string} type - Type of the model that will be searched for
      * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be returned)
-     * @returns {IModel} Found model
+     * @returns {T} Found model
      *
      * @memberOf Collection
      */
@@ -178,8 +179,9 @@ var Collection = (function () {
     /**
      * Find all models of the specified type
      *
+     * @template T
      * @argument {string} type - Type of the models that will be searched for
-     * @returns {Array<IModel>} Found models
+     * @returns {Array<T>} Found models
      *
      * @memberOf Collection
      */
@@ -189,9 +191,10 @@ var Collection = (function () {
     /**
      * Remove a specific model from the collection
      *
+     * @template T
      * @argument {string} type - Type of the model that will be removed
      * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
-     * @returns {IModel} Removed model
+     * @returns {T} Removed model
      *
      * @memberOf Collection
      */
@@ -203,8 +206,9 @@ var Collection = (function () {
     /**
      * Remove all models of the specified type from the collection
      *
+     * @template T
      * @argument {string} type - Type of the models that will be removed
-     * @returns {Array<IModel>} Removed models
+     * @returns {Array<T>} Removed models
      *
      * @memberOf Collection
      */

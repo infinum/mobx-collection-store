@@ -139,15 +139,16 @@ export class Collection implements ICollection {
   /**
    * Add a model or list of models to the collection
    *
+   * @template T
    * @argument {Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported
    * @argument {string} [type] - The model type to be imported (not relevant if the model is an instance of Model)
-   * @returns {IModel|Array<IModel>} Model instance(s)
+   * @returns {IModel|Array<IModel>|T|Array<T>} Model instance(s)
    *
    * @memberOf Collection
    */
-  add(model: Object, type?: string): IModel;
+  add<T extends IModel>(model: Object, type?: string): T;
+  add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
   add(model: IModel): IModel;
-  add(model: Array<Object>, type?: string): Array<IModel>;
   add(model: Array<IModel>): Array<IModel>;
   @action add(model: any, type?: string) {
     if (model instanceof Array) {
@@ -177,23 +178,24 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  private __matchModel(item: IModel, type: string, id: string|number) {
+  private __matchModel(item: IModel, type: string, id: string|number): boolean {
     return item.static.type === type && item[item.static.idAttribute] === id;
   }
 
   /**
    * Find a specific model
    *
+   * @template T
    * @argument {string} type - Type of the model that will be searched for
    * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be returned)
-   * @returns {IModel} Found model
+   * @returns {T} Found model
    *
    * @memberOf Collection
    */
-  find(type: string, id?: string|number): IModel {
-    const modelList: Array<IModel> = id
-      ? this.data.filter((item) => this.__matchModel(item, type, id))
-      : this.findAll(type);
+  find<T extends IModel>(type: string, id?: string|number): T {
+    const modelList: Array<T> = id
+      ? this.data.filter((item) => this.__matchModel(item, type, id)) as Array<T>
+      : this.findAll<T>(type);
 
     return modelList[0] || null;
   }
@@ -201,26 +203,28 @@ export class Collection implements ICollection {
   /**
    * Find all models of the specified type
    *
+   * @template T
    * @argument {string} type - Type of the models that will be searched for
-   * @returns {Array<IModel>} Found models
+   * @returns {Array<T>} Found models
    *
    * @memberOf Collection
    */
-  findAll(type: string): Array<IModel> {
-    return this.data.filter((item) => item.static.type === type);
+  findAll<T extends IModel>(type: string): Array<T> {
+    return this.data.filter((item) => item.static.type === type) as Array<T>;
   }
 
   /**
    * Remove a specific model from the collection
    *
+   * @template T
    * @argument {string} type - Type of the model that will be removed
    * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
-   * @returns {IModel} Removed model
+   * @returns {T} Removed model
    *
    * @memberOf Collection
    */
-  remove(type: string, id?: string|number): IModel {
-    const model = this.find(type, id);
+  remove<T extends IModel>(type: string, id?: string|number): T {
+    const model = this.find<T>(type, id);
     this.data.remove(model);
     return model;
   }
@@ -228,13 +232,14 @@ export class Collection implements ICollection {
   /**
    * Remove all models of the specified type from the collection
    *
+   * @template T
    * @argument {string} type - Type of the models that will be removed
-   * @returns {Array<IModel>} Removed models
+   * @returns {Array<T>} Removed models
    *
    * @memberOf Collection
    */
-  @action removeAll(type: string): Array<IModel> {
-    const models = this.findAll(type);
+  @action removeAll<T extends IModel>(type: string): Array<T> {
+    const models = this.findAll<T>(type);
     models.forEach((model) => {
       this.data.remove(model);
     });

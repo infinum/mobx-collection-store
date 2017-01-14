@@ -25,12 +25,12 @@ describe('MobX Collection Store', function() {
     }
 
     const collection = new TestCollection();
-    const model = collection.add({
+    const model = collection.add<FooModel>({
       id: 1,
       foo: 1,
       bar: 0,
       fooBar: 0.5
-    }, 'foo') as FooModel;
+    }, 'foo');
 
     expect(collection.length).to.equal(1);
     expect(collection.foo.length).to.equal(1);
@@ -57,19 +57,19 @@ describe('MobX Collection Store', function() {
     }
 
     const collection = new TestCollection();
-    const model = collection.add({
+    const model = collection.add<FooModel>({
       id: 1,
       foo: 1,
       bar: 0,
       fooBar: 0.5
-    }, 'foo') as FooModel;
+    }, 'foo');
 
-    const model2 = collection.add({
+    const model2 = collection.add<FooModel>({
       id: 1,
       foo: 2,
       bar: 1,
       fooBar: 1.5
-    }, 'foo') as FooModel;
+    }, 'foo');
 
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
@@ -97,12 +97,12 @@ describe('MobX Collection Store', function() {
     }
 
     const collection = new TestCollection();
-    const model = collection.add({
+    const model = collection.add<FooModel>({
       id: 1,
       foo: 0,
       bar: 1,
       fooBar: 0.5
-    }, 'foo') as FooModel;
+    }, 'foo');
 
     // Check if the references are ok
     expect(collection.length).to.equal(1);
@@ -117,7 +117,7 @@ describe('MobX Collection Store', function() {
 
     // Clone the collection and check new references
     const collection2 = new TestCollection(collection.toJS());
-    const model2 = collection2.find('foo') as FooModel;
+    const model2 = collection2.find<FooModel>('foo');
     expect(collection2.length).to.equal(1);
     expect(collection2.find('foo', 1)).to.equal(model2);
     expect(model2.__id).to.equal(1);
@@ -181,18 +181,18 @@ describe('MobX Collection Store', function() {
 
     const collection = new MyCollection();
 
-    const john = collection.add({
+    const john = collection.add<Person>({
       id: 1,
       spouse: 2,
       firstName: 'John',
       lastName: 'Doe'
-    }, 'person') as Person;
+    }, 'person');
 
-    const fido = collection.add({
+    const fido = collection.add<Pet>({
       id: 1,
       owner: john,
       name: 'Fido'
-    }, 'pet') as Pet;
+    }, 'pet');
 
     const jane = new Person({
       id: 2,
