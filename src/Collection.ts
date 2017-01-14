@@ -31,7 +31,7 @@ export class Collection implements ICollection {
    * @type {IObservableArray<IModel>}
    * @memberOf Collection
    */
-  private data: IObservableArray<IModel> = observable([])
+  private __data: IObservableArray<IModel> = observable([])
 
   /**
    * Creates an instance of Collection.
@@ -41,7 +41,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   constructor(data: Array<Object> = []) {
-    this.data.push(...data.map(this.__initItem, this));
+    this.__data.push(...data.map(this.__initItem, this));
 
     const computedProps = {};
     for (const model of this.static.types) {
@@ -61,7 +61,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   private __getByType(type: string): IComputedValue<Array<IModel>> {
-    return computed(() => this.data.filter((item) => item.static.type === type));
+    return computed(() => this.__data.filter((item) => item.static.type === type));
   }
 
   /**
@@ -112,7 +112,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   @computed get length(): number {
-    return this.data.length;
+    return this.__data.length;
   }
 
   /**
@@ -163,7 +163,7 @@ export class Collection implements ICollection {
       return existing;
     }
 
-    this.data.push(instance);
+    this.__data.push(instance);
     return instance;
   }
 
@@ -194,7 +194,7 @@ export class Collection implements ICollection {
    */
   find<T extends IModel>(type: string, id?: string|number): T {
     const modelList: Array<T> = id
-      ? this.data.filter((item) => this.__matchModel(item, type, id)) as Array<T>
+      ? this.__data.filter((item) => this.__matchModel(item, type, id)) as Array<T>
       : this.findAll<T>(type);
 
     return modelList[0] || null;
@@ -210,7 +210,24 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   findAll<T extends IModel>(type: string): Array<T> {
-    return this.data.filter((item) => item.static.type === type) as Array<T>;
+    return this.__data.filter((item) => item.static.type === type) as Array<T>;
+  }
+
+  /**
+   * Remove models from the collection
+   *
+   * @private
+   * @param {Array<IModel>} models - Models to remove
+   *
+   * @memberOf Collection
+   */
+  @action private __removeModels(models: Array<IModel>): void {
+    models.forEach((model) => {
+      if (model) {
+        this.__data.remove(model);
+        model.__collection = null;
+      }
+    });
   }
 
   /**
@@ -225,7 +242,7 @@ export class Collection implements ICollection {
    */
   remove<T extends IModel>(type: string, id?: string|number): T {
     const model = this.find<T>(type, id);
-    this.data.remove(model);
+    this.__removeModels([model]);
     return model;
   }
 
@@ -240,10 +257,18 @@ export class Collection implements ICollection {
    */
   @action removeAll<T extends IModel>(type: string): Array<T> {
     const models = this.findAll<T>(type);
-    models.forEach((model) => {
-      this.data.remove(model);
-    });
+    this.__removeModels(models);
     return models;
+  }
+
+  /**
+   * Reset the collection - remove all models
+   *
+   * @memberOf Collection
+   */
+  @action reset(): void {
+    const models = [...this.__data];
+    this.__removeModels(models);
   }
 
   /**
@@ -254,6 +279,6 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   toJS(): Array<Object> {
-    return this.data.map((item) => item.toJS());
+    return this.__data.map((item) => item.toJS());
   }
 };

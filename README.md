@@ -234,8 +234,12 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 
 ## TODO
 
+* [ ] Reference to an array of models
+* [ ] Support for default props
+* [ ] Reset method
 * [ ] Autoincrement IDs
 * [ ] More tests
+  * [ ] Autorun tests
 * [ ] Setup test code coverage
 * [ ] Better docs
 * [ ] Basic reference validation (throw an error if the wrong model type was assigned)

@@ -32,8 +32,8 @@ var Collection = (function () {
          * @type {IObservableArray<IModel>}
          * @memberOf Collection
          */
-        this.data = mobx_1.observable([]);
-        (_a = this.data).push.apply(_a, data.map(this.__initItem, this));
+        this.__data = mobx_1.observable([]);
+        (_a = this.__data).push.apply(_a, data.map(this.__initItem, this));
         var computedProps = {};
         for (var _i = 0, _b = this.static.types; _i < _b.length; _i++) {
             var model = _b[_i];
@@ -53,7 +53,7 @@ var Collection = (function () {
      */
     Collection.prototype.__getByType = function (type) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.data.filter(function (item) { return item.static.type === type; }); });
+        return mobx_1.computed(function () { return _this.__data.filter(function (item) { return item.static.type === type; }); });
     };
     /**
      * Get the model constructor for a given model type
@@ -105,7 +105,7 @@ var Collection = (function () {
          * @memberOf Collection
          */
         get: function () {
-            return this.data.length;
+            return this.__data.length;
         },
         enumerable: true,
         configurable: true
@@ -142,7 +142,7 @@ var Collection = (function () {
             existing.update(model);
             return existing;
         }
-        this.data.push(instance);
+        this.__data.push(instance);
         return instance;
     };
     /**
@@ -172,7 +172,7 @@ var Collection = (function () {
     Collection.prototype.find = function (type, id) {
         var _this = this;
         var modelList = id
-            ? this.data.filter(function (item) { return _this.__matchModel(item, type, id); })
+            ? this.__data.filter(function (item) { return _this.__matchModel(item, type, id); })
             : this.findAll(type);
         return modelList[0] || null;
     };
@@ -186,7 +186,24 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.findAll = function (type) {
-        return this.data.filter(function (item) { return item.static.type === type; });
+        return this.__data.filter(function (item) { return item.static.type === type; });
+    };
+    /**
+     * Remove models from the collection
+     *
+     * @private
+     * @param {Array<IModel>} models - Models to remove
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__removeModels = function (models) {
+        var _this = this;
+        models.forEach(function (model) {
+            if (model) {
+                _this.__data.remove(model);
+                model.__collection = null;
+            }
+        });
     };
     /**
      * Remove a specific model from the collection
@@ -200,7 +217,7 @@ var Collection = (function () {
      */
     Collection.prototype.remove = function (type, id) {
         var model = this.find(type, id);
-        this.data.remove(model);
+        this.__removeModels([model]);
         return model;
     };
     /**
@@ -213,12 +230,18 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.removeAll = function (type) {
-        var _this = this;
         var models = this.findAll(type);
-        models.forEach(function (model) {
-            _this.data.remove(model);
-        });
+        this.__removeModels(models);
         return models;
+    };
+    /**
+     * Reset the collection - remove all models
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.reset = function () {
+        var models = this.__data.slice();
+        this.__removeModels(models);
     };
     /**
      * Convert the collection (and containing models) into a plain JS Object in order to be serialized
@@ -228,7 +251,7 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.toJS = function () {
-        return this.data.map(function (item) { return item.toJS(); });
+        return this.__data.map(function (item) { return item.toJS(); });
     };
     return Collection;
 }());
@@ -249,5 +272,11 @@ __decorate([
 ], Collection.prototype, "add", null);
 __decorate([
     mobx_1.action
+], Collection.prototype, "___removeModels", null);
+__decorate([
+    mobx_1.action
 ], Collection.prototype, "removeAll", null);
+__decorate([
+    mobx_1.action
+], Collection.prototype, "reset", null);
 ;

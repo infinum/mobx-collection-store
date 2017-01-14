@@ -221,5 +221,9 @@ describe('MobX Collection Store', function() {
 
     fido.set('owner', jane);
     expect(fido.owner.fullName).to.equal('Jane Doe');
+
+    expect(collection.length).to.equal(4);
+    collection.reset();
+    expect(collection.length).to.equal(0);
   });
 });

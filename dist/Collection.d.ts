@@ -24,7 +24,7 @@ export declare class Collection implements ICollection {
      * @type {IObservableArray<IModel>}
      * @memberOf Collection
      */
-    private data;
+    private __data;
     /**
      * Creates an instance of Collection.
      *
@@ -139,6 +139,15 @@ export declare class Collection implements ICollection {
      */
     findAll<T extends IModel>(type: string): Array<T>;
     /**
+     * Remove models from the collection
+     *
+     * @private
+     * @param {Array<IModel>} models - Models to remove
+     *
+     * @memberOf Collection
+     */
+    private __removeModels(models);
+    /**
      * Remove a specific model from the collection
      *
      * @template T
@@ -159,6 +168,12 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     removeAll<T extends IModel>(type: string): Array<T>;
+    /**
+     * Reset the collection - remove all models
+     *
+     * @memberOf Collection
+     */
+    reset(): void;
     /**
      * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *

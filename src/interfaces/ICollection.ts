@@ -73,6 +73,13 @@ interface ICollection {
   removeAll(type: string): Array<IModel>;
 
   /**
+   * Reset the collection - remove all models
+   *
+   * @memberOf ICollection
+   */
+  reset(): void;
+
+  /**
    * Convert the collection (and containing models) into a plain JS Object in order to be serialized
    *
    * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models

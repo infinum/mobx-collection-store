@@ -68,7 +68,7 @@ class Model implements IModel {
    * @type {IObservableObject}
    * @memberOf Model
    */
-  private data: IObservableObject = observable({})
+  private __data: IObservableObject = observable({})
 
   /**
    * Creates an instance of Model.
@@ -115,7 +115,7 @@ class Model implements IModel {
    */
   private __getRef(ref: string): IComputedValue<IModel> {
     return computed(() => this.__collection
-      ?this.__collection.find(this.static.refs[ref], this.data[ref])
+      ?this.__collection.find(this.static.refs[ref], this.__data[ref])
       : null);
   }
 
@@ -129,7 +129,7 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __getProp(key: string): IComputedValue<IModel> {
-    return computed(() => this.data[key]);
+    return computed(() => this.__data[key]);
   }
 
   /**
@@ -147,20 +147,20 @@ class Model implements IModel {
     if (val instanceof Model) {
       // Make sure we have the same model in the collection
       const model = this.__collection.add(val);
-      this.data[ref] = model.__id;
+      this.__data[ref] = model.__id;
     } else if (typeof val === 'object') {
       // Add the object to collection if it's not a model yet
       const type = this.static.refs[ref];
       const model = this.__collection.add(val, type);
-      this.data[ref] = model.__id;
+      this.__data[ref] = model.__id;
     } else {
       // Add a reference to the existing model
-      this.data[ref] = val;
+      this.__data[ref] = val;
     }
 
     // Find the referenced model in collection
     return this.__collection
-      ? this.__collection.find(this.static.refs[ref], this.data[ref])
+      ? this.__collection.find(this.static.refs[ref], this.__data[ref])
       : null;
   }
 
@@ -193,7 +193,7 @@ class Model implements IModel {
         // Skip the key because it would override the internal key
         return;
       }
-      if (key !== idAttribute || !this.data[idAttribute]) {
+      if (key !== idAttribute || !this.__data[idAttribute]) {
         vals[key] = this.set(key, data[key]);
       }
     });
@@ -216,7 +216,7 @@ class Model implements IModel {
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
-      this.data[key] = value;
+      this.__data[key] = value;
     }
 
     // Add getter if it doesn't exist yet
@@ -236,7 +236,7 @@ class Model implements IModel {
    * @memberOf Model
    */
   toJS(): Object {
-    const data = toJS(this.data);
+    const data = toJS(this.__data);
     data[TYPE_PROP] = this.static.type;
     return data;
   }

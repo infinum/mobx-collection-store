@@ -40,7 +40,7 @@ var Model = (function () {
          * @type {IObservableObject}
          * @memberOf Model
          */
-        this.data = mobx_1.observable({});
+        this.__data = mobx_1.observable({});
         // No need for them to be observable
         this.__id = initialData[this.static.idAttribute];
         this.__collection = collection;
@@ -75,7 +75,7 @@ var Model = (function () {
     Model.prototype.__getRef = function (ref) {
         var _this = this;
         return mobx_1.computed(function () { return _this.__collection
-            ? _this.__collection.find(_this.static.refs[ref], _this.data[ref])
+            ? _this.__collection.find(_this.static.refs[ref], _this.__data[ref])
             : null; });
     };
     /**
@@ -89,7 +89,7 @@ var Model = (function () {
      */
     Model.prototype.__getProp = function (key) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.data[key]; });
+        return mobx_1.computed(function () { return _this.__data[key]; });
     };
     /**
      * Setter for the referenced model
@@ -106,21 +106,21 @@ var Model = (function () {
         if (val instanceof Model) {
             // Make sure we have the same model in the collection
             var model = this.__collection.add(val);
-            this.data[ref] = model.__id;
+            this.__data[ref] = model.__id;
         }
         else if (typeof val === 'object') {
             // Add the object to collection if it's not a model yet
             var type = this.static.refs[ref];
             var model = this.__collection.add(val, type);
-            this.data[ref] = model.__id;
+            this.__data[ref] = model.__id;
         }
         else {
             // Add a reference to the existing model
-            this.data[ref] = val;
+            this.__data[ref] = val;
         }
         // Find the referenced model in collection
         return this.__collection
-            ? this.__collection.find(this.static.refs[ref], this.data[ref])
+            ? this.__collection.find(this.static.refs[ref], this.__data[ref])
             : null;
     };
     Object.defineProperty(Model.prototype, "static", {
@@ -155,7 +155,7 @@ var Model = (function () {
                 // Skip the key because it would override the internal key
                 return;
             }
-            if (key !== idAttribute || !_this.data[idAttribute]) {
+            if (key !== idAttribute || !_this.__data[idAttribute]) {
                 vals[key] = _this.set(key, data[key]);
             }
         });
@@ -177,7 +177,7 @@ var Model = (function () {
             val = this.__setRef(key, value);
         }
         else {
-            this.data[key] = value;
+            this.__data[key] = value;
         }
         // Add getter if it doesn't exist yet
         if (!(key in this)) {
@@ -196,7 +196,7 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.toJS = function () {
-        var data = mobx_1.toJS(this.data);
+        var data = mobx_1.toJS(this.__data);
         data[consts_1.TYPE_PROP] = this.static.type;
         return data;
     };

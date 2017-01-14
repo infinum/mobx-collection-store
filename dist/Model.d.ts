@@ -53,7 +53,7 @@ declare class Model implements IModel {
      * @type {IObservableObject}
      * @memberOf Model
      */
-    private data;
+    private __data;
     /**
      * Creates an instance of Model.
      *
