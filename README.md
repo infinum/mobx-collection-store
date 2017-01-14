@@ -1,5 +1,7 @@
 # mobx-collection-store
 
+[![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
+
 Data store for MobX. Influenced by [Backbone Collections](http://backbonejs.org/#Collection) and [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store).
 
 ## Work in progress...
