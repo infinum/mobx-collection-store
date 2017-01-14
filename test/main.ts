@@ -12,11 +12,16 @@ describe('MobX Collection Store', function() {
 
   it('should use basic models', function() {
     class FooModel extends Model {
-      static type = 'foo'
+      static type = 'foo';
+
+      foo: number;
+      bar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel]
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
@@ -25,24 +30,30 @@ describe('MobX Collection Store', function() {
       foo: 1,
       bar: 0,
       fooBar: 0.5
-    }, 'foo');
+    }, 'foo') as FooModel;
 
     expect(collection.length).to.equal(1);
-    expect(collection['foo'].length).to.equal(1);
+    expect(collection.foo.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
-    expect(model.id).to.equal(1);
-    expect(model.attrs['foo']).to.equal(1);
-    expect(model.attrs['bar']).to.equal(0);
-    expect(model.type).to.equal('foo');
+    expect(model.__id).to.equal(1);
+    expect(model.foo).to.equal(1);
+    expect(model.bar).to.equal(0);
+    expect(model.static.type).to.equal('foo');
   });
 
   it('should be able to upsert models', function() {
     class FooModel extends Model {
-      static type = 'foo'
+      static type = 'foo';
+
+      foo: number;
+      bar: number;
+      fooBar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel]
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
@@ -51,30 +62,38 @@ describe('MobX Collection Store', function() {
       foo: 1,
       bar: 0,
       fooBar: 0.5
-    }, 'foo');
+    }, 'foo') as FooModel;
 
     const model2 = collection.add({
       id: 1,
       foo: 2,
       bar: 1,
       fooBar: 1.5
-    }, 'foo');
+    }, 'foo') as FooModel;
 
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
-    expect(model.id).to.equal(1);
-    expect(model.attrs['foo']).to.equal(2);
-    expect(model.attrs['bar']).to.equal(1);
+    expect(model.__id).to.equal(1);
+    expect(model.foo).to.equal(2);
+    expect(model.bar).to.equal(1);
   });
 
   it('should support basic relations and serializing', function() {
     class FooModel extends Model {
-      static type = 'foo'
-      static refs = {bar: 'foo', fooBar: 'foo'}
+      static type = 'foo';
+      static refs = {bar: 'foo', fooBar: 'foo'};
+
+      foo: number
+      bar: FooModel;
+      barId: number;
+      fooBar: FooModel;
+      fooBarId: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel]
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
@@ -83,36 +102,36 @@ describe('MobX Collection Store', function() {
       foo: 0,
       bar: 1,
       fooBar: 0.5
-    }, 'foo');
+    }, 'foo') as FooModel;
 
     // Check if the references are ok
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
-    expect(model.id).to.equal(1);
-    expect(model.attrs['foo']).to.equal(0);
-    expect(model.refs['bar']).to.equal(model);
-    expect(model.attrs['bar']).to.equal(1);
-    expect(model.refs['fooBar']).to.equal(null);
-    expect(model.attrs['fooBar']).to.equal(0.5);
-    expect(model.refs['bar'].refs['bar']).to.equal(model);
+    expect(model.__id).to.equal(1);
+    expect(model.foo).to.equal(0);
+    expect(model.bar).to.equal(model);
+    expect(model.barId).to.equal(1);
+    expect(model.fooBar).to.equal(null);
+    expect(model.fooBarId).to.equal(0.5);
+    expect(model.bar.bar).to.equal(model);
 
     // Clone the collection and check new references
     const collection2 = new TestCollection(collection.toJS());
-    const model2 = collection2.find('foo');
+    const model2 = collection2.find('foo') as FooModel;
     expect(collection2.length).to.equal(1);
     expect(collection2.find('foo', 1)).to.equal(model2);
-    expect(model2.id).to.equal(1);
-    expect(model2.attrs['foo']).to.equal(0);
-    expect(model2.refs['bar']).to.equal(model2);
-    expect(model2.attrs['bar']).to.equal(1);
-    expect(model2.refs['fooBar']).to.equal(null);
-    expect(model2.attrs['fooBar']).to.equal(0.5);
-    expect(model2.refs['bar'].refs['bar']).to.equal(model2);
+    expect(model2.__id).to.equal(1);
+    expect(model2.foo).to.equal(0);
+    expect(model2.bar).to.equal(model2);
+    expect(model2.barId).to.equal(1);
+    expect(model2.fooBar).to.equal(null);
+    expect(model2.fooBarId).to.equal(0.5);
+    expect(model2.bar.bar).to.equal(model2);
 
     // Check if the model is a proper clone
     model.set('fooBar', 1);
-    expect(model.attrs['fooBar']).to.equal(1);
-    expect(model2.attrs['fooBar']).to.equal(0.5);
+    expect(model.fooBarId).to.equal(1);
+    expect(model2.fooBarId).to.equal(0.5);
 
     // Try to remove a non-existing model
     collection.remove('foo', 2);
@@ -134,26 +153,30 @@ describe('MobX Collection Store', function() {
 
   it('should work for the readme example', function() {
     class Person extends Model {
-      constructor(initialData: Object, collection?: Collection) {
-        super(initialData, collection);
-        extendObservable(this, {
-          fullName: computed(() => `${this.attrs['firstName']} ${this.attrs['lastName']}`)
-        });
+      static type = 'person';
+      static refs = {spouse: 'person'};
+
+      firstName: string;
+      lastName: string;
+      spouse: Person;
+
+      @computed get fullName(): string {
+        return `${this.firstName} ${this.lastName}`;
       }
     }
 
-    Person.type = 'person';
-    Person.refs = {spouse: 'person'};
-
     class Pet extends Model {
       static type = 'pet';
-      static refs = {
-        owner: 'person'
-      }
+      static refs = {owner: 'person'}
+
+      owner: Person;
+      ownerId: number;
     }
 
     class MyCollection extends Collection {
       static types = [Person, Pet]
+      person: Array<Person>;
+      pet: Array<Pet>;
     }
 
     const collection = new MyCollection();
@@ -163,13 +186,13 @@ describe('MobX Collection Store', function() {
       spouse: 2,
       firstName: 'John',
       lastName: 'Doe'
-    }, 'person');
+    }, 'person') as Person;
 
     const fido = collection.add({
       id: 1,
       owner: john,
       name: 'Fido'
-    }, 'pet');
+    }, 'pet') as Pet;
 
     const jane = new Person({
       id: 2,
@@ -179,10 +202,10 @@ describe('MobX Collection Store', function() {
     });
     collection.add(jane);
 
-    expect(john.refs['spouse'].fullName).to.equal('Jane Doe');
-    expect(fido.refs['owner'].fullName).to.equal('John Doe');
-    expect(fido.refs['owner'].refs.spouse.fullName).to.equal('Jane Doe');
-    expect(collection['person'].length).to.equal(2);
+    expect(john.spouse.fullName).to.equal('Jane Doe');
+    expect(fido.owner.fullName).to.equal('John Doe');
+    expect(fido.owner.spouse.fullName).to.equal('Jane Doe');
+    expect(collection.person.length).to.equal(2);
     expect(collection.length).to.equal(3);
 
     fido.set('owner', {
@@ -191,11 +214,12 @@ describe('MobX Collection Store', function() {
       lastName: 'Jones'
     });
 
-    expect(fido.refs['owner'].fullName).to.equal('Dave Jones');
-    expect(collection['person'].length).to.equal(3);
+    expect(fido.owner.fullName).to.equal('Dave Jones');
+    expect(fido.ownerId).to.equal(3);
+    expect(collection.person.length).to.equal(3);
     expect(collection.length).to.equal(4);
 
     fido.set('owner', jane);
-    expect(fido.refs['owner'].fullName).to.equal('Jane Doe');
+    expect(fido.owner.fullName).to.equal('Jane Doe');
   });
 });

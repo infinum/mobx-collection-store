@@ -7,10 +7,9 @@
   "license": "MIT",
   "scripts": {
     "build": "ntsc -p ./src",
-    "build:add": "npm run build && git add dist/",
-    "test": "nyc _mocha",
-    "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x _mocha",
-    "precommit": "npm test && npm run build:add"
+    "test": "NODE_ENV=test nyc mocha",
+    "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
+    "precommit": "npm test && npm run build && git add dist/"
   },
   "repository": {
     "type": "git",
@@ -19,6 +18,7 @@
   "keywords": [
     "mobx",
     "collection",
+    "model",
     "store",
     "observable"
   ],
@@ -37,15 +37,12 @@
     "extensions": [
       ".ts"
     ],
-    "include": [
-      "lib/**/*.ts"
-    ],
     "require": [
       "ts-node/register"
     ],
     "sourceMap": true,
     "instrument": true,
-    "cache": true,
+    "cache": false,
     "reporter": [
       "lcov",
       "text",
@@ -53,8 +50,8 @@
     ]
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.35",
-    "@types/node": "^6.0.55",
+    "@types/mocha": "^2.2.37",
+    "@types/node": "^7.0.0",
     "chai": "^3.5.0",
     "husky": "^0.12.0",
     "mobx": "^2.7.0",
@@ -63,7 +60,7 @@
     "ntypescript": "^1.201609302242.1",
     "nyc": "^10.0.0",
     "ts-node": "^2.0.0",
-    "typescript": "^2.1.4"
+    "typescript": "^2.1.5"
   },
   "peerDependencies": {
     "mobx": "^2.7.0 || ^3"

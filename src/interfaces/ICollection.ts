@@ -1,9 +1,19 @@
 import IModel from './IModel';
 import IModelConstructor from './IModelConstructor';
 
+/**
+ * MobX Collection interface
+ *
+ * @interface ICollection
+ */
 interface ICollection {
 
-  /** Number of unique models in the collection */
+  /**
+   * Number of unique models in the collection
+   *
+   * @type {number}
+   * @memberOf ICollection
+   */
   length: number;
 
   /**
@@ -11,7 +21,9 @@ interface ICollection {
    *
    * @argument {Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported
    * @argument {string} [type] - The model type to be imported (not relevant if the model is an instance of Model)
-   * @returns {IModel|IModel[]} Model instance(s)
+   * @returns {IModel|Array<IModel>} Model instance(s)
+   *
+   * @memberOf ICollection
    */
   add(model: Object, type?: string): IModel;
   add(model: IModel): IModel;
@@ -24,6 +36,8 @@ interface ICollection {
    * @argument {string} type - Type of the model that will be searched for
    * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be returned)
    * @returns {IModel} Found model
+   *
+   * @memberOf ICollection
    */
   find(type: string, id?: string | number): IModel;
 
@@ -32,6 +46,8 @@ interface ICollection {
    *
    * @argument {string} type - Type of the models that will be searched for
    * @returns {IModel[]} Found models
+   *
+   * @memberOf ICollection
    */
   findAll(type: string): Array<IModel>;
 
@@ -41,6 +57,8 @@ interface ICollection {
    * @argument {string} type - Type of the model that will be removed
    * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
    * @returns {IModel} Removed model
+   *
+   * @memberOf ICollection
    */
   remove(type: string, id?: string | number): IModel;
 
@@ -49,13 +67,17 @@ interface ICollection {
    *
    * @argument {string} type - Type of the models that will be removed
    * @returns {IModel[]} Removed models
+   *
+   * @memberOf ICollection
    */
   removeAll(type: string): Array<IModel>;
 
   /**
    * Convert the collection (and containing models) into a plain JS Object in order to be serialized
    *
-   * @returns {Object} Plain JS Object representing the collection and all its models
+   * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models
+   *
+   * @memberOf ICollection
    */
   toJS(): Array<Object>;
 }

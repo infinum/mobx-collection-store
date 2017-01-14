@@ -27,7 +27,7 @@ const jane = collection.add({
 console.log(collection.length); // 2
 
 john.set('lastName', 'Williams');
-console.log(john.attrs.lastName); // 'Williams'
+console.log(john.lastName); // 'Williams'
 ```
 ## Installation
 
@@ -47,7 +47,7 @@ Since this lib was written using TypeScript, it also exposes TS typings. If you'
 
 ### Usage
 
-Since the lib is exposed as a set of `CommonJS` modules, you'll need something like [`webpack`](https://webpack.js.org/) or `browserify` in order to use it in the browser.
+Since the lib is exposed as a set of `CommonJS` modules, you'll need something like [`webpack`](https://webpack.js.org/concepts/) or `browserify` in order to use it in the browser.
 
 Don't forget to minify your code before production for better performance!
 
@@ -63,7 +63,7 @@ import {Model, Collection} from 'mobx-collection-store';
 
 class Person extends Model {
 
-  // The ES5/ES2015 way to add a computed property
+  // The ES2015 way to add a computed property
   // This is not a requirement for the library, but it's a very useful mobx feature
   constructor(...args) {
     super(...args);
@@ -110,9 +110,9 @@ const jane = new Person({
 });
 collection.add(jane); // No need for the type argument since we're passing a real model
 
-console.log(john.refs.spouse.fullName); // 'Jane Doe'
-console.log(fido.refs.owner.fullName); // 'John Doe'
-console.log(fido.refs.owner.refs.spouse.fullName); // 'Jane Doe'
+console.log(john.spouse.fullName); // 'Jane Doe'
+console.log(fido.owner.fullName); // 'John Doe'
+console.log(fido.owner.spouse.fullName); // 'Jane Doe'
 console.log(collection.person.length); // 2
 console.log(collection.length); // 3
 
@@ -123,12 +123,87 @@ const dave = fido.set('owner', {
   lastName: 'Jones'
 });
 
-console.log(fido.refs.owner.fullName); // 'Dave Jones'
+console.log(fido.owner.fullName); // 'Dave Jones'
+console.log(fido.ownerId); // 3
 console.log(collection.person.length); // 3
 console.log(collection.length); // 4
 
 fido.set('owner', jane);
-console.log(fido.refs.owner.fullName); // 'Jane Doe'
+console.log(fido.owner.fullName); // 'Jane Doe'
+```
+
+### Relationships (TypeScript version)
+
+```typescript
+class Person extends Model {
+  static type = 'person';
+  static refs = {spouse: 'person'};
+
+  firstName: string;
+  lastName: string;
+  spouse: Person;
+
+  @computed get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+
+class Pet extends Model {
+  static type = 'pet';
+  static refs = {owner: 'person'}
+
+  owner: Person;
+  ownerId: number;
+}
+
+class MyCollection extends Collection {
+  static types = [Person, Pet]
+  person: Array<Person>;
+  pet: Array<Pet>;
+}
+
+const collection = new MyCollection();
+
+const john = collection.add({
+  id: 1,
+  spouse: 2,
+  firstName: 'John',
+  lastName: 'Doe'
+}, 'person') as Person;
+
+const fido = collection.add({
+  id: 1,
+  owner: john,
+  name: 'Fido'
+}, 'pet') as Pet;
+
+const jane = new Person({
+  id: 2,
+  spouse: 1,
+  firstName: 'Jane',
+  lastName: 'Doe'
+});
+collection.add(jane);
+
+console.log(john.spouse.fullName); // 'Jane Doe'
+console.log(fido.owner.fullName); // 'John Doe'
+console.log(fido.owner.spouse.fullName); // 'Jane Doe'
+console.log(collection.person.length); // 2
+console.log(collection.length); // 3
+
+fido.set('owner', {
+  id: 3,
+  firstName: 'Dave',
+  lastName: 'Jones'
+});
+
+console.log(fido.owner.fullName); // 'Dave Jones'
+console.log(fido.ownerId); // 3
+console.log(collection.person.length); // 3
+console.log(collection.length); // 4
+
+fido.set('owner', jane);
+console.log(fido.owner.fullName); // 'Jane Doe'
 ```
 
 ## Collection
@@ -146,11 +221,9 @@ console.log(fido.refs.owner.fullName); // 'Jane Doe'
 ## Model
 
 * `constructor([serializedData])` - The constructor can be provided with the serialized data from `toJS` in order to deserialize
-* `id` - ID of the model
-* `idAttribute` - Property name of the unique identifier in your data (default is `id`)
-* `type` - Type of the model
-* `attrs` - Object with the model attributes
-* `refs` - Object with references to other models
+* `__id` - ID of the model
+* `static.idAttribute` - Property name of the unique identifier in your data (default is `id`)
+* `static.type` - Type of the model
 * `update(data)` - Update the model with new data (object)
 * `set(prop, value)` - Set a property to the specified value
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
@@ -158,9 +231,6 @@ console.log(fido.refs.owner.fullName); // 'Jane Doe'
 ## TODO
 
 * [ ] Autoincrement IDs
-* [ ] Change the `attrs` and `refs` behaviour?
-  * Get rid of them (name collision with internal props/methods)?
-  * Move reference IDs to `refs` and references to `attrs`?
 * [ ] More tests
 * [ ] Setup test code coverage
 * [ ] Better docs
