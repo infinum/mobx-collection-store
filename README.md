@@ -1,6 +1,8 @@
 # mobx-collection-store
 
 [![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
+[![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
+[![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
 
 Data store for MobX. Influenced by [Backbone Collections](http://backbonejs.org/#Collection) and [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store).
 
@@ -237,3 +239,9 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * [ ] Setup test code coverage
 * [ ] Better docs
 * [ ] Basic reference validation (throw an error if the wrong model type was assigned)
+
+## License
+
+The MIT License
+
+![](https://assets.infinum.co/assets/brand-logo-9e079bfa1875e17c8c1f71d1fee49cf0.svg) © 2016 Infinum Inc.
