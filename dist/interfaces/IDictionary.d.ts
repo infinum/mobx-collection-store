@@ -1,4 +1,4 @@
 interface IDictionary {
-    [name: string]: any;
+    [key: string]: any;
 }
 export default IDictionary;

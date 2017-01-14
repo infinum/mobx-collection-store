@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var mobx_1 = require("mobx");
+var assign = require('object-assign');
 var consts_1 = require("./consts");
 var __reservedKeys = [
     'static', 'set', 'update', 'toJS', '__id', '__collection'
@@ -41,10 +42,11 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__data = mobx_1.observable({});
+        var data = assign({}, this.static.defaults, initialData);
         // No need for them to be observable
-        this.__id = initialData[this.static.idAttribute];
+        this.__id = data[this.static.idAttribute];
         this.__collection = collection;
-        this.update(initialData);
+        this.update(data);
         this.__initRefGetters();
     }
     /**
@@ -219,6 +221,14 @@ Model.idAttribute = 'id';
  * @memberOf Model
  */
 Model.refs = {};
+/**
+ * Default values of model props
+ *
+ * @static
+ * @type {IDictionary}
+ * @memberOf Model
+ */
+Model.defaults = {};
 /**
  * Type of the model
  *

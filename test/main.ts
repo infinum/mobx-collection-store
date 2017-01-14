@@ -226,4 +226,41 @@ describe('MobX Collection Store', function() {
     collection.reset();
     expect(collection.length).to.equal(0);
   });
+
+  it('should support default props', function() {
+    class FooModel extends Model {
+      static type = 'foo';
+      static defaults = {
+        foo: 4
+      };
+
+      foo: number;
+      bar: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+
+    const model1 = collection.add<FooModel>({
+      id: 1,
+      foo: 1,
+      bar: 0,
+      fooBar: 0.5
+    }, 'foo');
+
+    expect(model1.foo).to.equal(1);
+
+    const model2 = collection.add<FooModel>({
+      id: 2,
+      bar: 0,
+      fooBar: 0.5
+    }, 'foo');
+
+    expect(model2.foo).to.equal(4);
+  });
 });

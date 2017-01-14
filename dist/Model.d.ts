@@ -1,6 +1,7 @@
 import IReferences from './interfaces/IReferences';
 import IModel from './interfaces/IModel';
 import ICollection from './interfaces/ICollection';
+import IDictionary from './interfaces/IDictionary';
 /**
  * MobX Collection Model class
  *
@@ -38,6 +39,14 @@ declare class Model implements IModel {
      * @memberOf Model
      */
     static refs: IReferences;
+    /**
+     * Default values of model props
+     *
+     * @static
+     * @type {IDictionary}
+     * @memberOf Model
+     */
+    static defaults: IDictionary;
     /**
      * Type of the model
      *

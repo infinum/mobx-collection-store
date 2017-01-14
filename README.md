@@ -220,6 +220,7 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `findAll(type)` - Find all models of the specified type
 * `remove(type, [id])` - Remove a specific model
 * `removeAll(type)` - Remove all models of the specified type
+* `reset()` - Remove all models from the collection
 * `toJS()` - Convert the collection (and containing models) into a plain JS Object in order to be serialized
 
 ## Model
@@ -228,6 +229,7 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `__id` - ID of the model
 * `static.idAttribute` - Property name of the unique identifier in your data (default is `id`)
 * `static.type` - Type of the model
+* `static.defaults` - An object with default model properties
 * `update(data)` - Update the model with new data (object)
 * `set(prop, value)` - Set a property to the specified value
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
@@ -235,8 +237,8 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 ## TODO
 
 * [ ] Reference to an array of models
-* [ ] Support for default props
-* [ ] Reset method
+* [x] Support for default props
+* [x] Reset method
 * [ ] Autoincrement IDs
 * [ ] More tests
   * [ ] Autorun tests

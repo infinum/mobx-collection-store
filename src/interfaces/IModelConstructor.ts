@@ -1,5 +1,6 @@
 import IModel from './IModel';
 import ICollection from './ICollection';
+import IDictionary from './IDictionary';
 
 /**
  * MobX Collection Model constructor interface
@@ -23,6 +24,14 @@ interface IModelConstructor {
    * @memberOf IModelConstructor
    */
   idAttribute: string;
+
+  /**
+   * Default values of model props
+   *
+   * @type {IDictionary}
+   * @memberOf IModelConstructor
+   */
+  defaults: IDictionary;
 
   new (initialData: Object, collection?: ICollection): IModel;
 }

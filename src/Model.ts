@@ -1,9 +1,11 @@
 import {observable, extendObservable, toJS, action, computed, IComputedValue, IObservableObject} from 'mobx';
+const assign = require('object-assign');
 
 import IReferences from './interfaces/IReferences';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
+import IDictionary from './interfaces/IDictionary';
 import {TYPE_PROP, DEFAULT_TYPE} from './consts';
 
 const __reservedKeys: Array<string> = [
@@ -53,6 +55,15 @@ class Model implements IModel {
   static refs: IReferences = {}
 
   /**
+   * Default values of model props
+   *
+   * @static
+   * @type {IDictionary}
+   * @memberOf Model
+   */
+  static defaults: IDictionary = {};
+
+  /**
    * Type of the model
    *
    * @static
@@ -80,11 +91,13 @@ class Model implements IModel {
    */
   constructor(initialData: Object, collection?: ICollection) {
 
+    const data = assign({}, this.static.defaults, initialData);
+
     // No need for them to be observable
-    this.__id = initialData[this.static.idAttribute];
+    this.__id = data[this.static.idAttribute];
     this.__collection = collection;
 
-    this.update(initialData);
+    this.update(data);
     this.__initRefGetters();
   }
 

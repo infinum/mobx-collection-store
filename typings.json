@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "object-assign": "registry:dt/object-assign#4.0.1+20161119044246"
+  }
+}
