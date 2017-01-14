@@ -7,9 +7,13 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import {TYPE_PROP, DEFAULT_TYPE} from './consts';
+import {mapItems} from './utils';
 
 const __reservedKeys: Array<string> = [
-  'static', 'set', 'update', 'toJS', '__id', '__collection'
+  'static', 'set', 'update', 'toJS',
+  '__id', '__collection',
+  '__data', '__getProp', '__initializedProps',
+  '__getRef', '__setRef', '__initRefGetters'
 ];
 
 /**
@@ -35,6 +39,8 @@ class Model implements IModel {
    * @memberOf Model
    */
   __collection?: ICollection = null
+
+  private __initializedProps: Array<string> = [];
 
   /**
    * The attribute that should be used as the unique identifier
@@ -90,15 +96,14 @@ class Model implements IModel {
    * @memberOf Model
    */
   constructor(initialData: Object, collection?: ICollection) {
-
     const data = assign({}, this.static.defaults, initialData);
 
     // No need for them to be observable
     this.__id = data[this.static.idAttribute];
     this.__collection = collection;
 
-    this.update(data);
     this.__initRefGetters();
+    this.update(data);
   }
 
   /**
@@ -113,6 +118,8 @@ class Model implements IModel {
     const refKeys: Array<string> = Object.keys(this.static.refs);
     for (const ref of refKeys) {
       refGetters[ref] = this.__getRef(ref);
+      refGetters[`${ref}Id`] = this.__getProp(ref);
+      this.__initializedProps.push(ref, `${ref}Id`);
     }
     extendObservable(this, refGetters);
   }
@@ -126,9 +133,9 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  private __getRef(ref: string): IComputedValue<IModel> {
+  private __getRef(ref: string): IComputedValue<IModel|Array<IModel>> {
     return computed(() => this.__collection
-      ?this.__collection.find(this.static.refs[ref], this.__data[ref])
+      ? mapItems<IModel>(this.__data[ref], (refId) => this.__collection.find(this.static.refs[ref], refId))
       : null);
   }
 
@@ -151,29 +158,29 @@ class Model implements IModel {
    *
    * @private
    * @argument {string} ref - Reference name
-   * @argument {IModel|Object|string|number} val - The referenced mode
+   * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
    * @returns {IModel} Referenced model
    *
    * @memberOf Model
    */
-  @action private __setRef(ref: string, val: IModel | string | number | Object): IModel {
-    if (val instanceof Model) {
-      // Make sure we have the same model in the collection
-      const model = this.__collection.add(val);
-      this.__data[ref] = model.__id;
-    } else if (typeof val === 'object') {
-      // Add the object to collection if it's not a model yet
-      const type = this.static.refs[ref];
-      const model = this.__collection.add(val, type);
-      this.__data[ref] = model.__id;
-    } else {
-      // Add a reference to the existing model
-      this.__data[ref] = val;
-    }
+  @action private __setRef(ref: string, val: IModel|Array<IModel>|string|number|Object|Array<Object>): IModel|Array<IModel> {
+    const type = this.static.refs[ref];
+    const refs = mapItems<number|string>(val, (item) => {
+      if (item instanceof Model) {
+        return item.__id;
+      } else if (typeof item === 'object') {
+        const model = this.__collection.add(item, type);
+        return model.__id;
+      } else {
+        return item;
+      }
+    });
+
+    this.__data[ref] = refs;
 
     // Find the referenced model in collection
     return this.__collection
-      ? this.__collection.find(this.static.refs[ref], this.__data[ref])
+      ? mapItems<IModel>(this.__data[ref], (refId) => this.__collection.find(this.static.refs[ref], refId))
       : null;
   }
 
@@ -197,7 +204,12 @@ class Model implements IModel {
    * @memberOf Model
    */
   @action update(data: IModel | Object): Object {
+    if (data === this) {
+      // Nothing to do - don't update with itself
+      return this;
+    }
     const vals = {};
+    // const dataObj = data instanceof Model ? data.toJS() : data;
     const keys = Object.keys(data);
     const idAttribute = this.static.idAttribute;
 
@@ -223,8 +235,8 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  set<T>(key: string, value: T): T|IModel {
-    let val: T|IModel = value;
+  set<T>(key: string, value: T): T|IModel|Array<IModel> {
+    let val: T|IModel|Array<IModel> = value;
     const isRef: boolean = key in this.static.refs;
     if (isRef) {
       val = this.__setRef(key, value);
@@ -233,9 +245,10 @@ class Model implements IModel {
     }
 
     // Add getter if it doesn't exist yet
-    if (!(key in this)) {
+    if (this.__initializedProps.indexOf(key) === -1) {
+      this.__initializedProps.push(key);
       extendObservable(this, {
-        [isRef ? `${key}Id` : key]: this.__getProp(key)
+        [key]: this.__getProp(key)
       });
     }
     return val;

@@ -23,6 +23,7 @@ declare class Model implements IModel {
      * @memberOf Model
      */
     __collection?: ICollection;
+    private __initializedProps;
     /**
      * The attribute that should be used as the unique identifier
      *
@@ -106,7 +107,7 @@ declare class Model implements IModel {
      *
      * @private
      * @argument {string} ref - Reference name
-     * @argument {IModel|Object|string|number} val - The referenced mode
+     * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
      * @returns {IModel} Referenced model
      *
      * @memberOf Model
@@ -138,7 +139,7 @@ declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    set<T>(key: string, value: T): T | IModel;
+    set<T>(key: string, value: T): T | IModel | Array<IModel>;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *

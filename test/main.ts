@@ -34,7 +34,7 @@ describe('MobX Collection Store', function() {
 
     expect(collection.length).to.equal(1);
     expect(collection.foo.length).to.equal(1);
-    expect(collection.find('foo', 1)).to.equal(model);
+    expect(collection.find<FooModel>('foo', 1)).to.equal(model);
     expect(model.__id).to.equal(1);
     expect(model.foo).to.equal(1);
     expect(model.bar).to.equal(0);
@@ -262,5 +262,49 @@ describe('MobX Collection Store', function() {
     }, 'foo');
 
     expect(model2.foo).to.equal(4);
+  });
+
+    it('should support array refereces', function() {
+    class FooModel extends Model {
+      static type = 'foo';
+
+      static refs = {fooBar: 'foo'};
+
+      foo: number;
+      bar: number;
+      fooBar: FooModel|Array<FooModel>;
+      fooBarId: number|Array<number>;
+    }
+
+    class TestCollection extends Collection {
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+
+    const models = collection.add<FooModel>([{
+      id: 1,
+      foo: 1,
+    }, {
+      id: 2,
+      foo: 2
+    }, {
+      id: 3,
+      foo: 3
+    }, {
+      id: 4,
+      foo: 4
+    }] as Array<Object>, 'foo');
+
+    const first = models.shift();
+    expect(collection.length).to.equal(4);
+
+    first.set('fooBar', models);
+    expect(collection.length).to.equal(4);
+    expect(first.fooBar).to.have.length(3);
+    expect(first.fooBar[1].foo).to.equal(3);
+    expect(JSON.stringify(first.fooBarId)).to.equal(JSON.stringify(models.map((model) => model.__id)));
   });
 });

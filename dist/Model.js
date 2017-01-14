@@ -8,8 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var mobx_1 = require("mobx");
 var assign = require('object-assign');
 var consts_1 = require("./consts");
+var utils_1 = require("./utils");
 var __reservedKeys = [
-    'static', 'set', 'update', 'toJS', '__id', '__collection'
+    'static', 'set', 'update', 'toJS',
+    '__id', '__collection',
+    '__data', '__getProp', '__initializedProps',
+    '__getRef', '__setRef', '__initRefGetters'
 ];
 /**
  * MobX Collection Model class
@@ -34,6 +38,7 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__collection = null;
+        this.__initializedProps = [];
         /**
          * Internal data storage
          *
@@ -46,8 +51,8 @@ var Model = (function () {
         // No need for them to be observable
         this.__id = data[this.static.idAttribute];
         this.__collection = collection;
-        this.update(data);
         this.__initRefGetters();
+        this.update(data);
     }
     /**
      * Initialize the reference getters based on the static refs property
@@ -62,6 +67,8 @@ var Model = (function () {
         for (var _i = 0, refKeys_1 = refKeys; _i < refKeys_1.length; _i++) {
             var ref = refKeys_1[_i];
             refGetters[ref] = this.__getRef(ref);
+            refGetters[ref + "Id"] = this.__getProp(ref);
+            this.__initializedProps.push(ref, ref + "Id");
         }
         mobx_1.extendObservable(this, refGetters);
     };
@@ -77,7 +84,7 @@ var Model = (function () {
     Model.prototype.__getRef = function (ref) {
         var _this = this;
         return mobx_1.computed(function () { return _this.__collection
-            ? _this.__collection.find(_this.static.refs[ref], _this.__data[ref])
+            ? utils_1.mapItems(_this.__data[ref], function (refId) { return _this.__collection.find(_this.static.refs[ref], refId); })
             : null; });
     };
     /**
@@ -99,30 +106,30 @@ var Model = (function () {
      *
      * @private
      * @argument {string} ref - Reference name
-     * @argument {IModel|Object|string|number} val - The referenced mode
+     * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
      * @returns {IModel} Referenced model
      *
      * @memberOf Model
      */
     Model.prototype.__setRef = function (ref, val) {
-        if (val instanceof Model) {
-            // Make sure we have the same model in the collection
-            var model = this.__collection.add(val);
-            this.__data[ref] = model.__id;
-        }
-        else if (typeof val === 'object') {
-            // Add the object to collection if it's not a model yet
-            var type = this.static.refs[ref];
-            var model = this.__collection.add(val, type);
-            this.__data[ref] = model.__id;
-        }
-        else {
-            // Add a reference to the existing model
-            this.__data[ref] = val;
-        }
+        var _this = this;
+        var type = this.static.refs[ref];
+        var refs = utils_1.mapItems(val, function (item) {
+            if (item instanceof Model) {
+                return item.__id;
+            }
+            else if (typeof item === 'object') {
+                var model = _this.__collection.add(item, type);
+                return model.__id;
+            }
+            else {
+                return item;
+            }
+        });
+        this.__data[ref] = refs;
         // Find the referenced model in collection
         return this.__collection
-            ? this.__collection.find(this.static.refs[ref], this.__data[ref])
+            ? utils_1.mapItems(this.__data[ref], function (refId) { return _this.__collection.find(_this.static.refs[ref], refId); })
             : null;
     };
     Object.defineProperty(Model.prototype, "static", {
@@ -149,7 +156,12 @@ var Model = (function () {
      */
     Model.prototype.update = function (data) {
         var _this = this;
+        if (data === this) {
+            // Nothing to do - don't update with itself
+            return this;
+        }
         var vals = {};
+        // const dataObj = data instanceof Model ? data.toJS() : data;
         var keys = Object.keys(data);
         var idAttribute = this.static.idAttribute;
         keys.forEach(function (key) {
@@ -182,9 +194,10 @@ var Model = (function () {
             this.__data[key] = value;
         }
         // Add getter if it doesn't exist yet
-        if (!(key in this)) {
+        if (this.__initializedProps.indexOf(key) === -1) {
+            this.__initializedProps.push(key);
             mobx_1.extendObservable(this, (_a = {},
-                _a[isRef ? key + "Id" : key] = this.__getProp(key),
+                _a[key] = this.__getProp(key),
                 _a));
         }
         return val;

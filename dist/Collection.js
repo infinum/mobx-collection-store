@@ -122,9 +122,8 @@ var Collection = (function () {
      */
     Collection.prototype.__getModelInstance = function (model, type) {
         if (model instanceof Model_1.Model) {
-            var modelInstance = model;
-            modelInstance.__collection = this;
-            return modelInstance;
+            model.__collection = this;
+            return model;
         }
         else {
             var TypeModel = this.__getModel(type);

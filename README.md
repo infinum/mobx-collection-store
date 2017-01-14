@@ -234,9 +234,11 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `set(prop, value)` - Set a property to the specified value
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
 
+Note: If a field is an array of references, dont' modify it directly - use `set` method instead.
+
 ## TODO
 
-* [ ] Reference to an array of models
+* [x] Reference to an array of models
 * [x] Support for default props
 * [x] Reset method
 * [ ] Autoincrement IDs

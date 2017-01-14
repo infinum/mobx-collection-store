@@ -127,9 +127,8 @@ export class Collection implements ICollection {
    */
   private __getModelInstance(model: IModel|Object, type?: string): IModel {
     if (model instanceof Model) {
-      const modelInstance = model;
-      modelInstance.__collection = this;
-      return modelInstance;
+      model.__collection = this;
+      return model;
     } else {
       const TypeModel: IModelConstructor = this.__getModel(type);
       return new TypeModel(model, this);
@@ -146,10 +145,10 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  add<T extends IModel>(model: Object, type?: string): T;
+  add<T extends IModel>(model: Array<IModel>): Array<T>;
+  add<T extends IModel>(model: IModel): T;
   add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
-  add(model: IModel): IModel;
-  add(model: Array<IModel>): Array<IModel>;
+  add<T extends IModel>(model: Object, type?: string): T;
   @action add(model: any, type?: string) {
     if (model instanceof Array) {
       return model.map((item) => this.add(item, type));

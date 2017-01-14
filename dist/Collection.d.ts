@@ -101,10 +101,10 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    add<T extends IModel>(model: Object, type?: string): T;
+    add<T extends IModel>(model: Array<IModel>): Array<T>;
+    add<T extends IModel>(model: IModel): T;
     add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
-    add(model: IModel): IModel;
-    add(model: Array<IModel>): Array<IModel>;
+    add<T extends IModel>(model: Object, type?: string): T;
     /**
      * Match a model to defined parameters
      *
