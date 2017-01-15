@@ -38,6 +38,13 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__collection = null;
+        /**
+         * List of properties that were initialized on the model
+         *
+         * @private
+         * @type {Array<string>}
+         * @memberOf Model
+         */
         this.__initializedProps = [];
         /**
          * Internal data storage
@@ -84,7 +91,7 @@ var Model = (function () {
     Model.prototype.__getRef = function (ref) {
         var _this = this;
         return mobx_1.computed(function () { return _this.__collection
-            ? utils_1.mapItems(_this.__data[ref], function (refId) { return _this.__collection.find(_this.static.refs[ref], refId); })
+            ? _this.__getReferencedModels(ref)
             : null; });
     };
     /**
@@ -101,36 +108,59 @@ var Model = (function () {
         return mobx_1.computed(function () { return _this.__data[key]; });
     };
     /**
+     * Get the reference id
+     *
+     * @private
+     * @template T
+     * @param {string} type - type fo the reference
+     * @param {T} item - model reference
+     * @returns {number|string}
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__getValueRefs = function (type, item) {
+        if (typeof item === 'object') {
+            var model = this.__collection.add(item, type);
+            return model.__id;
+        }
+        else {
+            return item;
+        }
+    };
+    /**
+     * Get the model(s) referenced by a key
+     *
+     * @private
+     * @param {string} key - the reference key
+     * @returns {(IModel|Array<IModel>)}
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__getReferencedModels = function (key) {
+        var _this = this;
+        return utils_1.mapItems(this.__data[key], function (refId) {
+            return _this.__collection.find(_this.static.refs[key], refId);
+        });
+    };
+    /**
      * Setter for the referenced model
      * If the value is an object it will be upserted into the collection
      *
      * @private
      * @argument {string} ref - Reference name
-     * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
+     * @argument {T} val - The referenced mode
      * @returns {IModel} Referenced model
      *
      * @memberOf Model
      */
     Model.prototype.__setRef = function (ref, val) {
-        var _this = this;
         var type = this.static.refs[ref];
-        var refs = utils_1.mapItems(val, function (item) {
-            if (item instanceof Model) {
-                return item.__id;
-            }
-            else if (typeof item === 'object') {
-                var model = _this.__collection.add(item, type);
-                return model.__id;
-            }
-            else {
-                return item;
-            }
-        });
-        this.__data[ref] = refs;
-        // Find the referenced model in collection
-        return this.__collection
-            ? utils_1.mapItems(this.__data[ref], function (refId) { return _this.__collection.find(_this.static.refs[ref], refId); })
-            : null;
+        var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
+        // TODO: Could be optimised based on __initializedProps?
+        mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
+        // Find the referenced model(s) in collection
+        return this.__collection ? this.__getReferencedModels(ref) : null;
+        var _a;
     };
     Object.defineProperty(Model.prototype, "static", {
         /**
@@ -157,17 +187,14 @@ var Model = (function () {
     Model.prototype.update = function (data) {
         var _this = this;
         if (data === this) {
-            // Nothing to do - don't update with itself
-            return this;
+            return this; // Nothing to do - don't update with itself
         }
         var vals = {};
-        // const dataObj = data instanceof Model ? data.toJS() : data;
         var keys = Object.keys(data);
         var idAttribute = this.static.idAttribute;
         keys.forEach(function (key) {
             if (__reservedKeys.indexOf(key) !== -1) {
-                // Skip the key because it would override the internal key
-                return;
+                return; // Skip the key because it would override the internal key
             }
             if (key !== idAttribute || !_this.__data[idAttribute]) {
                 vals[key] = _this.set(key, data[key]);
@@ -191,17 +218,16 @@ var Model = (function () {
             val = this.__setRef(key, value);
         }
         else {
-            this.__data[key] = value;
+            // TODO: Could be optimised based on __initializedProps?
+            mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
         }
         // Add getter if it doesn't exist yet
         if (this.__initializedProps.indexOf(key) === -1) {
             this.__initializedProps.push(key);
-            mobx_1.extendObservable(this, (_a = {},
-                _a[key] = this.__getProp(key),
-                _a));
+            mobx_1.extendObservable(this, (_b = {}, _b[key] = this.__getProp(key), _b));
         }
         return val;
-        var _a;
+        var _a, _b;
     };
     /**
      * Convert the model into a plain JS Object in order to be serialized
@@ -252,8 +278,8 @@ Model.defaults = {};
 Model.type = consts_1.DEFAULT_TYPE;
 __decorate([
     mobx_1.action
-], Model.prototype, "___setRef", null);
+], Model.prototype, "update", null);
 __decorate([
     mobx_1.action
-], Model.prototype, "update", null);
+], Model.prototype, "set", null);
 ;

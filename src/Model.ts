@@ -40,6 +40,13 @@ class Model implements IModel {
    */
   __collection?: ICollection = null
 
+  /**
+   * List of properties that were initialized on the model
+   *
+   * @private
+   * @type {Array<string>}
+   * @memberOf Model
+   */
   private __initializedProps: Array<string> = [];
 
   /**
@@ -135,7 +142,7 @@ class Model implements IModel {
    */
   private __getRef(ref: string): IComputedValue<IModel|Array<IModel>> {
     return computed(() => this.__collection
-      ? mapItems<IModel>(this.__data[ref], (refId) => this.__collection.find(this.static.refs[ref], refId))
+      ? this.__getReferencedModels(ref)
       : null);
   }
 
@@ -153,35 +160,60 @@ class Model implements IModel {
   }
 
   /**
+   * Get the reference id
+   *
+   * @private
+   * @template T
+   * @param {string} type - type fo the reference
+   * @param {T} item - model reference
+   * @returns {number|string}
+   *
+   * @memberOf Model
+   */
+  private __getValueRefs<T>(type: string, item: T): number|string {
+    if (typeof item === 'object') {
+      const model = this.__collection.add(item, type);
+      return model.__id;
+    } else {
+      return item;
+    }
+  }
+
+  /**
+   * Get the model(s) referenced by a key
+   *
+   * @private
+   * @param {string} key - the reference key
+   * @returns {(IModel|Array<IModel>)}
+   *
+   * @memberOf Model
+   */
+  private __getReferencedModels(key: string) : IModel|Array<IModel> {
+    return mapItems<IModel>(this.__data[key], (refId) => {
+      return this.__collection.find(this.static.refs[key], refId);
+    });
+  }
+
+  /**
    * Setter for the referenced model
    * If the value is an object it will be upserted into the collection
    *
    * @private
    * @argument {string} ref - Reference name
-   * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
+   * @argument {T} val - The referenced mode
    * @returns {IModel} Referenced model
    *
    * @memberOf Model
    */
-  @action private __setRef(ref: string, val: IModel|Array<IModel>|string|number|Object|Array<Object>): IModel|Array<IModel> {
+  private __setRef<T>(ref: string, val: T|Array<T>): IModel|Array<IModel> {
     const type = this.static.refs[ref];
-    const refs = mapItems<number|string>(val, (item) => {
-      if (item instanceof Model) {
-        return item.__id;
-      } else if (typeof item === 'object') {
-        const model = this.__collection.add(item, type);
-        return model.__id;
-      } else {
-        return item;
-      }
-    });
+    const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
 
-    this.__data[ref] = refs;
+    // TODO: Could be optimised based on __initializedProps?
+    extendObservable(this.__data, {[ref]: refs});
 
-    // Find the referenced model in collection
-    return this.__collection
-      ? mapItems<IModel>(this.__data[ref], (refId) => this.__collection.find(this.static.refs[ref], refId))
-      : null;
+    // Find the referenced model(s) in collection
+    return this.__collection ? this.__getReferencedModels(ref) : null;
   }
 
   /**
@@ -205,18 +237,15 @@ class Model implements IModel {
    */
   @action update(data: IModel | Object): Object {
     if (data === this) {
-      // Nothing to do - don't update with itself
-      return this;
+      return this; // Nothing to do - don't update with itself
     }
     const vals = {};
-    // const dataObj = data instanceof Model ? data.toJS() : data;
     const keys = Object.keys(data);
     const idAttribute = this.static.idAttribute;
 
     keys.forEach((key) => {
       if (__reservedKeys.indexOf(key) !== -1) {
-        // Skip the key because it would override the internal key
-        return;
+        return; // Skip the key because it would override the internal key
       }
       if (key !== idAttribute || !this.__data[idAttribute]) {
         vals[key] = this.set(key, data[key]);
@@ -235,21 +264,20 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  set<T>(key: string, value: T): T|IModel|Array<IModel> {
+  @action set<T>(key: string, value: T): T|IModel|Array<IModel> {
     let val: T|IModel|Array<IModel> = value;
     const isRef: boolean = key in this.static.refs;
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
-      this.__data[key] = value;
+      // TODO: Could be optimised based on __initializedProps?
+      extendObservable(this.__data, {[key]: value});
     }
 
     // Add getter if it doesn't exist yet
     if (this.__initializedProps.indexOf(key) === -1) {
       this.__initializedProps.push(key);
-      extendObservable(this, {
-        [key]: this.__getProp(key)
-      });
+      extendObservable(this, {[key]: this.__getProp(key)});
     }
     return val;
   }

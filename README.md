@@ -243,7 +243,7 @@ Note: If a field is an array of references, dont' modify it directly - use `set`
 * [x] Reset method
 * [ ] Autoincrement IDs
 * [ ] More tests
-  * [ ] Autorun tests
+  * [x] Autorun tests
 * [ ] Setup test code coverage
 * [ ] Better docs
 * [ ] Basic reference validation (throw an error if the wrong model type was assigned)

@@ -1,4 +1,4 @@
-import {computed, extendObservable} from 'mobx';
+import {computed, extendObservable, autorun} from 'mobx';
 
 const expect = require('chai').expect;
 
@@ -264,7 +264,7 @@ describe('MobX Collection Store', function() {
     expect(model2.foo).to.equal(4);
   });
 
-    it('should support array refereces', function() {
+  it('should support array refereces', function() {
     class FooModel extends Model {
       static type = 'foo';
 
@@ -306,5 +306,42 @@ describe('MobX Collection Store', function() {
     expect(first.fooBar).to.have.length(3);
     expect(first.fooBar[1].foo).to.equal(3);
     expect(JSON.stringify(first.fooBarId)).to.equal(JSON.stringify(models.map((model) => model.__id)));
+  });
+
+  it('should call autorun when needed', function(done) {
+    class FooModel extends Model {
+      static type = 'foo';
+
+      foo: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+
+    const model = collection.add<FooModel>({
+      id: 1,
+      foo: 1,
+      bar: 3
+    }, 'foo');
+
+    let runs = 0;
+    const expected = [1, 3, 5];
+    autorun(() => {
+      expect(model.foo).to.equal(expected[runs]);
+      runs++;
+
+      if (runs === 3) {
+        done();
+      }
+    });
+
+    model.set('foo', 3);
+    model.set('bar', 123);
+    model.set('foo', 5);
   });
 });

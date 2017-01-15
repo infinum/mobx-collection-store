@@ -23,6 +23,13 @@ declare class Model implements IModel {
      * @memberOf Model
      */
     __collection?: ICollection;
+    /**
+     * List of properties that were initialized on the model
+     *
+     * @private
+     * @type {Array<string>}
+     * @memberOf Model
+     */
     private __initializedProps;
     /**
      * The attribute that should be used as the unique identifier
@@ -102,17 +109,39 @@ declare class Model implements IModel {
      */
     private __getProp(key);
     /**
+     * Get the reference id
+     *
+     * @private
+     * @template T
+     * @param {string} type - type fo the reference
+     * @param {T} item - model reference
+     * @returns {number|string}
+     *
+     * @memberOf Model
+     */
+    private __getValueRefs<T>(type, item);
+    /**
+     * Get the model(s) referenced by a key
+     *
+     * @private
+     * @param {string} key - the reference key
+     * @returns {(IModel|Array<IModel>)}
+     *
+     * @memberOf Model
+     */
+    private __getReferencedModels(key);
+    /**
      * Setter for the referenced model
      * If the value is an object it will be upserted into the collection
      *
      * @private
      * @argument {string} ref - Reference name
-     * @argument {IModel|Array<IModel>|Object|Array<Model>|string|number} val - The referenced mode
+     * @argument {T} val - The referenced mode
      * @returns {IModel} Referenced model
      *
      * @memberOf Model
      */
-    private __setRef(ref, val);
+    private __setRef<T>(ref, val);
     /**
      * Static model class
      *
