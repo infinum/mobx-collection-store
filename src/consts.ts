@@ -3,3 +3,11 @@ export const TYPE_PROP: string = '__type__';
 
 /** @const DEFAULT_TYPE {string} - Type of the default model */
 export const DEFAULT_TYPE: string = '__default_type__';
+
+/** @const RESERVED_KEYS {Array<string>} - List of property names that shouldn't be used in the model */
+export const RESERVED_KEYS: Array<string> = [
+  'static', 'assign', 'assignRef', 'update', 'toJS',
+  '__collection', '__data', '__getProp', '__initializedProps',
+  '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
+  '__partialRefUpdate', '__updateKey'
+];

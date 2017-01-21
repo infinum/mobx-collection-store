@@ -57,7 +57,7 @@ var Collection = (function () {
      */
     Collection.prototype.__getByType = function (type) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.__data.filter(function (item) { return item.static.type === type; }); });
+        return mobx_1.computed(function () { return _this.__data.filter(function (item) { return utils_1.getType(item) === type; }); });
     };
     /**
      * Get the model constructor for a given model type
@@ -139,29 +139,14 @@ var Collection = (function () {
             return model.map(function (item) { return _this.add(item, type); });
         }
         var instance = this.__getModelInstance(model, type);
-        var existing = this.find(instance.static.type, instance[instance.static.idAttribute]);
+        var id = instance[instance.static.idAttribute];
+        var existing = this.find(utils_1.getType(instance), id);
         if (existing) {
             existing.update(model);
             return existing;
         }
         this.__data.push(instance);
         return instance;
-    };
-    /**
-     * Match a model to defined parameters
-     *
-     * @private
-     * @param {IModel} item - Model that's beeing matched
-     * @param {string} type - Model type to match
-     * @param {(string|number)} id - Model ID to match
-     * @returns {boolean} True if the model matches the parameters
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__matchModel = function (item, type, id) {
-        return (item.static.type === type
-            || (item.static.typeAttribute && item[item.static.typeAttribute] === type))
-            && item[item.static.idAttribute] === id;
     };
     /**
      * Find a specific model
@@ -174,9 +159,8 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.find = function (type, id) {
-        var _this = this;
         var modelList = id
-            ? this.__data.filter(function (item) { return _this.__matchModel(item, type, id); })
+            ? this.__data.filter(function (item) { return utils_1.matchModel(item, type, id); })
             : this.findAll(type);
         return utils_1.first(modelList) || null;
     };
@@ -191,8 +175,7 @@ var Collection = (function () {
      */
     Collection.prototype.findAll = function (type) {
         var item = utils_1.first(this.__data);
-        return this.__data.filter(function (item) { return (item.static.type === type
-            || (item.static.typeAttribute && item[item.static.typeAttribute] === type)); });
+        return this.__data.filter(function (item) { return utils_1.getType(item) === type; });
     };
     /**
      * Remove models from the collection
@@ -252,7 +235,7 @@ var Collection = (function () {
     /**
      * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *
-     * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models
+     * @returns {Array<IDictionary>} Plain JS Object Array representing the collection and all its models
      *
      * @memberOf Collection
      */
@@ -285,4 +268,3 @@ __decorate([
 __decorate([
     mobx_1.action
 ], Collection.prototype, "reset", null);
-;

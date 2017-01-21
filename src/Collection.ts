@@ -1,11 +1,15 @@
-import {extendObservable, observable, computed, IComputedValue, IObservableArray, action, runInAction} from 'mobx';
+import {
+  extendObservable, observable, computed, action, runInAction,
+  IComputedValue, IObservableArray
+} from 'mobx';
 
 import IModel from './interfaces/IModel';
+import IDictionary from './interfaces/IDictionary';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import {Model} from './Model';
-import {TYPE_PROP} from './consts';
-import {first} from './utils';
+import {TYPE_PROP, DEFAULT_TYPE} from './consts';
+import {first, matchModel, getType} from './utils';
 
 /**
  * MobX Collection class
@@ -46,7 +50,7 @@ export class Collection implements ICollection {
       this.__data.push(...data.map(this.__initItem, this));
     });
 
-    const computedProps = {};
+    const computedProps: IDictionary = {};
     for (const model of this.static.types) {
       computedProps[model.type] = this.__getByType(model.type);
     }
@@ -64,7 +68,9 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   private __getByType(type: string): IComputedValue<Array<IModel>> {
-    return computed(() => this.__data.filter((item) => item.static.type === type));
+    return computed(
+      () => this.__data.filter((item) => getType(item) === type)
+    );
   }
 
   /**
@@ -89,7 +95,7 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  private __initItem(item): IModel {
+  private __initItem(item: IDictionary): IModel {
     const type = item[TYPE_PROP];
     const TypeModel: IModelConstructor = this.__getModel(type);
     return new TypeModel(item, this);
@@ -153,12 +159,13 @@ export class Collection implements ICollection {
   add<T extends IModel>(model: Object, type?: string): T;
   @action add(model: any, type?: string) {
     if (model instanceof Array) {
-      return model.map((item) => this.add(item, type));
+      return model.map((item: IModel|Object) => this.add(item, type));
     }
 
     const instance: IModel = this.__getModelInstance(model, type);
 
-    const existing = this.find(instance.static.type, instance[instance.static.idAttribute]);
+    const id = instance[instance.static.idAttribute];
+    const existing = this.find(getType(instance), id);
     if (existing) {
       existing.update(model);
       return existing;
@@ -166,25 +173,6 @@ export class Collection implements ICollection {
 
     this.__data.push(instance);
     return instance;
-  }
-
-  /**
-   * Match a model to defined parameters
-   *
-   * @private
-   * @param {IModel} item - Model that's beeing matched
-   * @param {string} type - Model type to match
-   * @param {(string|number)} id - Model ID to match
-   * @returns {boolean} True if the model matches the parameters
-   *
-   * @memberOf Collection
-   */
-  private __matchModel(item: IModel, type: string, id: string|number): boolean {
-    return (
-        item.static.type === type
-        || (item.static.typeAttribute && item[item.static.typeAttribute] === type)
-      )
-      && item[item.static.idAttribute] === id;
   }
 
   /**
@@ -199,7 +187,7 @@ export class Collection implements ICollection {
    */
   find<T extends IModel>(type: string, id?: string|number): T {
     const modelList: Array<T> = id
-      ? this.__data.filter((item) => this.__matchModel(item, type, id)) as Array<T>
+      ? this.__data.filter((item) => matchModel(item, type, id)) as Array<T>
       : this.findAll<T>(type);
 
     return first(modelList) || null;
@@ -216,12 +204,7 @@ export class Collection implements ICollection {
    */
   findAll<T extends IModel>(type: string): Array<T> {
     const item = first(this.__data);
-    return this.__data.filter(
-      (item) => (
-        item.static.type === type
-        || (item.static.typeAttribute && item[item.static.typeAttribute] === type)
-      )
-    ) as Array<T>;
+    return this.__data.filter((item) => getType(item) === type) as Array<T>;
   }
 
   /**
@@ -285,11 +268,11 @@ export class Collection implements ICollection {
   /**
    * Convert the collection (and containing models) into a plain JS Object in order to be serialized
    *
-   * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models
+   * @returns {Array<IDictionary>} Plain JS Object Array representing the collection and all its models
    *
    * @memberOf Collection
    */
-  toJS(): Array<Object> {
+  toJS(): Array<IDictionary> {
     return this.__data.map((item) => item.toJS());
   }
-};
+}

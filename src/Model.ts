@@ -1,4 +1,9 @@
-import {observable, extendObservable, toJS, action, computed, intercept, IComputedValue, IObservableObject, IObservableArray} from 'mobx';
+import {
+  observable, extendObservable, toJS, action, computed, intercept,
+  IArrayChange, IArraySplice,
+  IComputedValue, IObservableObject, IObservableArray
+} from 'mobx';
+
 const assign = require('object-assign');
 
 import IReferences from './interfaces/IReferences';
@@ -6,16 +11,10 @@ import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
-import {TYPE_PROP, DEFAULT_TYPE} from './consts';
-import {mapItems, first} from './utils';
+import {TYPE_PROP, DEFAULT_TYPE, RESERVED_KEYS} from './consts';
+import {mapItems, first, getType} from './utils';
 
-const __reservedKeys: Array<string> = [
-  'static', 'assign', 'assignRef', 'update', 'toJS',
-  '__id', '__collection',
-  '__data', '__getProp', '__initializedProps',
-  '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
-  '__partialRefUpdate'
-];
+type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 
 /**
  * MobX Collection Model class
@@ -23,15 +22,7 @@ const __reservedKeys: Array<string> = [
  * @class Model
  * @implements {IModel}
  */
-class Model implements IModel {
-
-  /**
-   * Identifier of the model
-   *
-   * @type {(string | number)}
-   * @memberOf Model
-   */
-  __id: string | number
+export class Model implements IModel {
 
   /**
    * Collection the model belongs to
@@ -157,24 +148,36 @@ class Model implements IModel {
   constructor(initialData: Object, collection?: ICollection) {
     const data = assign({}, this.static.defaults, initialData);
 
-    if (!data[this.static.idAttribute]) {
-      if (!this.static.enableAutoId) {
-        throw new Error(`${this.static.idAttribute} is required!`);
-      } else {
-        let used;
-        do {
-          data[this.static.idAttribute] = this.static.autoIdFunction();
-          used = collection.find(this.static.type, data[this.static.idAttribute]);
-        } while(used);
-      }
-    }
+    this.__ensureId(data, collection);
 
-    // No need for them to be observable
-    this.__id = data[this.static.idAttribute];
+    // No need for it to be observable
     this.__collection = collection;
 
     this.__initRefGetters();
     this.update(data);
+  }
+
+  /**
+   * Ensure the new model has a valid id
+   *
+   * @private
+   * @param {any} data - New model object
+   * @param {any} [collection] - Collection the model will belong to
+   *
+   * @memberOf Model
+   */
+  private __ensureId(data: IDictionary, collection?: ICollection) {
+    const idAttribute = this.static.idAttribute;
+    if (!data[idAttribute]) {
+      if (!this.static.enableAutoId) {
+        throw new Error(`${idAttribute} is required!`);
+      } else {
+        do {
+          data[idAttribute] = this.static.autoIdFunction();
+        } while(collection.find(getType(this), data[idAttribute]));
+      }
+    }
+
   }
 
   /**
@@ -258,10 +261,9 @@ class Model implements IModel {
       return null;
     } else if (typeof item === 'object') {
       const model = this.__collection.add(item, type);
-      return model.__id;
-    } else {
-      return item;
+      return model[model.static.idAttribute];
     }
+    return item;
   }
 
   /**
@@ -274,11 +276,12 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  @action private __partialRefUpdate(ref: string, change) {
+  @action private __partialRefUpdate(ref: string, change: IChange): IChange {
     const type = this.__refs[ref];
+    change.type
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));
-      this.__data[ref].splice(change.index, change.removeCount, ...added);
+      this.__data[ref].splice(change.index, change.removedCount, ...added);
       return null;
     } else if (change.type === 'update') {
       const newValue = this.__getValueRefs(type, change.newValue);
@@ -298,13 +301,13 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __getReferencedModels(key: string) : IModel|Array<IModel> {
-    let dataModels = mapItems<IModel>(this.__data[key], (refId) => {
+    let dataModels = mapItems<IModel>(this.__data[key], (refId: string) => {
       return this.__collection.find(this.__refs[key], refId);
     });
 
     if (dataModels instanceof Array) {
       const data: IObservableArray<IModel> = observable(dataModels);
-      intercept(data, (change) => this.__partialRefUpdate(key, change));
+      intercept(data, (change: IChange) => this.__partialRefUpdate(key, change));
       return data;
     }
 
@@ -350,6 +353,27 @@ class Model implements IModel {
   }
 
   /**
+   * Update the model property
+   *
+   * @private
+   * @param {any} vals - An object of all updates
+   * @param {any} data - Data used to update
+   * @param {any} key - Key to be updated
+   * @returns
+   *
+   * @memberOf Model
+   */
+  private __updateKey(vals, data, key) {
+    const idAttribute = this.static.idAttribute;
+    if (RESERVED_KEYS.indexOf(key) !== -1) {
+      return; // Skip the key because it would override the internal key
+    }
+    if (key !== idAttribute || !this.__data[idAttribute]) {
+      vals[key] = this.assign(key, data[key]);
+    }
+  }
+
+  /**
    * Update the existing model
    *
    * @augments {IModel|Object} data - The new model
@@ -362,17 +386,8 @@ class Model implements IModel {
       return this; // Nothing to do - don't update with itself
     }
     const vals = {};
-    const keys = Object.keys(data);
-    const idAttribute = this.static.idAttribute;
 
-    keys.forEach((key) => {
-      if (__reservedKeys.indexOf(key) !== -1) {
-        return; // Skip the key because it would override the internal key
-      }
-      if (key !== idAttribute || !this.__data[idAttribute]) {
-        vals[key] = this.assign(key, data[key]);
-      }
-    });
+    Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
 
     return vals;
   }
@@ -395,13 +410,23 @@ class Model implements IModel {
       // TODO: Could be optimised based on __initializedProps?
       extendObservable(this.__data, {[key]: value});
     }
+    this.__ensureGetter(key);
+    return val;
+  }
 
-    // Add getter if it doesn't exist yet
+  /**
+   * Add getter if it doesn't exist yet
+   *
+   * @private
+   * @param {string} key
+   *
+   * @memberOf Model
+   */
+  private __ensureGetter(key: string) {
     if (this.__initializedProps.indexOf(key) === -1) {
       this.__initializedProps.push(key);
       extendObservable(this, {[key]: this.__getProp(key)});
     }
-    return val;
   }
 
   /**
@@ -419,28 +444,23 @@ class Model implements IModel {
     if (key in this.__refs) { // Is already a reference
       return this.assign<T>(key, value);
     }
-    this.__refs[key] = type;
+    const item = value instanceof Array ? first(value) : value;
+    this.__refs[key] = item instanceof Model ? getType(item) : type;
     const data = this.__setRef(key, value);
-    const item = data instanceof Array ? first(data) : data;
-    const refType = item ? item.static.type : DEFAULT_TYPE;
-    this.__initRefGetter(key, refType);
+    this.__initRefGetter(key, this.__refs[key]);
     return data;
   }
 
   /**
    * Convert the model into a plain JS Object in order to be serialized
    *
-   * @returns {Object} Plain JS Object representing the model
+   * @returns {IDictionary} Plain JS Object representing the model
    *
    * @memberOf Model
    */
-  toJS(): Object {
-    const data = toJS(this.__data);
-    data[TYPE_PROP] = this.static.type === DEFAULT_TYPE
-      ? this.__data[this.static.typeAttribute]
-      : this.static.type;
+  toJS(): IDictionary {
+    const data: IDictionary = toJS(this.__data);
+    data[TYPE_PROP] = getType(this);
     return data;
   }
-};
-
-export {Model};
+}

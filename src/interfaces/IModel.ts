@@ -11,14 +11,6 @@ import IModelConstructor from './IModelConstructor';
 interface IModel {
 
   /**
-   * Identifier of the model
-   *
-   * @type {(string | number)}
-   * @memberOf IModel
-   */
-  __id: string | number;
-
-  /**
    * Collection the model belongs to
    *
    * @type {ICollection}

@@ -9,13 +9,6 @@ var mobx_1 = require("mobx");
 var assign = require('object-assign');
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
-var __reservedKeys = [
-    'static', 'assign', 'assignRef', 'update', 'toJS',
-    '__id', '__collection',
-    '__data', '__getProp', '__initializedProps',
-    '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
-    '__partialRefUpdate'
-];
 /**
  * MobX Collection Model class
  *
@@ -64,20 +57,8 @@ var Model = (function () {
          */
         this.__data = mobx_1.observable({});
         var data = assign({}, this.static.defaults, initialData);
-        if (!data[this.static.idAttribute]) {
-            if (!this.static.enableAutoId) {
-                throw new Error(this.static.idAttribute + " is required!");
-            }
-            else {
-                var used = void 0;
-                do {
-                    data[this.static.idAttribute] = this.static.autoIdFunction();
-                    used = collection.find(this.static.type, data[this.static.idAttribute]);
-                } while (used);
-            }
-        }
-        // No need for them to be observable
-        this.__id = data[this.static.idAttribute];
+        this.__ensureId(data, collection);
+        // No need for it to be observable
         this.__collection = collection;
         this.__initRefGetters();
         this.update(data);
@@ -94,6 +75,28 @@ var Model = (function () {
         var id = this.autoincrementValue;
         this.autoincrementValue++;
         return id;
+    };
+    /**
+     * Ensure the new model has a valid id
+     *
+     * @private
+     * @param {any} data - New model object
+     * @param {any} [collection] - Collection the model will belong to
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__ensureId = function (data, collection) {
+        var idAttribute = this.static.idAttribute;
+        if (!data[idAttribute]) {
+            if (!this.static.enableAutoId) {
+                throw new Error(idAttribute + " is required!");
+            }
+            else {
+                do {
+                    data[idAttribute] = this.static.autoIdFunction();
+                } while (collection.find(utils_1.getType(this), data[idAttribute]));
+            }
+        }
     };
     /**
      * Add new reference getter/setter to the model
@@ -169,11 +172,9 @@ var Model = (function () {
         }
         else if (typeof item === 'object') {
             var model = this.__collection.add(item, type);
-            return model.__id;
+            return model[model.static.idAttribute];
         }
-        else {
-            return item;
-        }
+        return item;
     };
     /**
      * Update the referenced array on push/pull/update
@@ -187,9 +188,10 @@ var Model = (function () {
      */
     Model.prototype.__partialRefUpdate = function (ref, change) {
         var type = this.__refs[ref];
+        change.type;
         if (change.type === 'splice') {
             var added = change.added.map(this.__getValueRefs.bind(this, type));
-            (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removeCount].concat(added));
+            (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removedCount].concat(added));
             return null;
         }
         else if (change.type === 'update') {
@@ -260,6 +262,26 @@ var Model = (function () {
         configurable: true
     });
     /**
+     * Update the model property
+     *
+     * @private
+     * @param {any} vals - An object of all updates
+     * @param {any} data - Data used to update
+     * @param {any} key - Key to be updated
+     * @returns
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__updateKey = function (vals, data, key) {
+        var idAttribute = this.static.idAttribute;
+        if (consts_1.RESERVED_KEYS.indexOf(key) !== -1) {
+            return; // Skip the key because it would override the internal key
+        }
+        if (key !== idAttribute || !this.__data[idAttribute]) {
+            vals[key] = this.assign(key, data[key]);
+        }
+    };
+    /**
      * Update the existing model
      *
      * @augments {IModel|Object} data - The new model
@@ -268,21 +290,11 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.update = function (data) {
-        var _this = this;
         if (data === this) {
             return this; // Nothing to do - don't update with itself
         }
         var vals = {};
-        var keys = Object.keys(data);
-        var idAttribute = this.static.idAttribute;
-        keys.forEach(function (key) {
-            if (__reservedKeys.indexOf(key) !== -1) {
-                return; // Skip the key because it would override the internal key
-            }
-            if (key !== idAttribute || !_this.__data[idAttribute]) {
-                vals[key] = _this.assign(key, data[key]);
-            }
-        });
+        Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
         return vals;
     };
     /**
@@ -304,13 +316,24 @@ var Model = (function () {
             // TODO: Could be optimised based on __initializedProps?
             mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
         }
-        // Add getter if it doesn't exist yet
+        this.__ensureGetter(key);
+        return val;
+        var _a;
+    };
+    /**
+     * Add getter if it doesn't exist yet
+     *
+     * @private
+     * @param {string} key
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__ensureGetter = function (key) {
         if (this.__initializedProps.indexOf(key) === -1) {
             this.__initializedProps.push(key);
-            mobx_1.extendObservable(this, (_b = {}, _b[key] = this.__getProp(key), _b));
+            mobx_1.extendObservable(this, (_a = {}, _a[key] = this.__getProp(key), _a));
         }
-        return val;
-        var _a, _b;
+        var _a;
     };
     /**
      * Assign a new reference to the model
@@ -327,25 +350,22 @@ var Model = (function () {
         if (key in this.__refs) {
             return this.assign(key, value);
         }
-        this.__refs[key] = type;
+        var item = value instanceof Array ? utils_1.first(value) : value;
+        this.__refs[key] = item instanceof Model ? utils_1.getType(item) : type;
         var data = this.__setRef(key, value);
-        var item = data instanceof Array ? utils_1.first(data) : data;
-        var refType = item ? item.static.type : consts_1.DEFAULT_TYPE;
-        this.__initRefGetter(key, refType);
+        this.__initRefGetter(key, this.__refs[key]);
         return data;
     };
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *
-     * @returns {Object} Plain JS Object representing the model
+     * @returns {IDictionary} Plain JS Object representing the model
      *
      * @memberOf Model
      */
     Model.prototype.toJS = function () {
         var data = mobx_1.toJS(this.__data);
-        data[consts_1.TYPE_PROP] = this.static.type === consts_1.DEFAULT_TYPE
-            ? this.__data[this.static.typeAttribute]
-            : this.static.type;
+        data[consts_1.TYPE_PROP] = utils_1.getType(this);
         return data;
     };
     return Model;
@@ -420,4 +440,3 @@ __decorate([
 __decorate([
     mobx_1.action
 ], Model.prototype, "assignRef", null);
-;

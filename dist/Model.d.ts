@@ -8,14 +8,7 @@ import IDictionary from './interfaces/IDictionary';
  * @class Model
  * @implements {IModel}
  */
-declare class Model implements IModel {
-    /**
-     * Identifier of the model
-     *
-     * @type {(string | number)}
-     * @memberOf Model
-     */
-    __id: string | number;
+export declare class Model implements IModel {
     /**
      * Collection the model belongs to
      *
@@ -123,6 +116,16 @@ declare class Model implements IModel {
      */
     constructor(initialData: Object, collection?: ICollection);
     /**
+     * Ensure the new model has a valid id
+     *
+     * @private
+     * @param {any} data - New model object
+     * @param {any} [collection] - Collection the model will belong to
+     *
+     * @memberOf Model
+     */
+    private __ensureId(data, collection?);
+    /**
      * Add new reference getter/setter to the model
      *
      * @private
@@ -213,6 +216,18 @@ declare class Model implements IModel {
      */
     readonly static: typeof Model;
     /**
+     * Update the model property
+     *
+     * @private
+     * @param {any} vals - An object of all updates
+     * @param {any} data - Data used to update
+     * @param {any} key - Key to be updated
+     * @returns
+     *
+     * @memberOf Model
+     */
+    private __updateKey(vals, data, key);
+    /**
      * Update the existing model
      *
      * @augments {IModel|Object} data - The new model
@@ -232,6 +247,15 @@ declare class Model implements IModel {
      */
     assign<T>(key: string, value: T): T | IModel | Array<IModel>;
     /**
+     * Add getter if it doesn't exist yet
+     *
+     * @private
+     * @param {string} key
+     *
+     * @memberOf Model
+     */
+    private __ensureGetter(key);
+    /**
      * Assign a new reference to the model
      *
      * @template T
@@ -246,10 +270,9 @@ declare class Model implements IModel {
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *
-     * @returns {Object} Plain JS Object representing the model
+     * @returns {IDictionary} Plain JS Object representing the model
      *
      * @memberOf Model
      */
-    toJS(): Object;
+    toJS(): IDictionary;
 }
-export { Model };

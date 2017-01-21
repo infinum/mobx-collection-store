@@ -1,4 +1,5 @@
 import IModel from './interfaces/IModel';
+import IDictionary from './interfaces/IDictionary';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 /**
@@ -105,18 +106,6 @@ export declare class Collection implements ICollection {
     add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
     add<T extends IModel>(model: Object, type?: string): T;
     /**
-     * Match a model to defined parameters
-     *
-     * @private
-     * @param {IModel} item - Model that's beeing matched
-     * @param {string} type - Model type to match
-     * @param {(string|number)} id - Model ID to match
-     * @returns {boolean} True if the model matches the parameters
-     *
-     * @memberOf Collection
-     */
-    private __matchModel(item, type, id);
-    /**
      * Find a specific model
      *
      * @template T
@@ -176,9 +165,9 @@ export declare class Collection implements ICollection {
     /**
      * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *
-     * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models
+     * @returns {Array<IDictionary>} Plain JS Object Array representing the collection and all its models
      *
      * @memberOf Collection
      */
-    toJS(): Array<Object>;
+    toJS(): Array<IDictionary>;
 }

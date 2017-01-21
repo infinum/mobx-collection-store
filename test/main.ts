@@ -36,7 +36,6 @@ describe('MobX Collection Store', function() {
     expect(collection.length).to.equal(1);
     expect(collection.foo.length).to.equal(1);
     expect(collection.find<FooModel>('foo', 1)).to.equal(model);
-    expect(model.__id).to.equal(1);
     expect(model.foo).to.equal(1);
     expect(model.bar).to.equal(0);
     expect(model.static.type).to.equal('foo');
@@ -74,7 +73,6 @@ describe('MobX Collection Store', function() {
 
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
-    expect(model.__id).to.equal(1);
     expect(model.foo).to.equal(2);
     expect(model.bar).to.equal(1);
   });
@@ -108,7 +106,6 @@ describe('MobX Collection Store', function() {
     // Check if the references are ok
     expect(collection.length).to.equal(1);
     expect(collection.find('foo', 1)).to.equal(model);
-    expect(model.__id).to.equal(1);
     expect(model.foo).to.equal(0);
     expect(model.bar).to.equal(model);
     expect(model.barId).to.equal(1);
@@ -121,7 +118,6 @@ describe('MobX Collection Store', function() {
     const model2 = collection2.find<FooModel>('foo');
     expect(collection2.length).to.equal(1);
     expect(collection2.find('foo', 1)).to.equal(model2);
-    expect(model2.__id).to.equal(1);
     expect(model2.foo).to.equal(0);
     expect(model2.bar).to.equal(model2);
     expect(model2.barId).to.equal(1);
@@ -271,6 +267,7 @@ describe('MobX Collection Store', function() {
 
       static refs = {fooBar: 'foo'};
 
+      id: number;
       foo: number;
       bar: number;
       fooBar: FooModel|Array<FooModel>;
@@ -307,7 +304,7 @@ describe('MobX Collection Store', function() {
     expect(collection.length).to.equal(4);
     expect(first.fooBar).to.have.length(2);
     expect(first.fooBar[1].foo).to.equal(4);
-    expect(JSON.stringify(first.fooBarId)).to.equal(JSON.stringify(models.map((model) => model.__id)));
+    expect(JSON.stringify(first.fooBarId)).to.equal(JSON.stringify(models.map((model) => model.id)));
 
     first.fooBar.push(second);
     expect(first.fooBar).to.have.length(3);
