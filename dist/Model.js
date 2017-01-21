@@ -329,7 +329,7 @@ var Model = (function () {
         }
         this.__refs[key] = type;
         var data = this.__setRef(key, value);
-        var item = data instanceof Array ? data[0] : data;
+        var item = data instanceof Array ? utils_1.first(data) : data;
         var refType = item ? item.static.type : consts_1.DEFAULT_TYPE;
         this.__initRefGetter(key, refType);
         return data;

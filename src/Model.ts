@@ -7,7 +7,7 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import {TYPE_PROP, DEFAULT_TYPE} from './consts';
-import {mapItems} from './utils';
+import {mapItems, first} from './utils';
 
 const __reservedKeys: Array<string> = [
   'static', 'assign', 'assignRef', 'update', 'toJS',
@@ -421,7 +421,7 @@ class Model implements IModel {
     }
     this.__refs[key] = type;
     const data = this.__setRef(key, value);
-    const item = data instanceof Array ? data[0] : data;
+    const item = data instanceof Array ? first(data) : data;
     const refType = item ? item.static.type : DEFAULT_TYPE;
     this.__initRefGetter(key, refType);
     return data;

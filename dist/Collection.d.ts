@@ -67,11 +67,10 @@ export declare class Collection implements ICollection {
      * Static model class
      *
      * @readonly
-     * @private
      * @type {typeof Collection}
      * @memberOf Collection
      */
-    private readonly static;
+    readonly static: typeof Collection;
     /**
      * Number of unique models in the collection
      *

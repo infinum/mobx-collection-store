@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var mobx_1 = require("mobx");
 var Model_1 = require("./Model");
 var consts_1 = require("./consts");
+var utils_1 = require("./utils");
 /**
  * MobX Collection class
  *
@@ -68,7 +69,7 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.__getModel = function (type) {
-        return this.static.types.filter(function (item) { return item.type === type; })[0] || Model_1.Model;
+        return utils_1.first(this.static.types.filter(function (item) { return item.type === type; })) || Model_1.Model;
     };
     /**
      * Initialize a model based on an imported Object
@@ -89,7 +90,6 @@ var Collection = (function () {
          * Static model class
          *
          * @readonly
-         * @private
          * @type {typeof Collection}
          * @memberOf Collection
          */
@@ -178,7 +178,7 @@ var Collection = (function () {
         var modelList = id
             ? this.__data.filter(function (item) { return _this.__matchModel(item, type, id); })
             : this.findAll(type);
-        return modelList[0] || null;
+        return utils_1.first(modelList) || null;
     };
     /**
      * Find all models of the specified type
@@ -190,7 +190,7 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.findAll = function (type) {
-        var item = this.__data[0];
+        var item = utils_1.first(this.__data);
         return this.__data.filter(function (item) { return (item.static.type === type
             || (item.static.typeAttribute && item[item.static.typeAttribute] === type)); });
     };

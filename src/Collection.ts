@@ -5,6 +5,7 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import {Model} from './Model';
 import {TYPE_PROP} from './consts';
+import {first} from './utils';
 
 /**
  * MobX Collection class
@@ -76,7 +77,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   private __getModel(type : string): IModelConstructor {
-    return this.static.types.filter((item) => item.type === type)[0] || Model;
+    return first(this.static.types.filter((item) => item.type === type)) || Model;
   }
 
   /**
@@ -98,11 +99,10 @@ export class Collection implements ICollection {
    * Static model class
    *
    * @readonly
-   * @private
    * @type {typeof Collection}
    * @memberOf Collection
    */
-  private get static(): typeof Collection {
+  get static(): typeof Collection {
     return <typeof Collection>this.constructor;
   }
 
@@ -202,7 +202,7 @@ export class Collection implements ICollection {
       ? this.__data.filter((item) => this.__matchModel(item, type, id)) as Array<T>
       : this.findAll<T>(type);
 
-    return modelList[0] || null;
+    return first(modelList) || null;
   }
 
   /**
@@ -215,7 +215,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   findAll<T extends IModel>(type: string): Array<T> {
-    const item = this.__data[0];
+    const item = first(this.__data);
     return this.__data.filter(
       (item) => (
         item.static.type === type
