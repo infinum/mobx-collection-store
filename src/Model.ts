@@ -247,14 +247,16 @@ class Model implements IModel {
    *
    * @private
    * @template T
-   * @param {string} type - type fo the reference
+   * @param {string} type - type of the reference
    * @param {T} item - model reference
    * @returns {number|string}
    *
    * @memberOf Model
    */
   private __getValueRefs<T>(type: string, item: T): number|string {
-    if (typeof item === 'object') {
+    if (!item) { // Handle case when the ref is unsetted
+      return null;
+    } else if (typeof item === 'object') {
       const model = this.__collection.add(item, type);
       return model.__id;
     } else {
@@ -326,6 +328,11 @@ class Model implements IModel {
 
     // TODO: Could be optimised based on __initializedProps?
     extendObservable(this.__data, {[ref]: refs});
+
+    // Handle the case when the ref is unsetted
+    if (!refs) {
+      return null;
+    }
 
     // Find the referenced model(s) in collection
     return this.__collection ? this.__getReferencedModels(ref) : null;

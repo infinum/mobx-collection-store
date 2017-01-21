@@ -157,14 +157,17 @@ var Model = (function () {
      *
      * @private
      * @template T
-     * @param {string} type - type fo the reference
+     * @param {string} type - type of the reference
      * @param {T} item - model reference
      * @returns {number|string}
      *
      * @memberOf Model
      */
     Model.prototype.__getValueRefs = function (type, item) {
-        if (typeof item === 'object') {
+        if (!item) {
+            return null;
+        }
+        else if (typeof item === 'object') {
             var model = this.__collection.add(item, type);
             return model.__id;
         }
@@ -234,6 +237,10 @@ var Model = (function () {
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
         // TODO: Could be optimised based on __initializedProps?
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
+        // Handle the case when the ref is unsetted
+        if (!refs) {
+            return null;
+        }
         // Find the referenced model(s) in collection
         return this.__collection ? this.__getReferencedModels(ref) : null;
         var _a;

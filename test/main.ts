@@ -480,4 +480,25 @@ describe('MobX Collection Store', function() {
     const baz = collection.findAll('baz');
     expect(baz.length).to.equal(0);
   });
+
+  it('should handle null references', function() {
+    class Foo extends Model {
+      static type = 'foo';
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo];
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<Foo>({}, 'foo');
+    model.assign('foo', 1);
+    model.assignRef('self', model, 'foo');
+    model.assignRef('self2', model);
+    model.assignRef('empty', null);
+
+    expect(model['self']).to.equal(model);
+    expect(model['self2']).to.equal(model);
+    expect(model['empty']).to.equal(null);
+  });
 });

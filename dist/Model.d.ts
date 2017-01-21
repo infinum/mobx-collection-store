@@ -164,7 +164,7 @@ declare class Model implements IModel {
      *
      * @private
      * @template T
-     * @param {string} type - type fo the reference
+     * @param {string} type - type of the reference
      * @param {T} item - model reference
      * @returns {number|string}
      *
