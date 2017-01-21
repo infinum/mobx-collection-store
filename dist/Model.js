@@ -10,10 +10,11 @@ var assign = require('object-assign');
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
 var __reservedKeys = [
-    'static', 'set', 'update', 'toJS',
+    'static', 'assign', 'assignRef', 'update', 'toJS',
     '__id', '__collection',
     '__data', '__getProp', '__initializedProps',
-    '__getRef', '__setRef', '__initRefGetters', '__partialRefUpdate'
+    '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
+    '__partialRefUpdate'
 ];
 /**
  * MobX Collection Model class
@@ -47,6 +48,14 @@ var Model = (function () {
          */
         this.__initializedProps = [];
         /**
+         * The model references
+         *
+         * @static
+         * @type {IReferences}
+         * @memberOf Model
+         */
+        this.__refs = {};
+        /**
          * Internal data storage
          *
          * @private
@@ -62,6 +71,23 @@ var Model = (function () {
         this.update(data);
     }
     /**
+     * Add new reference getter/setter to the model
+     *
+     * @private
+     * @param {any} ref - reference name
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__initRefGetter = function (ref, type) {
+        this.__initializedProps.push(ref, ref + "Id");
+        this.__refs[ref] = type || this.static.refs[ref];
+        mobx_1.extendObservable(this, (_a = {},
+            _a[ref] = this.__getRef(ref),
+            _a[ref + "Id"] = this.__getProp(ref),
+            _a));
+        var _a;
+    };
+    /**
      * Initialize the reference getters based on the static refs property
      *
      * @private
@@ -69,15 +95,11 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__initRefGetters = function () {
-        var refGetters = {};
         var refKeys = Object.keys(this.static.refs);
         for (var _i = 0, refKeys_1 = refKeys; _i < refKeys_1.length; _i++) {
             var ref = refKeys_1[_i];
-            refGetters[ref] = this.__getRef(ref);
-            refGetters[ref + "Id"] = this.__getProp(ref);
-            this.__initializedProps.push(ref, ref + "Id");
+            this.__initRefGetter(ref);
         }
-        mobx_1.extendObservable(this, refGetters);
     };
     /**
      * Getter for the computed referenced model
@@ -136,7 +158,7 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__partialRefUpdate = function (ref, change) {
-        var type = this.static.refs[ref];
+        var type = this.__refs[ref];
         if (change.type === 'splice') {
             var added = change.added.map(this.__getValueRefs.bind(this, type));
             (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removeCount].concat(added));
@@ -162,7 +184,7 @@ var Model = (function () {
     Model.prototype.__getReferencedModels = function (key) {
         var _this = this;
         var dataModels = utils_1.mapItems(this.__data[key], function (refId) {
-            return _this.__collection.find(_this.static.refs[key], refId);
+            return _this.__collection.find(_this.__refs[key], refId);
         });
         if (dataModels instanceof Array) {
             var data = mobx_1.observable(dataModels);
@@ -183,7 +205,7 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__setRef = function (ref, val) {
-        var type = this.static.refs[ref];
+        var type = this.__refs[ref];
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
         // TODO: Could be optimised based on __initializedProps?
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
@@ -242,7 +264,7 @@ var Model = (function () {
      */
     Model.prototype.assign = function (key, value) {
         var val = value;
-        var isRef = key in this.static.refs;
+        var isRef = key in this.__refs;
         if (isRef) {
             val = this.__setRef(key, value);
         }
@@ -257,6 +279,28 @@ var Model = (function () {
         }
         return val;
         var _a, _b;
+    };
+    /**
+     * Assign a new reference to the model
+     *
+     * @template T
+     * @param {string} key - reference name
+     * @param {T} value - reference value
+     * @param {string} [type] - reference type
+     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+     *
+     * @memberOf Model
+     */
+    Model.prototype.assignRef = function (key, value, type) {
+        if (key in this.__refs) {
+            return this.assign(key, value);
+        }
+        this.__refs[key] = type;
+        var data = this.__setRef(key, value);
+        var item = data instanceof Array ? data[0] : data;
+        var refType = item.static.type;
+        this.__initRefGetter(key, refType);
+        return data;
     };
     /**
      * Convert the model into a plain JS Object in order to be serialized
@@ -314,4 +358,7 @@ __decorate([
 __decorate([
     mobx_1.action
 ], Model.prototype, "assign", null);
+__decorate([
+    mobx_1.action
+], Model.prototype, "assignRef", null);
 ;

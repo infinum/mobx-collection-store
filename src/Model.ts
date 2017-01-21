@@ -10,10 +10,11 @@ import {TYPE_PROP, DEFAULT_TYPE} from './consts';
 import {mapItems} from './utils';
 
 const __reservedKeys: Array<string> = [
-  'static', 'set', 'update', 'toJS',
+  'static', 'assign', 'assignRef', 'update', 'toJS',
   '__id', '__collection',
   '__data', '__getProp', '__initializedProps',
-  '__getRef', '__setRef', '__initRefGetters', '__partialRefUpdate'
+  '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
+  '__partialRefUpdate'
 ];
 
 /**
@@ -68,6 +69,15 @@ class Model implements IModel {
   static refs: IReferences = {}
 
   /**
+   * The model references
+   *
+   * @static
+   * @type {IReferences}
+   * @memberOf Model
+   */
+  private __refs: IReferences = {};
+
+  /**
    * Default values of model props
    *
    * @static
@@ -114,6 +124,24 @@ class Model implements IModel {
   }
 
   /**
+   * Add new reference getter/setter to the model
+   *
+   * @private
+   * @param {any} ref - reference name
+   *
+   * @memberOf Model
+   */
+  private __initRefGetter(ref: string, type?: string) {
+    this.__initializedProps.push(ref, `${ref}Id`);
+    this.__refs[ref] = type || this.static.refs[ref];
+
+    extendObservable(this, {
+      [ref]: this.__getRef(ref),
+      [`${ref}Id`]: this.__getProp(ref)
+    });
+  }
+
+  /**
    * Initialize the reference getters based on the static refs property
    *
    * @private
@@ -121,14 +149,11 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __initRefGetters(): void {
-    const refGetters = {};
     const refKeys: Array<string> = Object.keys(this.static.refs);
+
     for (const ref of refKeys) {
-      refGetters[ref] = this.__getRef(ref);
-      refGetters[`${ref}Id`] = this.__getProp(ref);
-      this.__initializedProps.push(ref, `${ref}Id`);
+      this.__initRefGetter(ref);
     }
-    extendObservable(this, refGetters);
   }
 
   /**
@@ -194,7 +219,7 @@ class Model implements IModel {
    * @memberOf Model
    */
   @action private __partialRefUpdate(ref: string, change) {
-    const type = this.static.refs[ref];
+    const type = this.__refs[ref];
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));
       this.__data[ref].splice(change.index, change.removeCount, ...added);
@@ -218,7 +243,7 @@ class Model implements IModel {
    */
   private __getReferencedModels(key: string) : IModel|Array<IModel> {
     let dataModels = mapItems<IModel>(this.__data[key], (refId) => {
-      return this.__collection.find(this.static.refs[key], refId);
+      return this.__collection.find(this.__refs[key], refId);
     });
 
     if (dataModels instanceof Array) {
@@ -242,7 +267,7 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __setRef<T>(ref: string, val: T|Array<T>): IModel|Array<IModel> {
-    const type = this.static.refs[ref];
+    const type = this.__refs[ref];
     const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
 
     // TODO: Could be optimised based on __initializedProps?
@@ -302,7 +327,7 @@ class Model implements IModel {
    */
   @action assign<T>(key: string, value: T): T|IModel|Array<IModel> {
     let val: T|IModel|Array<IModel> = value;
-    const isRef: boolean = key in this.static.refs;
+    const isRef: boolean = key in this.__refs;
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
@@ -316,6 +341,29 @@ class Model implements IModel {
       extendObservable(this, {[key]: this.__getProp(key)});
     }
     return val;
+  }
+
+  /**
+   * Assign a new reference to the model
+   *
+   * @template T
+   * @param {string} key - reference name
+   * @param {T} value - reference value
+   * @param {string} [type] - reference type
+   * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+   *
+   * @memberOf Model
+   */
+  @action assignRef<T>(key: string, value: T, type: string): T|IModel|Array<IModel> {
+    if (key in this.__refs) { // Is already a reference
+      return this.assign<T>(key, value);
+    }
+    this.__refs[key] = type;
+    const data = this.__setRef(key, value);
+    const item = data instanceof Array ? data[0] : data;
+    const refType = item.static.type;
+    this.__initRefGetter(key, refType);
+    return data;
   }
 
   /**

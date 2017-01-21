@@ -56,6 +56,19 @@ interface IModel {
   assign<T>(key: string, value: T): T|IModel;
 
   /**
+   * Assign a new reference to the model
+   *
+   * @template T
+   * @param {string} key - reference name
+   * @param {T} value - reference value
+   * @param {string} [type] - reference type
+   * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+   *
+   * @memberOf Model
+   */
+  assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel>;
+
+  /**
    * Convert the model into a plain JS Object in order to be serialized
    *
    * @returns {Object} Plain JS Object representing the model

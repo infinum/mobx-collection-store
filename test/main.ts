@@ -351,4 +351,41 @@ describe('MobX Collection Store', function() {
     model.bar = 123;
     model.foo = 5;
   });
+
+  it('should support dynamic references', function() {
+    class FooModel extends Model {
+      static type = 'foo';
+
+
+      foo: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [FooModel];
+
+      foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+
+    const models = collection.add<FooModel>([{
+      id: 1,
+      foo: 1,
+    }, {
+      id: 2,
+      foo: 2
+    }, {
+      id: 3,
+      foo: 3
+    }, {
+      id: 4,
+      foo: 4
+    }] as Array<Object>, 'foo');
+
+    const first = models.shift();
+
+    first.assignRef('bar', models, 'foo');
+    expect(first['bar']).to.have.length(3);
+    expect(first['bar'][1].foo).to.equal(3);
+  });
 });

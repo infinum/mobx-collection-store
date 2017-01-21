@@ -48,6 +48,14 @@ declare class Model implements IModel {
      */
     static refs: IReferences;
     /**
+     * The model references
+     *
+     * @static
+     * @type {IReferences}
+     * @memberOf Model
+     */
+    private __refs;
+    /**
      * Default values of model props
      *
      * @static
@@ -80,6 +88,15 @@ declare class Model implements IModel {
      * @memberOf Model
      */
     constructor(initialData: Object, collection?: ICollection);
+    /**
+     * Add new reference getter/setter to the model
+     *
+     * @private
+     * @param {any} ref - reference name
+     *
+     * @memberOf Model
+     */
+    private __initRefGetter(ref, type?);
     /**
      * Initialize the reference getters based on the static refs property
      *
@@ -180,6 +197,18 @@ declare class Model implements IModel {
      * @memberOf Model
      */
     assign<T>(key: string, value: T): T | IModel | Array<IModel>;
+    /**
+     * Assign a new reference to the model
+     *
+     * @template T
+     * @param {string} key - reference name
+     * @param {T} value - reference value
+     * @param {string} [type] - reference type
+     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+     *
+     * @memberOf Model
+     */
+    assignRef<T>(key: string, value: T, type: string): T | IModel | Array<IModel>;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *
