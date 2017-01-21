@@ -1,5 +1,6 @@
 # mobx-collection-store
 
+[![npm version](https://badge.fury.io/js/mobx-collection-store.svg)](https://badge.fury.io/js/mobx-collection-store)
 [![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
 [![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
 [![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
@@ -34,8 +35,6 @@ john.set('lastName', 'Williams');
 console.log(john.lastName); // 'Williams'
 ```
 ## Installation
-
-***Still not working***
 
 ```bash
 npm install --save mobx-collection-store
@@ -132,7 +131,7 @@ console.log(fido.ownerId); // 3
 console.log(collection.person.length); // 3
 console.log(collection.length); // 4
 
-fido.set('owner', jane);
+fido.owner = jane;
 console.log(fido.owner.fullName); // 'Jane Doe'
 ```
 
@@ -195,7 +194,7 @@ console.log(fido.owner.spouse.fullName); // 'Jane Doe'
 console.log(collection.person.length); // 2
 console.log(collection.length); // 3
 
-fido.set('owner', {
+fido.assign('owner', {
   id: 3,
   firstName: 'Dave',
   lastName: 'Jones'
@@ -206,7 +205,7 @@ console.log(fido.ownerId); // 3
 console.log(collection.person.length); // 3
 console.log(collection.length); // 4
 
-fido.set('owner', jane);
+fido.owner = jane;
 console.log(fido.owner.fullName); // 'Jane Doe'
 ```
 
@@ -231,10 +230,10 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `static.type` - Type of the model
 * `static.defaults` - An object with default model properties
 * `update(data)` - Update the model with new data (object)
-* `set(prop, value)` - Set a property to the specified value
+* `assign(prop, value)` - Set a property to the specified value
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
 
-Note: If a field is an array of references, dont' modify it directly - use `set` method instead.
+*Note:* New properties should be added to the model by using the `assign` method, not by direct assignment.
 
 ## TODO
 

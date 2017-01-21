@@ -45,7 +45,7 @@ interface IModel {
      *
      * @memberOf IModel
      */
-    set<T>(key: string, value: T): T | IModel;
+    assign<T>(key: string, value: T): T | IModel;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *

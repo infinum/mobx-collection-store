@@ -1,4 +1,4 @@
-import {extendObservable, observable, computed, IComputedValue, IObservableArray, action} from 'mobx';
+import {extendObservable, observable, computed, IComputedValue, IObservableArray, action, runInAction} from 'mobx';
 
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
@@ -41,7 +41,9 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   constructor(data: Array<Object> = []) {
-    this.__data.push(...data.map(this.__initItem, this));
+    runInAction(() => {
+      this.__data.push(...data.map(this.__initItem, this));
+    });
 
     const computedProps = {};
     for (const model of this.static.types) {

@@ -121,6 +121,17 @@ declare class Model implements IModel {
      */
     private __getValueRefs<T>(type, item);
     /**
+     * Update the referenced array on push/pull/update
+     *
+     * @private
+     * @param {string} ref - reference name
+     * @param {any} change - MobX change object
+     * @returns {null} no direct change
+     *
+     * @memberOf Model
+     */
+    private __partialRefUpdate(ref, change);
+    /**
      * Get the model(s) referenced by a key
      *
      * @private
@@ -168,7 +179,7 @@ declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    set<T>(key: string, value: T): T | IModel | Array<IModel>;
+    assign<T>(key: string, value: T): T | IModel | Array<IModel>;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *

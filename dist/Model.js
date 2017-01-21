@@ -13,7 +13,7 @@ var __reservedKeys = [
     'static', 'set', 'update', 'toJS',
     '__id', '__collection',
     '__data', '__getProp', '__initializedProps',
-    '__getRef', '__setRef', '__initRefGetters'
+    '__getRef', '__setRef', '__initRefGetters', '__partialRefUpdate'
 ];
 /**
  * MobX Collection Model class
@@ -90,9 +90,7 @@ var Model = (function () {
      */
     Model.prototype.__getRef = function (ref) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.__collection
-            ? _this.__getReferencedModels(ref)
-            : null; });
+        return mobx_1.computed(function () { return _this.__collection ? _this.__getReferencedModels(ref) : null; }, function (value) { return _this.assign(ref, value); });
     };
     /**
      * Getter for the computed property value
@@ -105,7 +103,7 @@ var Model = (function () {
      */
     Model.prototype.__getProp = function (key) {
         var _this = this;
-        return mobx_1.computed(function () { return _this.__data[key]; });
+        return mobx_1.computed(function () { return _this.__data[key]; }, function (value) { return _this.assign(key, value); });
     };
     /**
      * Get the reference id
@@ -128,6 +126,31 @@ var Model = (function () {
         }
     };
     /**
+     * Update the referenced array on push/pull/update
+     *
+     * @private
+     * @param {string} ref - reference name
+     * @param {any} change - MobX change object
+     * @returns {null} no direct change
+     *
+     * @memberOf Model
+     */
+    Model.prototype.__partialRefUpdate = function (ref, change) {
+        var type = this.static.refs[ref];
+        if (change.type === 'splice') {
+            var added = change.added.map(this.__getValueRefs.bind(this, type));
+            (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removeCount].concat(added));
+            return null;
+        }
+        else if (change.type === 'update') {
+            var newValue = this.__getValueRefs(type, change.newValue);
+            this.__data[ref][change.index] = newValue;
+            return null;
+        }
+        return change;
+        var _a;
+    };
+    /**
      * Get the model(s) referenced by a key
      *
      * @private
@@ -138,9 +161,15 @@ var Model = (function () {
      */
     Model.prototype.__getReferencedModels = function (key) {
         var _this = this;
-        return utils_1.mapItems(this.__data[key], function (refId) {
+        var dataModels = utils_1.mapItems(this.__data[key], function (refId) {
             return _this.__collection.find(_this.static.refs[key], refId);
         });
+        if (dataModels instanceof Array) {
+            var data = mobx_1.observable(dataModels);
+            mobx_1.intercept(data, function (change) { return _this.__partialRefUpdate(key, change); });
+            return data;
+        }
+        return dataModels;
     };
     /**
      * Setter for the referenced model
@@ -197,7 +226,7 @@ var Model = (function () {
                 return; // Skip the key because it would override the internal key
             }
             if (key !== idAttribute || !_this.__data[idAttribute]) {
-                vals[key] = _this.set(key, data[key]);
+                vals[key] = _this.assign(key, data[key]);
             }
         });
         return vals;
@@ -211,7 +240,7 @@ var Model = (function () {
      *
      * @memberOf Model
      */
-    Model.prototype.set = function (key, value) {
+    Model.prototype.assign = function (key, value) {
         var val = value;
         var isRef = key in this.static.refs;
         if (isRef) {
@@ -278,8 +307,11 @@ Model.defaults = {};
 Model.type = consts_1.DEFAULT_TYPE;
 __decorate([
     mobx_1.action
+], Model.prototype, "___partialRefUpdate", null);
+__decorate([
+    mobx_1.action
 ], Model.prototype, "update", null);
 __decorate([
     mobx_1.action
-], Model.prototype, "set", null);
+], Model.prototype, "assign", null);
 ;

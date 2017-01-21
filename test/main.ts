@@ -1,4 +1,5 @@
-import {computed, extendObservable, autorun} from 'mobx';
+import {computed, extendObservable, autorun, useStrict, action} from 'mobx';
+useStrict(true);
 
 const expect = require('chai').expect;
 
@@ -129,7 +130,7 @@ describe('MobX Collection Store', function() {
     expect(model2.bar.bar).to.equal(model2);
 
     // Check if the model is a proper clone
-    model.set('fooBar', 1);
+    model.assign('fooBar', 1);
     expect(model.fooBarId).to.equal(1);
     expect(model2.fooBarId).to.equal(0.5);
 
@@ -208,7 +209,7 @@ describe('MobX Collection Store', function() {
     expect(collection.person.length).to.equal(2);
     expect(collection.length).to.equal(3);
 
-    fido.set('owner', {
+    fido.assign('owner', {
       id: 3,
       firstName: 'Dave',
       lastName: 'Jones'
@@ -219,7 +220,7 @@ describe('MobX Collection Store', function() {
     expect(collection.person.length).to.equal(3);
     expect(collection.length).to.equal(4);
 
-    fido.set('owner', jane);
+    fido.owner = jane;
     expect(fido.owner.fullName).to.equal('Jane Doe');
 
     expect(collection.length).to.equal(4);
@@ -264,7 +265,7 @@ describe('MobX Collection Store', function() {
     expect(model2.foo).to.equal(4);
   });
 
-  it('should support array refereces', function() {
+  it('should support array refereces', action(function() {
     class FooModel extends Model {
       static type = 'foo';
 
@@ -299,20 +300,26 @@ describe('MobX Collection Store', function() {
     }] as Array<Object>, 'foo');
 
     const first = models.shift();
+    const second = models.shift();
     expect(collection.length).to.equal(4);
 
-    first.set('fooBar', models);
+    first.fooBar = models;
     expect(collection.length).to.equal(4);
-    expect(first.fooBar).to.have.length(3);
-    expect(first.fooBar[1].foo).to.equal(3);
+    expect(first.fooBar).to.have.length(2);
+    expect(first.fooBar[1].foo).to.equal(4);
     expect(JSON.stringify(first.fooBarId)).to.equal(JSON.stringify(models.map((model) => model.__id)));
-  });
+
+    first.fooBar.push(second);
+    expect(first.fooBar).to.have.length(3);
+    expect(first.fooBar[2].foo).to.equal(2);
+  }));
 
   it('should call autorun when needed', function(done) {
     class FooModel extends Model {
       static type = 'foo';
 
       foo: number;
+      bar: number;
     }
 
     class TestCollection extends Collection {
@@ -340,8 +347,8 @@ describe('MobX Collection Store', function() {
       }
     });
 
-    model.set('foo', 3);
-    model.set('bar', 123);
-    model.set('foo', 5);
+    model.foo = 3;
+    model.bar = 123;
+    model.foo = 5;
   });
 });

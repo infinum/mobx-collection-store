@@ -25,6 +25,7 @@ var Collection = (function () {
      */
     function Collection(data) {
         if (data === void 0) { data = []; }
+        var _this = this;
         /**
          * Internal data storage
          *
@@ -33,14 +34,16 @@ var Collection = (function () {
          * @memberOf Collection
          */
         this.__data = mobx_1.observable([]);
-        (_a = this.__data).push.apply(_a, data.map(this.__initItem, this));
+        mobx_1.runInAction(function () {
+            (_a = _this.__data).push.apply(_a, data.map(_this.__initItem, _this));
+            var _a;
+        });
         var computedProps = {};
-        for (var _i = 0, _b = this.static.types; _i < _b.length; _i++) {
-            var model = _b[_i];
+        for (var _i = 0, _a = this.static.types; _i < _a.length; _i++) {
+            var model = _a[_i];
             computedProps[model.type] = this.__getByType(model.type);
         }
         mobx_1.extendObservable(this, computedProps);
-        var _a;
     }
     /**
      * Get a list of the type models

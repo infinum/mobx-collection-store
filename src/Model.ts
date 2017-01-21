@@ -1,4 +1,4 @@
-import {observable, extendObservable, toJS, action, computed, IComputedValue, IObservableObject} from 'mobx';
+import {observable, extendObservable, toJS, action, computed, intercept, IComputedValue, IObservableObject, IObservableArray} from 'mobx';
 const assign = require('object-assign');
 
 import IReferences from './interfaces/IReferences';
@@ -13,7 +13,7 @@ const __reservedKeys: Array<string> = [
   'static', 'set', 'update', 'toJS',
   '__id', '__collection',
   '__data', '__getProp', '__initializedProps',
-  '__getRef', '__setRef', '__initRefGetters'
+  '__getRef', '__setRef', '__initRefGetters', '__partialRefUpdate'
 ];
 
 /**
@@ -141,9 +141,10 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __getRef(ref: string): IComputedValue<IModel|Array<IModel>> {
-    return computed(() => this.__collection
-      ? this.__getReferencedModels(ref)
-      : null);
+    return computed(
+      () => this.__collection ? this.__getReferencedModels(ref) : null,
+      (value) => this.assign(ref, value)
+    );
   }
 
   /**
@@ -156,7 +157,10 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __getProp(key: string): IComputedValue<IModel> {
-    return computed(() => this.__data[key]);
+    return computed(
+      () => this.__data[key],
+      (value) => this.assign(key, value)
+    );
   }
 
   /**
@@ -180,6 +184,30 @@ class Model implements IModel {
   }
 
   /**
+   * Update the referenced array on push/pull/update
+   *
+   * @private
+   * @param {string} ref - reference name
+   * @param {any} change - MobX change object
+   * @returns {null} no direct change
+   *
+   * @memberOf Model
+   */
+  @action private __partialRefUpdate(ref: string, change) {
+    const type = this.static.refs[ref];
+    if (change.type === 'splice') {
+      const added = change.added.map(this.__getValueRefs.bind(this, type));
+      this.__data[ref].splice(change.index, change.removeCount, ...added);
+      return null;
+    } else if (change.type === 'update') {
+      const newValue = this.__getValueRefs(type, change.newValue);
+      this.__data[ref][change.index] = newValue;
+      return null;
+    }
+    return change;
+  }
+
+  /**
    * Get the model(s) referenced by a key
    *
    * @private
@@ -189,9 +217,17 @@ class Model implements IModel {
    * @memberOf Model
    */
   private __getReferencedModels(key: string) : IModel|Array<IModel> {
-    return mapItems<IModel>(this.__data[key], (refId) => {
+    let dataModels = mapItems<IModel>(this.__data[key], (refId) => {
       return this.__collection.find(this.static.refs[key], refId);
     });
+
+    if (dataModels instanceof Array) {
+      const data: IObservableArray<IModel> = observable(dataModels);
+      intercept(data, (change) => this.__partialRefUpdate(key, change));
+      return data;
+    }
+
+    return dataModels;
   }
 
   /**
@@ -248,7 +284,7 @@ class Model implements IModel {
         return; // Skip the key because it would override the internal key
       }
       if (key !== idAttribute || !this.__data[idAttribute]) {
-        vals[key] = this.set(key, data[key]);
+        vals[key] = this.assign(key, data[key]);
       }
     });
 
@@ -264,7 +300,7 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  @action set<T>(key: string, value: T): T|IModel|Array<IModel> {
+  @action assign<T>(key: string, value: T): T|IModel|Array<IModel> {
     let val: T|IModel|Array<IModel> = value;
     const isRef: boolean = key in this.static.refs;
     if (isRef) {
