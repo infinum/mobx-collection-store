@@ -208,7 +208,7 @@ declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    assignRef<T>(key: string, value: T, type: string): T | IModel | Array<IModel>;
+    assignRef<T>(key: string, value: T, type?: string): T | IModel | Array<IModel>;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *

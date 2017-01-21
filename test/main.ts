@@ -388,4 +388,28 @@ describe('MobX Collection Store', function() {
     expect(first['bar']).to.have.length(3);
     expect(first['bar'][1].foo).to.equal(3);
   });
+
+  it('Should support generic references', function() {
+    const collection = new Collection();
+
+    const models = collection.add<Model>([{
+      id: 1,
+      foo: 1,
+    }, {
+      id: 2,
+      foo: 2
+    }, {
+      id: 3,
+      foo: 3
+    }, {
+      id: 4,
+      foo: 4
+    }] as Array<Object>);
+
+    const first = models.shift();
+
+    first.assignRef('bar', models);
+    expect(first['bar']).to.have.length(3);
+    expect(first['bar'][1].foo).to.equal(3);
+  });
 });

@@ -231,7 +231,7 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `static.defaults` - An object with default model properties
 * `update(data)` - Update the model with new data (object)
 * `assign(prop, value)` - Set a property to the specified value
-* `assignRef(prop, value, type)` - Add a new reference to the model
+* `assignRef(prop, value, [type])` - Add a new reference to the model
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
 
 *Note:* New properties should be added to the model by using the `assign` method, not by direct assignment.

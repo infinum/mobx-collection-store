@@ -354,14 +354,14 @@ class Model implements IModel {
    *
    * @memberOf Model
    */
-  @action assignRef<T>(key: string, value: T, type: string): T|IModel|Array<IModel> {
+  @action assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel> {
     if (key in this.__refs) { // Is already a reference
       return this.assign<T>(key, value);
     }
     this.__refs[key] = type;
     const data = this.__setRef(key, value);
     const item = data instanceof Array ? data[0] : data;
-    const refType = item.static.type;
+    const refType = item ? item.static.type : DEFAULT_TYPE;
     this.__initRefGetter(key, refType);
     return data;
   }
