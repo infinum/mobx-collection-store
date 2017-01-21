@@ -64,12 +64,37 @@ var Model = (function () {
          */
         this.__data = mobx_1.observable({});
         var data = assign({}, this.static.defaults, initialData);
+        if (!data[this.static.idAttribute]) {
+            if (!this.static.enableAutoId) {
+                throw new Error(this.static.idAttribute + " is required!");
+            }
+            else {
+                var used = void 0;
+                do {
+                    data[this.static.idAttribute] = this.static.autoIdFunction();
+                    used = collection.find(this.static.type, data[this.static.idAttribute]);
+                } while (used);
+            }
+        }
         // No need for them to be observable
         this.__id = data[this.static.idAttribute];
         this.__collection = collection;
         this.__initRefGetters();
         this.update(data);
     }
+    /**
+     * Function used for generating the autoincrement IDs
+     *
+     * @static
+     * @returns {number|string} id
+     *
+     * @memberOf Model
+     */
+    Model.autoIdFunction = function () {
+        var id = this.autoincrementValue;
+        this.autoincrementValue++;
+        return id;
+    };
     /**
      * Add new reference getter/setter to the model
      *
@@ -349,6 +374,23 @@ Model.defaults = {};
  * @memberOf Model
  */
 Model.type = consts_1.DEFAULT_TYPE;
+/**
+ * Defines if the model should use autoincrement id if none is defined
+ *
+ * @static
+ * @type {boolean}
+ * @memberOf Model
+ */
+Model.enableAutoId = true;
+/**
+ * Autoincrement counter used for the builtin function
+ *
+ * @private
+ * @static
+ *
+ * @memberOf Model
+ */
+Model.autoincrementValue = 1;
 __decorate([
     mobx_1.action
 ], Model.prototype, "___partialRefUpdate", null);

@@ -96,6 +96,39 @@ class Model implements IModel {
   static type: string = DEFAULT_TYPE
 
   /**
+   * Defines if the model should use autoincrement id if none is defined
+   *
+   * @static
+   * @type {boolean}
+   * @memberOf Model
+   */
+  static enableAutoId: boolean = true;
+
+  /**
+   * Autoincrement counter used for the builtin function
+   *
+   * @private
+   * @static
+   *
+   * @memberOf Model
+   */
+  private static autoincrementValue = 1;
+
+  /**
+   * Function used for generating the autoincrement IDs
+   *
+   * @static
+   * @returns {number|string} id
+   *
+   * @memberOf Model
+   */
+  static autoIdFunction(): number|string {
+    const id = this.autoincrementValue;
+    this.autoincrementValue++;
+    return id;
+  }
+
+  /**
    * Internal data storage
    *
    * @private
@@ -114,6 +147,18 @@ class Model implements IModel {
    */
   constructor(initialData: Object, collection?: ICollection) {
     const data = assign({}, this.static.defaults, initialData);
+
+    if (!data[this.static.idAttribute]) {
+      if (!this.static.enableAutoId) {
+        throw new Error(`${this.static.idAttribute} is required!`);
+      } else {
+        let used;
+        do {
+          data[this.static.idAttribute] = this.static.autoIdFunction();
+          used = collection.find(this.static.type, data[this.static.idAttribute]);
+        } while(used);
+      }
+    }
 
     // No need for them to be observable
     this.__id = data[this.static.idAttribute];

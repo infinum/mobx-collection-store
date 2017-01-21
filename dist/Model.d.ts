@@ -72,6 +72,32 @@ declare class Model implements IModel {
      */
     static type: string;
     /**
+     * Defines if the model should use autoincrement id if none is defined
+     *
+     * @static
+     * @type {boolean}
+     * @memberOf Model
+     */
+    static enableAutoId: boolean;
+    /**
+     * Autoincrement counter used for the builtin function
+     *
+     * @private
+     * @static
+     *
+     * @memberOf Model
+     */
+    private static autoincrementValue;
+    /**
+     * Function used for generating the autoincrement IDs
+     *
+     * @static
+     * @returns {number|string} id
+     *
+     * @memberOf Model
+     */
+    static autoIdFunction(): number | string;
+    /**
      * Internal data storage
      *
      * @private

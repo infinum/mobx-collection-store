@@ -31,7 +31,7 @@ const jane = collection.add({
 
 console.log(collection.length); // 2
 
-john.set('lastName', 'Williams');
+john.lastName = 'Williams';
 console.log(john.lastName); // 'Williams'
 ```
 ## Installation
@@ -120,7 +120,7 @@ console.log(collection.person.length); // 2
 console.log(collection.length); // 3
 
 // The new person model will automatically be created and added to the collection if it doesn't exist
-const dave = fido.set('owner', {
+const dave = fido.assign('owner', {
   id: 3,
   firstName: 'Dave',
   lastName: 'Jones'
@@ -229,6 +229,8 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `static.idAttribute` - Property name of the unique identifier in your data (default is `id`)
 * `static.type` - Type of the model
 * `static.defaults` - An object with default model properties
+* `static enableAutoId` - Should the id be generated if it doesn't exist (default `true`)
+* `static autoIdFunction` - Function used to generate a model id (default is creating an autoincrement id)
 * `update(data)` - Update the model with new data (object)
 * `assign(prop, value)` - Set a property to the specified value
 * `assignRef(prop, value, [type])` - Add a new reference to the model
@@ -241,7 +243,7 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * [x] Reference to an array of models
 * [x] Support for default props
 * [x] Reset method
-* [ ] Autoincrement IDs
+* [x] Autoincrement IDs
 * [ ] More tests
   * [x] Autorun tests
 * [ ] Setup test code coverage

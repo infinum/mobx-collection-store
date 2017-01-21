@@ -33,6 +33,25 @@ interface IModelConstructor {
    */
   defaults: IDictionary;
 
+  /**
+   * Defines if the model should use autoincrement id if none is defined
+   *
+   * @static
+   * @type {boolean}
+   * @memberOf IModelConstructor
+   */
+  enableAutoId: boolean;
+
+  /**
+   * Function used for generating the autoincrement IDs
+   *
+   * @static
+   * @returns {number|string} id
+   *
+   * @memberOf IModelConstructor
+   */
+  autoIdFunction(): number|string;
+
   new (initialData: Object, collection?: ICollection): IModel;
 }
 

@@ -389,7 +389,7 @@ describe('MobX Collection Store', function() {
     expect(first['bar'][1].foo).to.equal(3);
   });
 
-  it('Should support generic references', function() {
+  it('should support generic references', function() {
     const collection = new Collection();
 
     const models = collection.add<Model>([{
@@ -411,5 +411,52 @@ describe('MobX Collection Store', function() {
     first.assignRef('bar', models);
     expect(first['bar']).to.have.length(3);
     expect(first['bar'][1].foo).to.equal(3);
+  });
+
+  it('should work with autoincrement', function() {
+    class Foo extends Model {
+      static type = 'foo';
+      static idAttribute = 'myID';
+      myID: number;
+    }
+
+    class Bar extends Model {
+      static type = 'bar';
+      static enableAutoId = false;
+      id: number;
+    }
+
+    class Baz extends Model {
+      static type = 'baz';
+      static autoIdFunction() {
+        return Math.random();
+      }
+      id: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo, Bar, Baz];
+      foo: Array<Foo>;
+    }
+
+    const collection = new TestCollection();
+
+    const foo1 = collection.add<Foo>({bar: 1}, 'foo');
+    const foo2 = collection.add<Foo>({bar: 1}, 'foo');
+    const foo10 = collection.add<Foo>({myID: 10, bar: 1}, 'foo');
+    const foo3 = collection.add<Foo>({bar: 1}, 'foo');
+    const foo4 = collection.add<Foo>({myID: 4, bar: 1}, 'foo');
+    const foo5 = collection.add<Foo>({bar: 1}, 'foo');
+
+    expect(collection.foo.length).to.equal(6);
+    expect(foo5.myID).to.equal(5);
+    expect(foo10.myID).to.equal(10);
+
+    const bar5 = collection.add<Bar>({id: 5}, 'bar');
+    expect(bar5.id).to.equal(5);
+    expect(() => collection.add<Bar>({foo: 1}, 'bar')).to.throw();
+
+    const baz1 = collection.add<Baz>({}, 'baz');
+    expect(baz1.id).to.be.within(0, 1);
   });
 });
