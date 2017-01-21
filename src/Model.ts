@@ -96,6 +96,15 @@ class Model implements IModel {
   static type: string = DEFAULT_TYPE
 
   /**
+   * Atribute name for the type attribute
+   *
+   * @static
+   * @type {string}
+   * @memberOf Model
+   */
+  static typeAttribute: string = TYPE_PROP;
+
+  /**
    * Defines if the model should use autoincrement id if none is defined
    *
    * @static
@@ -420,7 +429,9 @@ class Model implements IModel {
    */
   toJS(): Object {
     const data = toJS(this.__data);
-    data[TYPE_PROP] = this.static.type;
+    data[TYPE_PROP] = this.static.type === DEFAULT_TYPE
+      ? this.__data[this.static.typeAttribute]
+      : this.static.type;
     return data;
   }
 };

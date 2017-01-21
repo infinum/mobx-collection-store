@@ -18,6 +18,14 @@ interface IModelConstructor {
   type: string;
 
   /**
+   * Atribute name for the type attribute
+   *
+   * @type {string}
+   * @memberOf IModelConstructor
+   */
+  typeAttribute: string;
+
+  /**
    * The attribute that should be used as the unique identifier
    *
    * @type {string}
@@ -36,7 +44,6 @@ interface IModelConstructor {
   /**
    * Defines if the model should use autoincrement id if none is defined
    *
-   * @static
    * @type {boolean}
    * @memberOf IModelConstructor
    */
@@ -45,7 +52,6 @@ interface IModelConstructor {
   /**
    * Function used for generating the autoincrement IDs
    *
-   * @static
    * @returns {number|string} id
    *
    * @memberOf IModelConstructor

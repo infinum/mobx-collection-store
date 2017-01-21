@@ -336,7 +336,9 @@ var Model = (function () {
      */
     Model.prototype.toJS = function () {
         var data = mobx_1.toJS(this.__data);
-        data[consts_1.TYPE_PROP] = this.static.type;
+        data[consts_1.TYPE_PROP] = this.static.type === consts_1.DEFAULT_TYPE
+            ? this.__data[this.static.typeAttribute]
+            : this.static.type;
         return data;
     };
     return Model;
@@ -374,6 +376,14 @@ Model.defaults = {};
  * @memberOf Model
  */
 Model.type = consts_1.DEFAULT_TYPE;
+/**
+ * Atribute name for the type attribute
+ *
+ * @static
+ * @type {string}
+ * @memberOf Model
+ */
+Model.typeAttribute = consts_1.TYPE_PROP;
 /**
  * Defines if the model should use autoincrement id if none is defined
  *

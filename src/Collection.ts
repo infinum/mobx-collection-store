@@ -180,7 +180,11 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   private __matchModel(item: IModel, type: string, id: string|number): boolean {
-    return item.static.type === type && item[item.static.idAttribute] === id;
+    return (
+        item.static.type === type
+        || (item.static.typeAttribute && item[item.static.typeAttribute] === type)
+      )
+      && item[item.static.idAttribute] === id;
   }
 
   /**
@@ -211,7 +215,13 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   findAll<T extends IModel>(type: string): Array<T> {
-    return this.__data.filter((item) => item.static.type === type) as Array<T>;
+    const item = this.__data[0];
+    return this.__data.filter(
+      (item) => (
+        item.static.type === type
+        || (item.static.typeAttribute && item[item.static.typeAttribute] === type)
+      )
+    ) as Array<T>;
   }
 
   /**

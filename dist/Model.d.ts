@@ -72,6 +72,14 @@ declare class Model implements IModel {
      */
     static type: string;
     /**
+     * Atribute name for the type attribute
+     *
+     * @static
+     * @type {string}
+     * @memberOf Model
+     */
+    static typeAttribute: string;
+    /**
      * Defines if the model should use autoincrement id if none is defined
      *
      * @static

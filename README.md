@@ -226,9 +226,10 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 
 * `constructor([serializedData])` - The constructor can be provided with the serialized data from `toJS` in order to deserialize
 * `__id` - ID of the model
-* `static.idAttribute` - Property name of the unique identifier in your data (default is `id`)
-* `static.type` - Type of the model
-* `static.defaults` - An object with default model properties
+* `static idAttribute` - Property name of the unique identifier in your data (default is `id`)
+* `static type` - Type of the model
+* `static typeAttribute` - Name of the type attribute if dynamic types are used (`static type` is not set)
+* `static defaults` - An object with default model properties
 * `static enableAutoId` - Should the id be generated if it doesn't exist (default `true`)
 * `static autoIdFunction` - Function used to generate a model id (default is creating an autoincrement id)
 * `update(data)` - Update the model with new data (object)
@@ -236,7 +237,7 @@ console.log(fido.owner.fullName); // 'Jane Doe'
 * `assignRef(prop, value, [type])` - Add a new reference to the model
 * `toJS()` - Convert the model into a plain JS Object in order to be serialized
 
-*Note:* New properties should be added to the model by using the `assign` method, not by direct assignment.
+*Note:* New properties should be added to the model by using the `assign` or `assignRef` methods, not by direct assignment.
 
 ## TODO
 

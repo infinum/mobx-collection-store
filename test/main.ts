@@ -459,4 +459,25 @@ describe('MobX Collection Store', function() {
     const baz1 = collection.add<Baz>({}, 'baz');
     expect(baz1.id).to.be.within(0, 1);
   });
+
+  it('should support typeAttribute', function() {
+    class TestModel extends Model {
+      static typeAttribute = 'foo';
+    }
+
+    class TestCollection extends Collection {
+      static types = [TestModel];
+    }
+
+    const collection = new TestCollection();
+
+    const model = new TestModel({id: 1, foo: 'bar'});
+    collection.add(model);
+
+    const bar = collection.findAll('bar');
+    expect(bar.length).to.equal(1);
+
+    const baz = collection.findAll('baz');
+    expect(baz.length).to.equal(0);
+  });
 });

@@ -159,7 +159,9 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.__matchModel = function (item, type, id) {
-        return item.static.type === type && item[item.static.idAttribute] === id;
+        return (item.static.type === type
+            || (item.static.typeAttribute && item[item.static.typeAttribute] === type))
+            && item[item.static.idAttribute] === id;
     };
     /**
      * Find a specific model
@@ -188,7 +190,9 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.findAll = function (type) {
-        return this.__data.filter(function (item) { return item.static.type === type; });
+        var item = this.__data[0];
+        return this.__data.filter(function (item) { return (item.static.type === type
+            || (item.static.typeAttribute && item[item.static.typeAttribute] === type)); });
     };
     /**
      * Remove models from the collection
