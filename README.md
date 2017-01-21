@@ -60,32 +60,11 @@ In order to use relationships, you'll need to create new model and collection cl
 * [JavaScript version](examples/relationships.js)
 * [TypeScript version](examples/relationships.ts)
 
-## Collection
+## [Docs](https://infinum.github.io/mobx-collection-store/index.html)
 
-* `constructor([serializedData])` - The constructor can be provided with the serialized data from `toJS` in order to deserialize
-* `static types` - Array of classes extended from the Model
-* `length` - Number of unique models in the collection
-* `add(model, [type])` - Add a model (or an array of models). Type param is required if the first argument is an plain object (or an array of plain objects) and you want to map them to the correct model classes
-* `find(type, [id])` - Find a specific model
-* `findAll(type)` - Find all models of the specified type
-* `remove(type, [id])` - Remove a specific model
-* `removeAll(type)` - Remove all models of the specified type
-* `reset()` - Remove all models from the collection
-* `toJS()` - Convert the collection (and containing models) into a plain JS Object in order to be serialized
+### [Collection](https://infinum.github.io/mobx-collection-store/classes/collection.html)
 
-## Model
-
-* `constructor([serializedData])` - The constructor can be provided with the serialized data from `toJS` in order to deserialize
-* `static idAttribute` - Property name of the unique identifier in your data (default is `id`)
-* `static type` - Type of the model
-* `static typeAttribute` - Name of the type attribute if dynamic types are used (`static type` is not set)
-* `static defaults` - An object with default model properties
-* `static enableAutoId` - Should the id be generated if it doesn't exist (default `true`)
-* `static autoIdFunction` - Function used to generate a model id (default is creating an autoincrement id)
-* `update(data)` - Update the model with new data (object)
-* `assign(prop, value)` - Set a property to the specified value
-* `assignRef(prop, value, [type])` - Add a new reference to the model
-* `toJS()` - Convert the model into a plain JS Object in order to be serialized
+### [Model](https://infinum.github.io/mobx-collection-store/classes/model.html)
 
 *Note:* New properties should be added to the model by using the `assign` or `assignRef` methods, not by direct assignment.
 

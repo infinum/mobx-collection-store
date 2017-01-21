@@ -1007,33 +1007,9 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<li><a href="examples/relationships.js">JavaScript version</a></li>
 				<li><a href="examples/relationships.ts">TypeScript version</a></li>
 			</ul>
-			<h2 id="collection">Collection</h2>
-			<ul>
-				<li><code>constructor([serializedData])</code> - The constructor can be provided with the serialized data from <code>toJS</code> in order to deserialize</li>
-				<li><code>static types</code> - Array of classes extended from the Model</li>
-				<li><code>length</code> - Number of unique models in the collection</li>
-				<li><code>add(model, [type])</code> - Add a model (or an array of models). Type param is required if the first argument is an plain object (or an array of plain objects) and you want to map them to the correct model classes</li>
-				<li><code>find(type, [id])</code> - Find a specific model</li>
-				<li><code>findAll(type)</code> - Find all models of the specified type</li>
-				<li><code>remove(type, [id])</code> - Remove a specific model</li>
-				<li><code>removeAll(type)</code> - Remove all models of the specified type</li>
-				<li><code>reset()</code> - Remove all models from the collection</li>
-				<li><code>toJS()</code> - Convert the collection (and containing models) into a plain JS Object in order to be serialized</li>
-			</ul>
-			<h2 id="model">Model</h2>
-			<ul>
-				<li><code>constructor([serializedData])</code> - The constructor can be provided with the serialized data from <code>toJS</code> in order to deserialize</li>
-				<li><code>static idAttribute</code> - Property name of the unique identifier in your data (default is <code>id</code>)</li>
-				<li><code>static type</code> - Type of the model</li>
-				<li><code>static typeAttribute</code> - Name of the type attribute if dynamic types are used (<code>static type</code> is not set)</li>
-				<li><code>static defaults</code> - An object with default model properties</li>
-				<li><code>static enableAutoId</code> - Should the id be generated if it doesn&#39;t exist (default <code>true</code>)</li>
-				<li><code>static autoIdFunction</code> - Function used to generate a model id (default is creating an autoincrement id)</li>
-				<li><code>update(data)</code> - Update the model with new data (object)</li>
-				<li><code>assign(prop, value)</code> - Set a property to the specified value</li>
-				<li><code>assignRef(prop, value, [type])</code> - Add a new reference to the model</li>
-				<li><code>toJS()</code> - Convert the model into a plain JS Object in order to be serialized</li>
-			</ul>
+			<h2 id="-docs-https-infinum-github-io-mobx-collection-store-index-html-"><a href="https://infinum.github.io/mobx-collection-store/index.html">Docs</a></h2>
+			<h3 id="-collection-https-infinum-github-io-mobx-collection-store-classes-collection-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/collection.html">Collection</a></h3>
+			<h3 id="-model-https-infinum-github-io-mobx-collection-store-classes-model-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/model.html">Model</a></h3>
 			<p><em>Note:</em> New properties should be added to the model by using the <code>assign</code> or <code>assignRef</code> methods, not by direct assignment.</p>
 			<h2 id="license">License</h2>
 			<p>The MIT License</p>
