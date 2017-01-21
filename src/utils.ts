@@ -46,3 +46,26 @@ export function getType(instance: IModel) {
     ? instance[instance.static.typeAttribute]
     : instance.static.type;
 }
+
+/**
+ * Assign objects to the target object
+ * Not a complete implementation (Object.assign)
+ * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
+ *
+ * @export
+ * @param {Object} target - Target object
+ * @param {Array<Object>} args - Objects to be assigned
+ * @returns
+ */
+export function assign(target: Object, ...args: Array<Object>) {
+  args.forEach((nextSource) => {
+    if (nextSource != null) {
+      for (var nextKey in nextSource) {
+        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+          target[nextKey] = nextSource[nextKey];
+        }
+      }
+    }
+  });
+  return target;
+}

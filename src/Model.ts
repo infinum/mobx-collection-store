@@ -4,15 +4,13 @@ import {
   IComputedValue, IObservableObject, IObservableArray
 } from 'mobx';
 
-const assign = require('object-assign');
-
 import IReferences from './interfaces/IReferences';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import {TYPE_PROP, DEFAULT_TYPE, RESERVED_KEYS} from './consts';
-import {mapItems, first, getType} from './utils';
+import {mapItems, first, getType, assign} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 

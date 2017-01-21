@@ -9,7 +9,10 @@
     "build": "ntsc -p ./src",
     "test": "NODE_ENV=test nyc mocha",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
-    "precommit": "npm test && npm run build && git add dist/"
+    "docs": "typedoc --mode file --theme minimal --tsconfig ./src/tsconfig.json --excludePrivate --out ./docs ./src",
+    "docs:add": "npm run docs && git add docs/",
+    "dist:add": "npm run build && git add dist/",
+    "precommit": "npm test && npm run dist:add && npm run docs:add"
   },
   "repository": {
     "type": "git",
@@ -60,12 +63,10 @@
     "ntypescript": "^1.201609302242.1",
     "nyc": "^10.1.2",
     "ts-node": "^2.0.0",
+    "typedoc": "^0.5.5",
     "typescript": "^2.1.5"
   },
   "peerDependencies": {
     "mobx": "^2.7.0 || ^3"
-  },
-  "dependencies": {
-    "object-assign": "^4.1.1"
   }
 }

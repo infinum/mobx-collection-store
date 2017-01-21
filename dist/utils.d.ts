@@ -30,3 +30,14 @@ export declare function first(arr: Array<any>): any;
  */
 export declare function matchModel(item: IModel, type: string, id: string | number): boolean;
 export declare function getType(instance: IModel): any;
+/**
+ * Assign objects to the target object
+ * Not a complete implementation (Object.assign)
+ * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
+ *
+ * @export
+ * @param {Object} target - Target object
+ * @param {Array<Object>} args - Objects to be assigned
+ * @returns
+ */
+export declare function assign(target: Object, ...args: Array<Object>): Object;

@@ -6,7 +6,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var mobx_1 = require("mobx");
-var assign = require('object-assign');
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
 /**
@@ -56,7 +55,7 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__data = mobx_1.observable({});
-        var data = assign({}, this.static.defaults, initialData);
+        var data = utils_1.assign({}, this.static.defaults, initialData);
         this.__ensureId(data, collection);
         // No need for it to be observable
         this.__collection = collection;
