@@ -1,6 +1,6 @@
 {
   "name": "mobx-collection-store",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Data collection store for MobX",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
