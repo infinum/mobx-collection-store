@@ -56,13 +56,26 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__data = mobx_1.observable({});
-        var data = utils_1.assign({}, this.static.defaults, initialData);
+        var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
         this.__ensureId(data, collection);
         // No need for it to be observable
         this.__collection = collection;
         this.__initRefGetters();
         this.update(data);
     }
+    /**
+     * Function that can process the received data (e.g. from an API) before it's transformed into a model
+     *
+     * @static
+     * @param {Object} [rawData={}] - Raw data
+     * @returns {Object} Transformed data
+     *
+     * @memberOf Model
+     */
+    Model.preprocess = function (rawData) {
+        if (rawData === void 0) { rawData = {}; }
+        return rawData;
+    };
     /**
      * Function used for generating the autoincrement IDs
      *

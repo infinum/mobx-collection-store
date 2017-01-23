@@ -957,6 +957,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="model.html#autoidfunction" class="tsd-kind-icon">auto<wbr>IdFunction</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="model.html#preprocess" class="tsd-kind-icon">preprocess</a>
+				</li>
 			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
@@ -1072,6 +1075,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="model.html#tojs" class="tsd-kind-icon">toJS</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="model.html#update" class="tsd-kind-icon">update</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model.html#autoidfunction" class="tsd-kind-icon">auto<wbr>IdFunction</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model.html#preprocess" class="tsd-kind-icon">preprocess</a></li>
 						</ul>
 					</section>
 				</div>
@@ -1089,7 +1093,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in Model.ts:136</li>
+								<li>Defined in Model.ts:149</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1302,7 +1306,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/imodel.html">IModel</a>.<a href="../interfaces/imodel.html#static">static</a></p>
 					<ul>
-						<li>Defined in Model.ts:349</li>
+						<li>Defined in Model.ts:362</li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1335,7 +1339,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Implementation of <a href="../interfaces/imodel.html">IModel</a>.<a href="../interfaces/imodel.html#assign">assign</a></p>
 							<ul>
-								<li>Defined in Model.ts:402</li>
+								<li>Defined in Model.ts:415</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1390,7 +1394,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Implementation of <a href="../interfaces/imodel.html">IModel</a>.<a href="../interfaces/imodel.html#assignref">assignRef</a></p>
 							<ul>
-								<li>Defined in Model.ts:441</li>
+								<li>Defined in Model.ts:454</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1453,7 +1457,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Implementation of <a href="../interfaces/imodel.html">IModel</a>.<a href="../interfaces/imodel.html#tojs">toJS</a></p>
 							<ul>
-								<li>Defined in Model.ts:459</li>
+								<li>Defined in Model.ts:472</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1482,7 +1486,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Implementation of <a href="../interfaces/imodel.html">IModel</a>.<a href="../interfaces/imodel.html#update">update</a></p>
 							<ul>
-								<li>Defined in Model.ts:382</li>
+								<li>Defined in Model.ts:395</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1519,7 +1523,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in Model.ts:123</li>
+								<li>Defined in Model.ts:136</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1539,6 +1543,42 @@ img { max-width: 100%; }
 							<span class="tsd-signature-type">string</span>
 						</h4>
 						<p>id</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="preprocess" class="tsd-anchor"></a>
+				<h3>preprocess</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">preprocess<span class="tsd-signature-symbol">(</span>rawData<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in Model.ts:124</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Function that can process the received data (e.g. from an API) before it&#39;s transformed into a model</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>static</dt>
+								<dd></dd>
+								<dt>memberof</dt>
+								<dd><p>Model</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> rawData: <span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span></h4>
+						<p>Transformed data</p>
 					</li>
 				</ul>
 			</section>

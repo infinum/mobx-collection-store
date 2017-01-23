@@ -5,6 +5,8 @@ const expect = require('chai').expect;
 
 import {Collection, Model} from '../src';
 
+import {assign} from '../src/utils';
+
 describe('MobX Collection Store', function() {
   it('should do the basic init', function() {
     const collection = new Collection();
@@ -627,5 +629,45 @@ describe('MobX Collection Store', function() {
     expect(cart.products[0].quantity).to.equal(8);
     expect(cart.products[1].quantity).to.equal(2);
     expect(cart.products[0].product.name).to.equal('Electrons');
+  });
+
+  it('should work with preprocess', function() {
+    class Foo extends Model {
+      static type = 'foo';
+      static refs = {bar: 'bar'};
+      static preprocess(rawData) {
+        return assign({newProp: 1}, rawData);
+      }
+      bar: Bar|Array<Bar>;
+    }
+
+    class Bar extends Model {
+      static type = 'bar';
+      static preprocess(rawData) {
+        return assign({barProp: 2}, rawData);
+      }
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo, Bar];
+    }
+
+    const collection = new TestCollection();
+
+    const foo = collection.add<Foo>({
+      foo: 6,
+      id: 5,
+      bar: [{
+        id: 7,
+        bar: 8
+      }, {
+        id: 9,
+        bar: 10
+      }]
+    }, 'foo');
+
+    expect(foo['newProp']).to.equal(1);
+    expect(foo.bar[0]['barProp']).to.equal(2);
+    expect(foo.bar[1]['barProp']).to.equal(2);
   });
 });

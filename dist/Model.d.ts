@@ -90,6 +90,16 @@ export declare class Model implements IModel {
      */
     private static autoincrementValue;
     /**
+     * Function that can process the received data (e.g. from an API) before it's transformed into a model
+     *
+     * @static
+     * @param {Object} [rawData={}] - Raw data
+     * @returns {Object} Transformed data
+     *
+     * @memberOf Model
+     */
+    static preprocess(rawData?: Object): Object;
+    /**
      * Function used for generating the autoincrement IDs
      *
      * @static

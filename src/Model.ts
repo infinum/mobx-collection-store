@@ -113,6 +113,19 @@ export class Model implements IModel {
   private static autoincrementValue = 1;
 
   /**
+   * Function that can process the received data (e.g. from an API) before it's transformed into a model
+   *
+   * @static
+   * @param {Object} [rawData={}] - Raw data
+   * @returns {Object} Transformed data
+   *
+   * @memberOf Model
+   */
+  static preprocess(rawData: Object = {}): Object {
+    return rawData;
+  }
+
+  /**
    * Function used for generating the autoincrement IDs
    *
    * @static
@@ -144,7 +157,7 @@ export class Model implements IModel {
    * @memberOf Model
    */
   constructor(initialData: Object = {}, collection?: ICollection) {
-    const data = assign({}, this.static.defaults, initialData);
+    const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
     this.__ensureId(data, collection);
 
