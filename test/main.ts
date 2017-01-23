@@ -1,4 +1,4 @@
-import {computed, extendObservable, autorun, useStrict, action} from 'mobx';
+import {computed, extendObservable, autorun, useStrict, action, toJS} from 'mobx';
 useStrict(true);
 
 const expect = require('chai').expect;
@@ -497,5 +497,135 @@ describe('MobX Collection Store', function() {
     expect(model['self']).to.equal(model);
     expect(model['self2']).to.equal(model);
     expect(model['empty']).to.equal(null);
+  });
+
+  it('should support references during collection add', function() {
+    class Foo extends Model {
+      static type = 'foo';
+
+      static refs = {bar: 'bar'}
+
+      foo: number;
+      bar: Bar|Array<Bar>
+    }
+
+    class Bar extends Model {
+      static type = 'bar';
+      bar: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo, Bar];
+      foo: Array<Foo>;
+      bar: Array<Bar>;
+    }
+
+    const collection = new TestCollection();
+
+    const foo = collection.add<Foo>({
+      foo: 2,
+      id: 1,
+      bar: {
+        id: 4,
+        bar: 3
+      }
+    }, 'foo');
+
+    expect(foo.foo).to.equal(2);
+    expect(foo.bar['bar']).to.equal(3);
+    expect(collection.foo).to.have.length(1);
+    expect(collection.bar).to.have.length(1);
+
+    const foo2 = collection.add<Foo>({
+      foo: 6,
+      id: 5,
+      bar: [{
+        id: 7,
+        bar: 8
+      }, {
+        id: 9,
+        bar: 10
+      }]
+    }, 'foo');
+
+    expect(foo2.bar[0].bar).to.equal(8);
+    expect(foo2.bar[1].bar).to.equal(10);
+    expect(collection.foo).to.have.length(2);
+    expect(collection.bar).to.have.length(3);
+  });
+
+  it('should work for a real world scenario', function() {
+    class User extends Model {
+      static type = 'user';
+      email: string;
+    }
+
+    class Cart extends Model {
+      static type = 'cart';
+      static refs = {user: 'user', products: 'cartItem'};
+      user: User|Array<User>;
+      products: CartItem|Array<CartItem>;
+      id: number;
+    }
+
+    class CartItem extends Model {
+      static type = 'cartItem';
+      static refs = {product: 'products'};
+      product: Product|Array<Product>;
+      quantity: number;
+      id: number;
+    }
+
+    class Product extends Model {
+      static type = 'products';
+      name: string;
+      price: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [User, Cart, CartItem, Product];
+      user: Array<User>;
+      cart: Array<Cart>;
+      cartItem: Array<CartItem>;
+      products: Array<Product>;
+    }
+
+    const collection = new TestCollection();
+
+    const cart = collection.add<Cart>({
+      "id": 1,
+      "user": {
+        "id": 1,
+        "username": "jdoe42",
+        "email": "test@example.com",
+        "token": "dc9dcd8116673372e96cc0410821da6a",
+        "role": 1
+      },
+      "products": [{
+        "product": {
+          "id": 1,
+          "name": "Electrons",
+          "price": 9.99
+        },
+        "quantity": 8
+      }, {
+        "product": {
+          "id": 2,
+          "name": "Protons",
+          "price": 5.99
+        },
+        "quantity": 2
+      }]
+    }, 'cart');
+
+    expect(collection.user).to.have.length(1);
+    expect(collection.cart).to.have.length(1);
+    expect(collection.cartItem).to.have.length(2);
+    expect(collection.products).to.have.length(2);
+    expect(cart.user['email']).to.equal('test@example.com');
+    expect(cart.products).to.have.length(2);
+    expect(cart.products[0].quantity).to.equal(8);
+    expect(cart.products[1].quantity).to.equal(2);
+    expect(cart.products[0].product.name).to.equal('Electrons');
   });
 });

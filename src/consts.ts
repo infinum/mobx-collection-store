@@ -1,10 +1,10 @@
-/** @const TYPE_PROP {string} - Name of the type property when the model is converted into POJO */
+/** @private @const TYPE_PROP {string} - Name of the type property when the model is converted into POJO */
 export const TYPE_PROP: string = '__type__';
 
-/** @const DEFAULT_TYPE {string} - Type of the default model */
+/** @private @const DEFAULT_TYPE {string} - Type of the default model */
 export const DEFAULT_TYPE: string = '__default_type__';
 
-/** @const RESERVED_KEYS {Array<string>} - List of property names that shouldn't be used in the model */
+/** @private @const RESERVED_KEYS {Array<string>} - List of property names that shouldn't be used in the model */
 export const RESERVED_KEYS: Array<string> = [
   'static', 'assign', 'assignRef', 'update', 'toJS',
   '__collection', '__data', '__getProp', '__initializedProps',

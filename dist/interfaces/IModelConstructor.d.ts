@@ -50,6 +50,6 @@ interface IModelConstructor {
      * @memberOf IModelConstructor
      */
     autoIdFunction(): number | string;
-    new (initialData: Object, collection?: ICollection): IModel;
+    new (initialData?: Object, collection?: ICollection): IModel;
 }
 export default IModelConstructor;

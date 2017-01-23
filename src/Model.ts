@@ -143,7 +143,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  constructor(initialData: Object, collection?: ICollection) {
+  constructor(initialData: Object = {}, collection?: ICollection) {
     const data = assign({}, this.static.defaults, initialData);
 
     this.__ensureId(data, collection);

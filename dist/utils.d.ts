@@ -2,7 +2,7 @@ import IModel from './interfaces/IModel';
 /**
  * Iterate trough an single item or array of items
  *
- * @export
+ * @private
  * @template T
  * @param {(Object|Array<Object>)} data - Data that needs to be iterated
  * @param {Function} fn - Function to call for every item
@@ -12,7 +12,7 @@ export declare function mapItems<T>(data: Object | Array<Object>, fn: Function):
 /**
  * Get the first array item
  *
- * @export
+ * @private
  * @param {Array<any>} arr - The array to process
  * @returns {*} First element or null
  */
@@ -20,7 +20,7 @@ export declare function first(arr: Array<any>): any;
 /**
  * Match a model to defined parameters
  *
- * @export
+ * @private
  * @param {IModel} item - Model that's beeing matched
  * @param {string} type - Model type to match
  * @param {(string|number)} id - Model ID to match
@@ -29,13 +29,20 @@ export declare function first(arr: Array<any>): any;
  * @memberOf Collection
  */
 export declare function matchModel(item: IModel, type: string, id: string | number): boolean;
+/**
+ * Get the dynamic/static model type
+ *
+ * @private
+ * @param {IModel} instance - Model instance
+ * @returns Model instance type
+ */
 export declare function getType(instance: IModel): any;
 /**
  * Assign objects to the target object
  * Not a complete implementation (Object.assign)
  * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
  *
- * @export
+ * @private
  * @param {Object} target - Target object
  * @param {Array<Object>} args - Objects to be assigned
  * @returns

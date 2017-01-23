@@ -114,7 +114,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    constructor(initialData: Object, collection?: ICollection);
+    constructor(initialData?: Object, collection?: ICollection);
     /**
      * Ensure the new model has a valid id
      *

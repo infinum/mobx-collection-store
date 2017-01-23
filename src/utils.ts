@@ -5,7 +5,7 @@ import {DEFAULT_TYPE} from './consts';
 /**
  * Iterate trough an single item or array of items
  *
- * @export
+ * @private
  * @template T
  * @param {(Object|Array<Object>)} data - Data that needs to be iterated
  * @param {Function} fn - Function to call for every item
@@ -18,7 +18,7 @@ export function mapItems<T>(data: Object|Array<Object>, fn: Function): T|Array<T
 /**
  * Get the first array item
  *
- * @export
+ * @private
  * @param {Array<any>} arr - The array to process
  * @returns {*} First element or null
  */
@@ -29,7 +29,7 @@ export function first(arr: Array<any>): any {
 /**
  * Match a model to defined parameters
  *
- * @export
+ * @private
  * @param {IModel} item - Model that's beeing matched
  * @param {string} type - Model type to match
  * @param {(string|number)} id - Model ID to match
@@ -41,6 +41,13 @@ export function matchModel(item: IModel, type: string, id: string|number): boole
   return getType(item) === type && item[item.static.idAttribute] === id;
 }
 
+/**
+ * Get the dynamic/static model type
+ *
+ * @private
+ * @param {IModel} instance - Model instance
+ * @returns Model instance type
+ */
 export function getType(instance: IModel) {
   return instance.static.type === DEFAULT_TYPE
     ? instance[instance.static.typeAttribute]
@@ -52,7 +59,7 @@ export function getType(instance: IModel) {
  * Not a complete implementation (Object.assign)
  * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
  *
- * @export
+ * @private
  * @param {Object} target - Target object
  * @param {Array<Object>} args - Objects to be assigned
  * @returns

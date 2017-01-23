@@ -24,6 +24,7 @@ var Model = (function () {
      * @memberOf Model
      */
     function Model(initialData, collection) {
+        if (initialData === void 0) { initialData = {}; }
         /**
          * Collection the model belongs to
          *
