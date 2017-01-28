@@ -37,11 +37,15 @@
     }
   ],
   "nyc": {
-    "extensions": [
+    "extension": [
       ".ts"
     ],
     "require": [
       "ts-node/register"
+    ],
+    "exclude": [
+      "src/interfaces/*",
+      "test/*"
     ],
     "sourceMap": true,
     "instrument": true,
