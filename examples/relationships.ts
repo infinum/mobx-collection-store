@@ -1,53 +1,57 @@
-import {Model, Collection} from '../src';
 import {computed} from 'mobx';
 
+import {Collection, Model} from '../src';
+
+// tslint:disable:max-classes-per-file
+// tslint:disable:no-console
+
 class Person extends Model {
-  static type = 'person';
-  static refs = {spouse: 'person'};
+  public static type = 'person';
+  public static refs = {spouse: 'person'};
 
-  firstName: string;
-  lastName: string;
-  spouse: Person;
+  public firstName: string;
+  public lastName: string;
+  public spouse: Person;
 
-  @computed get fullName(): string {
+  @computed public get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 }
 
 class Pet extends Model {
-  static type = 'pet';
-  static refs = {owner: 'person'}
+  public static type = 'pet';
+  public static refs = {owner: 'person'};
 
-  owner: Person;
-  ownerId: number;
+  public owner: Person;
+  public ownerId: number;
 }
 
 class MyCollection extends Collection {
-  static types = [Person, Pet]
-  person: Array<Person>;
-  pet: Array<Pet>;
+  public static types = [Person, Pet];
+  public person: Array<Person>;
+  public pet: Array<Pet>;
 }
 
 const collection = new MyCollection();
 
 const john = collection.add<Person>({
-  id: 1,
-  spouse: 2,
   firstName: 'John',
-  lastName: 'Doe'
+  id: 1,
+  lastName: 'Doe',
+  spouse: 2,
 }, 'person');
 
 const fido = collection.add<Pet>({
   id: 1,
+  name: 'Fido',
   owner: john,
-  name: 'Fido'
 }, 'pet');
 
 const jane = new Person({
-  id: 2,
-  spouse: 1,
   firstName: 'Jane',
-  lastName: 'Doe'
+  id: 2,
+  lastName: 'Doe',
+  spouse: 1,
 });
 collection.add(jane);
 
@@ -58,9 +62,9 @@ console.log(collection.person.length); // 2
 console.log(collection.length); // 3
 
 fido.assign('owner', {
-  id: 3,
   firstName: 'Dave',
-  lastName: 'Jones'
+  id: 3,
+  lastName: 'Jones',
 });
 
 console.log(fido.owner.fullName); // 'Dave Jones'

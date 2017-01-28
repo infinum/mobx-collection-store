@@ -1,5 +1,6 @@
-import {computed, extendObservable} from 'mobx';
-import {Model, Collection} from '../src';
+import {computed} from 'mobx';
+
+import {Collection, Model} from '../src';
 
 class Person extends Model {
 
