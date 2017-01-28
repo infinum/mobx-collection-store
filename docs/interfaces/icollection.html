@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>mobx-collection-store | mobx-collection-store</title>
+	<title>ICollection | mobx-collection-store</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -910,419 +910,467 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class">
-			<a href="classes/collection.html" class="tsd-kind-icon">Collection</a>
+			<a href="../classes/collection.html" class="tsd-kind-icon">Collection</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/model.html" class="tsd-kind-icon">Model</a>
+			<a href="../classes/model.html" class="tsd-kind-icon">Model</a>
+		</li>
+		<li class="current tsd-kind-interface">
+			<a href="icollection.html" class="tsd-kind-icon">ICollection</a>
+			<ul>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="icollection.html#length" class="tsd-kind-icon">length</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#add" class="tsd-kind-icon">add</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#find" class="tsd-kind-icon">find</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#findall" class="tsd-kind-icon">find<wbr>All</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#remove" class="tsd-kind-icon">remove</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#removeall" class="tsd-kind-icon">remove<wbr>All</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#reset" class="tsd-kind-icon">reset</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface">
+					<a href="icollection.html#tojs" class="tsd-kind-icon">toJS</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
+			<a href="idictionary.html" class="tsd-kind-icon">IDictionary</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a>
+			<a href="imodel.html" class="tsd-kind-icon">IModel</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/imodel.html" class="tsd-kind-icon">IModel</a>
+			<a href="imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a>
+			<a href="ireferences.html" class="tsd-kind-icon">IReferences</a>
 		</li>
 		<li class=" tsd-kind-type-alias tsd-is-not-exported">
-			<a href="globals.html#ichange" class="tsd-kind-icon">IChange</a>
+			<a href="../globals.html#ichange" class="tsd-kind-icon">IChange</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
-			<a href="globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
+			<a href="../globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
-			<a href="globals.html#reserved_keys" class="tsd-kind-icon">RESERVED_<wbr>KEYS</a>
+			<a href="../globals.html#reserved_keys" class="tsd-kind-icon">RESERVED_<wbr>KEYS</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
-			<a href="globals.html#type_prop" class="tsd-kind-icon">TYPE_<wbr>PROP</a>
+			<a href="../globals.html#type_prop" class="tsd-kind-icon">TYPE_<wbr>PROP</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-private">
-			<a href="globals.html#assign" class="tsd-kind-icon">assign</a>
+			<a href="../globals.html#assign" class="tsd-kind-icon">assign</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-private">
-			<a href="globals.html#first" class="tsd-kind-icon">first</a>
+			<a href="../globals.html#first" class="tsd-kind-icon">first</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-private">
-			<a href="globals.html#gettype" class="tsd-kind-icon">get<wbr>Type</a>
+			<a href="../globals.html#gettype" class="tsd-kind-icon">get<wbr>Type</a>
 		</li>
 		<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-private">
-			<a href="globals.html#mapitems" class="tsd-kind-icon">map<wbr>Items</a>
+			<a href="../globals.html#mapitems" class="tsd-kind-icon">map<wbr>Items</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-private">
-			<a href="globals.html#matchmodel" class="tsd-kind-icon">match<wbr>Model</a>
+			<a href="../globals.html#matchmodel" class="tsd-kind-icon">match<wbr>Model</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<h1 id="mobx-collection-store">mobx-collection-store</h1>
-			<p><a href="https://badge.fury.io/js/mobx-collection-store"><img src="https://badge.fury.io/js/mobx-collection-store.svg" alt="npm version"></a></p>
-			<p><a href="https://travis-ci.org/infinum/mobx-collection-store"><img src="https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master" alt="Build Status"></a>
-			<a href="https://codeclimate.com/github/infinum/mobx-collection-store/coverage"><img src="https://codeclimate.com/github/infinum/mobx-collection-store/badges/coverage.svg" alt="Test Coverage"></a></p>
-			<p><a href="https://david-dm.org/infinum/mobx-collection-store"><img src="https://david-dm.org/infinum/mobx-collection-store.svg" alt="Dependency Status"></a>
-			<a href="https://david-dm.org/infinum/mobx-collection-store#info=devDependencies"><img src="https://david-dm.org/infinum/mobx-collection-store/dev-status.svg" alt="devDependency Status"></a></p>
-			<p>Structured data store for MobX. Partially influenced by <a href="http://backbonejs.org/#Collection">Backbone Collections</a>.</p>
-			<h2 id="-basic-usage-examples-basic-js-"><a href="examples/basic.js">Basic usage</a></h2>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> {Collection} <span class="hljs-keyword">from</span> <span class="hljs-string">'mobx-collection-store'</span>;
-
-<span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection();
-
-<span class="hljs-keyword">const</span> john = collection.add({
-  <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>,
-  <span class="hljs-attr">firstName</span>: <span class="hljs-string">'John'</span>,
-  <span class="hljs-attr">lastName</span>: <span class="hljs-string">'Doe'</span>
-});
-
-<span class="hljs-keyword">const</span> jane = collection.add({
-  <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>,
-  <span class="hljs-attr">firstName</span>: <span class="hljs-string">'Jane'</span>,
-  <span class="hljs-attr">lastName</span>: <span class="hljs-string">'Doe'</span>
-});
-
-<span class="hljs-built_in">console</span>.log(collection.length); <span class="hljs-comment">// 2</span>
-
-john.lastName = <span class="hljs-string">'Williams'</span>;
-<span class="hljs-built_in">console</span>.log(john.lastName); <span class="hljs-comment">// 'Williams'</span>
-</code></pre>
-			<h2 id="installation">Installation</h2>
-			<pre><code class="lang-bash">npm install --save mobx-collection-store
-</code></pre>
-			<h3 id="dependencies">Dependencies</h3>
-			<p>The only (peer) dependency of this lib is <code>mobx</code> version 2.7.0 or newer (including MobX 3).</p>
-			<h3 id="typescript">TypeScript</h3>
-			<p>Since this lib was written using TypeScript, it also exposes TS typings. If you&#39;re not using TypeScript for your development, this won&#39;t be relevant to you.</p>
-			<h3 id="usage">Usage</h3>
-			<p>Since the lib is exposed as a set of <code>CommonJS</code> modules, you&#39;ll need something like <a href="https://webpack.js.org/concepts/"><code>webpack</code></a> or <code>browserify</code> in order to use it in the browser.</p>
-			<p>Don&#39;t forget to minify your code before production for better performance!</p>
-			<h2 id="advanced-examples">Advanced examples</h2>
-			<h3 id="relationships">Relationships</h3>
-			<p>In order to use relationships, you&#39;ll need to create new model and collection classes that extend the original ones:</p>
-			<ul>
-				<li><a href="examples/relationships.js">JavaScript version</a></li>
-				<li><a href="examples/relationships.ts">TypeScript version</a></li>
-			</ul>
-			<p>More examples (both JS and TS) are in the <a href="examples/">examples</a> folder.</p>
-			<h2 id="-docs-https-infinum-github-io-mobx-collection-store-index-html-"><a href="https://infinum.github.io/mobx-collection-store/index.html">Docs</a></h2>
-			<h3 id="-collection-https-infinum-github-io-mobx-collection-store-classes-collection-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/collection.html">Collection</a></h3>
-			<h3 id="-model-https-infinum-github-io-mobx-collection-store-classes-model-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/model.html">Model</a></h3>
-			<p><em>Note:</em> New properties should be added to the model by using the <code>assign</code> or <code>assignRef</code> methods, not by direct assignment.</p>
-			<h2 id="license">License</h2>
-			<p>The MIT License</p>
-			<p><img src="https://assets.infinum.co/assets/brand-logo-9e079bfa1875e17c8c1f71d1fee49cf0.svg" alt=""> © 2016 Infinum Inc.</p>
 		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>MobX Collection interface</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>interface</dt>
+					<dd><p>ICollection</p>
+					</dd>
+				</dl>
+			</div>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">ICollection</span>
+				</li>
+			</ul>
+		</section>
+		<section class="tsd-panel">
+			<h3>Implemented by</h3>
+			<ul class="tsd-hierarchy">
+				<li><a href="../classes/collection.html" class="tsd-signature-type">Collection</a></li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/collection.html" class="tsd-kind-icon">Collection</a></li>
-							<li class="tsd-kind-class"><a href="classes/model.html" class="tsd-kind-icon">Model</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icollection.html#length" class="tsd-kind-icon">length</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
-						<h3>Interfaces</h3>
+						<h3>Methods</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface"><a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/imodel.html" class="tsd-kind-icon">IModel</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-not-exported">
-						<h3>Type aliases</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-type-alias tsd-is-not-exported"><a href="globals.html#ichange" class="tsd-kind-icon">IChange</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
-						<h3>Variables</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-variable tsd-is-private"><a href="globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a></li>
-							<li class="tsd-kind-variable tsd-is-private"><a href="globals.html#reserved_keys" class="tsd-kind-icon">RESERVED_<wbr>KEYS</a></li>
-							<li class="tsd-kind-variable tsd-is-private"><a href="globals.html#type_prop" class="tsd-kind-icon">TYPE_<wbr>PROP</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
-						<h3>Functions</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-function tsd-is-private"><a href="globals.html#assign" class="tsd-kind-icon">assign</a></li>
-							<li class="tsd-kind-function tsd-is-private"><a href="globals.html#first" class="tsd-kind-icon">first</a></li>
-							<li class="tsd-kind-function tsd-is-private"><a href="globals.html#gettype" class="tsd-kind-icon">get<wbr>Type</a></li>
-							<li class="tsd-kind-function tsd-has-type-parameter tsd-is-private"><a href="globals.html#mapitems" class="tsd-kind-icon">map<wbr>Items</a></li>
-							<li class="tsd-kind-function tsd-is-private"><a href="globals.html#matchmodel" class="tsd-kind-icon">match<wbr>Model</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#add" class="tsd-kind-icon">add</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#find" class="tsd-kind-icon">find</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#findall" class="tsd-kind-icon">find<wbr>All</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#remove" class="tsd-kind-icon">remove</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#removeall" class="tsd-kind-icon">remove<wbr>All</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#reset" class="tsd-kind-icon">reset</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-interface"><a href="icollection.html#tojs" class="tsd-kind-icon">toJS</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-			<h2>Type aliases</h2>
-			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-not-exported">
-				<a name="ichange" class="tsd-anchor"></a>
-				<h3>IChange</h3>
-				<div class="tsd-signature tsd-kind-icon">IChange<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IArraySplice</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">IArrayChange</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></div>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="length" class="tsd-anchor"></a>
+				<h3>length</h3>
+				<div class="tsd-signature tsd-kind-icon">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Model.ts:16</li>
-					</ul>
-				</aside>
-			</section>
-		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
-			<h2>Variables</h2>
-			<section class="tsd-panel tsd-member tsd-kind-variable tsd-is-private">
-				<a name="default_type" class="tsd-anchor"></a>
-				<h3>DEFAULT_<wbr>TYPE</h3>
-				<div class="tsd-signature tsd-kind-icon">DEFAULT_<wbr>TYPE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;__default_type__&quot;</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in consts.ts:5</li>
+						<li>Defined in interfaces/ICollection.ts:17</li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-variable tsd-is-private">
-				<a name="reserved_keys" class="tsd-anchor"></a>
-				<h3>RESERVED_<wbr>KEYS</h3>
-				<div class="tsd-signature tsd-kind-icon">RESERVED_<wbr>KEYS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&#x27;static&#x27;, &#x27;assign&#x27;, &#x27;assignRef&#x27;, &#x27;update&#x27;, &#x27;toJS&#x27;,&#x27;__collection&#x27;, &#x27;__data&#x27;, &#x27;__getProp&#x27;, &#x27;__initializedProps&#x27;,&#x27;__getRef&#x27;, &#x27;__setRef&#x27;, &#x27;__initRefGetter&#x27;, &#x27;__initRefGetters&#x27;,&#x27;__partialRefUpdate&#x27;, &#x27;__updateKey&#x27;,]</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in consts.ts:8</li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-variable tsd-is-private">
-				<a name="type_prop" class="tsd-anchor"></a>
-				<h3>TYPE_<wbr>PROP</h3>
-				<div class="tsd-signature tsd-kind-icon">TYPE_<wbr>PROP<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;__type__&quot;</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in consts.ts:2</li>
-					</ul>
-				</aside>
-				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Number of unique models in the collection</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>type</dt>
+						<dd><p>{number}</p>
+						</dd>
+						<dt>memberof</dt>
+						<dd><p>ICollection</p>
+						</dd>
+					</dl>
 				</div>
 			</section>
 		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
-			<h2>Functions</h2>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-is-private">
-				<a name="assign" class="tsd-anchor"></a>
-				<h3>assign</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">assign<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></li>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="add" class="tsd-anchor"></a>
+				<h3>add</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:67</li>
+								<li>Defined in interfaces/ICollection.ts:28</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Assign objects to the target object
-									Not a complete implementation (Object.assign)
-								Based on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign</a> polyfill</p>
-							</div>
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>target: <span class="tsd-signature-type">Object</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Target object</p>
-								</div>
-							</li>
-							<li>
-								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Objects to be assigned</p>
-								</div>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span></h4>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-is-private">
-				<a name="first" class="tsd-anchor"></a>
-				<h3>first</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">first<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in utils.ts:25</li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Get the first array item</p>
-							</div>
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>arr: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>The array to process</p>
-								</div>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						<p>First element or null</p>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-is-private">
-				<a name="gettype" class="tsd-anchor"></a>
-				<h3>get<wbr>Type</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Type<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in utils.ts:51</li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Get the dynamic/static model type</p>
-							</div>
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>instance: <a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Model instance</p>
-								</div>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						<p>Model instance type</p>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter tsd-is-private">
-				<a name="mapitems" class="tsd-anchor"></a>
-				<h3>map<wbr>Items</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">map<wbr>Items&lt;T&gt;<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span>, fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in utils.ts:14</li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Iterate trough an single item or array of items</p>
+								<p>Add a model or list of models to the collection</p>
 							</div>
 							<dl class="tsd-comment-tags">
-								<dt>template</dt>
-								<dd><p>T</p>
+								<dt>argument</dt>
+								<dd><p>{Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported</p>
+								</dd>
+								<dt>argument</dt>
+								<dd><p>{string} [type] - The model type to be imported (not relevant if the model is an instance of Model)</p>
+								</dd>
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
 								</dd>
 							</dl>
 						</div>
-						<h4 class="tsd-type-parameters-title">Type parameters</h4>
-						<ul class="tsd-type-parameters">
-							<li>
-								<h4>T</h4>
-							</li>
-						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>data: <span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Data that needs to be iterated</p>
-								</div>
+								<h5>model: <span class="tsd-signature-type">Object</span></h5>
 							</li>
 							<li>
-								<h5>fn: <span class="tsd-signature-type">Function</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Function to call for every item</p>
-								</div>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">string</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
-						</h4>
-						<ul>
-							<li>Result of the iteration (function return value)</li>
+						<h4 class="tsd-returns-title">Returns <a href="imodel.html" class="tsd-signature-type">IModel</a></h4>
+						<p>Model instance(s)</p>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:29</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>model: <a href="imodel.html" class="tsd-signature-type">IModel</a></h5>
+							</li>
 						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="imodel.html" class="tsd-signature-type">IModel</a></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:30</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>model: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:31</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>model: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-is-private">
-				<a name="matchmodel" class="tsd-anchor"></a>
-				<h3>match<wbr>Model</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">match<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="find" class="tsd-anchor"></a>
+				<h3>find</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:40</li>
+								<li>Defined in interfaces/ICollection.ts:42</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Match a model to defined parameters</p>
+								<p>Find a specific model</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>argument</dt>
+								<dd><p>{string} type - Type of the model that will be searched for</p>
+								</dd>
+								<dt>argument</dt>
+								<dd><p>{string|number} [id] - ID of the model (if none is defined, the first result will be returned)</p>
+								</dd>
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>type: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="imodel.html" class="tsd-signature-type">IModel</a></h4>
+						<p>Found model</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="findall" class="tsd-anchor"></a>
+				<h3>find<wbr>All</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">find<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:52</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Find all models of the specified type</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>argument</dt>
+								<dd><p>{string} type - Type of the models that will be searched for</p>
+								</dd>
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>type: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Found models</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="remove" class="tsd-anchor"></a>
+				<h3>remove</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:63</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Remove a specific model from the collection</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>argument</dt>
+								<dd><p>{string} type - Type of the model that will be removed</p>
+								</dd>
+								<dt>argument</dt>
+								<dd><p>{string|number} [id] - ID of the model (if none is defined, the first result will be removed)</p>
+								</dd>
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>type: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="imodel.html" class="tsd-signature-type">IModel</a></h4>
+						<p>Removed model</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="removeall" class="tsd-anchor"></a>
+				<h3>remove<wbr>All</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">remove<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:73</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Remove all models of the specified type from the collection</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>argument</dt>
+								<dd><p>{string} type - Type of the models that will be removed</p>
+								</dd>
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>type: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Removed models</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="reset" class="tsd-anchor"></a>
+				<h3>reset</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:80</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Reset the collection - remove all models</p>
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>memberof</dt>
-								<dd><p>Collection</p>
+								<dd><p>ICollection</p>
 								</dd>
 							</dl>
 						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>item: <a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Model that&#39;s beeing matched</p>
-								</div>
-							</li>
-							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Model type to match</p>
-								</div>
-							</li>
-							<li>
-								<h5>id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Model ID to match</p>
-								</div>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						<p>True if the model matches the parameters</p>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<a name="tojs" class="tsd-anchor"></a>
+				<h3>toJS</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+					<li class="tsd-signature tsd-kind-icon">toJS<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interfaces/ICollection.ts:89</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Convert the collection (and containing models) into a plain JS Object in order to be serialized</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>ICollection</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Plain JS Object Array representing the collection and all its models</p>
 					</li>
 				</ul>
 			</section>
