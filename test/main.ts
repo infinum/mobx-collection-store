@@ -670,4 +670,76 @@ describe('MobX Collection Store', function() {
     expect(foo.bar[0]['barProp']).to.equal(2);
     expect(foo.bar[1]['barProp']).to.equal(2);
   });
+
+  it('should update an exiting reference', function() {
+    class Foo extends Model {
+      static type = 'foo';
+      static refs = {self: 'foo'};
+
+      self: Foo|Array<Foo>;
+      id: number;
+      foo: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo]
+    }
+
+    const collection = new TestCollection();
+
+    const model = collection.add<Foo>({id: 1, foo: 2, self: 1}, 'foo');
+
+    expect(model.self).to.equal(model);
+
+    model.assignRef('self', model);
+
+    expect(model.self).to.equal(model);
+  });
+
+  it('should not update a reserved key', function() {
+    class Foo extends Model {
+      static type = 'foo';
+      id: number;
+      foo: number;
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo]
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<Foo>({id: 1, foo: 2}, 'foo');
+
+    expect(model.assign).to.be.a('function');
+    expect(model.id).to.equal(1);
+    model.update({id: 2, assign: true, foo: 3});
+    expect(model.assign).to.be.a('function');
+    expect(model.id).to.equal(1);
+    expect(model.foo).to.equal(3);
+  });
+
+  it('should suport updating the array items in the reference', action(function() {
+    class Foo extends Model {
+      static type = 'foo';
+      static refs = {bar: 'foo'}
+      id: number;
+      foo: number;
+      bar: Foo|Array<Foo>;
+    }
+
+    class TestCollection extends Collection {
+      static types = [Foo]
+    }
+
+    const collection = new TestCollection();
+    const model1 = collection.add<Foo>({id: 1, foo: 2, bar: [1]}, 'foo');
+    const model2 = collection.add<Foo>({id: 2, foo: 4, bar: [1, 1, 2]}, 'foo');
+
+    expect(model2.bar[0]).to.equal(model1);
+    expect(model2.bar).to.have.length(3);
+
+    model2.bar[0] = model2;
+    expect(model2.bar[0]).to.equal(model2);
+    expect(model2.bar).to.have.length(3);
+  }));
 });
