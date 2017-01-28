@@ -271,6 +271,9 @@ var Model = (function () {
         }
         else if (typeof item === 'object') {
             var model = this.__collection.add(item, type);
+            if (utils_1.getType(model) !== type) {
+                throw new Error("The model should be a '" + type + "'");
+            }
             return model[model.static.idAttribute];
         }
         return item;

@@ -744,4 +744,32 @@ describe('MobX Collection Store', () => {
     expect(model2.bar[0]).to.equal(model2);
     expect(model2.bar).to.have.length(3);
   }));
+
+  it('should validate the reference types', action(() => {
+    class Foo extends Model {
+      public static type = 'foo';
+      public static refs = {foo: 'foo'};
+      public foo: any; // This would usually be Foo|Array<Foo>, but we need to test the other cases
+    }
+
+    class Bar extends Model {
+      public static type = 'bar';
+    }
+
+    class TestCollection extends Collection {
+      public static types = [Foo, Bar];
+    }
+
+    const collection = new TestCollection();
+    const foo = collection.add<Foo>({id: 1, foo: 1}, 'foo');
+    const bar = collection.add<Bar>({id: 2, bar: 3}, 'bar');
+
+    expect(foo.foo).to.equal(foo);
+
+    expect(() => {
+      foo.foo = bar;
+    }).to.throw();
+
+    expect(foo.foo).to.equal(foo);
+  }));
 });

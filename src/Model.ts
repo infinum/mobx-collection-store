@@ -360,6 +360,9 @@ export class Model implements IModel {
       return null;
     } else if (typeof item === 'object') {
       const model = this.__collection.add(item, type);
+      if (getType(model) !== type) {
+        throw new Error(`The model should be a '${type}'`);
+      }
       return model[model.static.idAttribute];
     }
     return item;
