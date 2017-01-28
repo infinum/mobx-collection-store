@@ -1,7 +1,7 @@
-import IReferences from './interfaces/IReferences';
-import IModel from './interfaces/IModel';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
+import IModel from './interfaces/IModel';
+import IReferences from './interfaces/IReferences';
 /**
  * MobX Collection Model class
  *
@@ -9,21 +9,6 @@ import IDictionary from './interfaces/IDictionary';
  * @implements {IModel}
  */
 export declare class Model implements IModel {
-    /**
-     * Collection the model belongs to
-     *
-     * @type {ICollection}
-     * @memberOf Model
-     */
-    __collection?: ICollection;
-    /**
-     * List of properties that were initialized on the model
-     *
-     * @private
-     * @type {Array<string>}
-     * @memberOf Model
-     */
-    private __initializedProps;
     /**
      * The attribute that should be used as the unique identifier
      *
@@ -40,14 +25,6 @@ export declare class Model implements IModel {
      * @memberOf Model
      */
     static refs: IReferences;
-    /**
-     * The model references
-     *
-     * @static
-     * @type {IReferences}
-     * @memberOf Model
-     */
-    private __refs;
     /**
      * Default values of model props
      *
@@ -81,15 +58,6 @@ export declare class Model implements IModel {
      */
     static enableAutoId: boolean;
     /**
-     * Autoincrement counter used for the builtin function
-     *
-     * @private
-     * @static
-     *
-     * @memberOf Model
-     */
-    private static autoincrementValue;
-    /**
      * Function that can process the received data (e.g. from an API) before it's transformed into a model
      *
      * @static
@@ -109,6 +77,38 @@ export declare class Model implements IModel {
      */
     static autoIdFunction(): number | string;
     /**
+     * Autoincrement counter used for the builtin function
+     *
+     * @private
+     * @static
+     *
+     * @memberOf Model
+     */
+    private static autoincrementValue;
+    /**
+     * Collection the model belongs to
+     *
+     * @type {ICollection}
+     * @memberOf Model
+     */
+    __collection?: ICollection;
+    /**
+     * List of properties that were initialized on the model
+     *
+     * @private
+     * @type {Array<string>}
+     * @memberOf Model
+     */
+    private __initializedProps;
+    /**
+     * The model references
+     *
+     * @static
+     * @type {IReferences}
+     * @memberOf Model
+     */
+    private __refs;
+    /**
      * Internal data storage
      *
      * @private
@@ -125,6 +125,53 @@ export declare class Model implements IModel {
      * @memberOf Model
      */
     constructor(initialData?: Object, collection?: ICollection);
+    /**
+     * Static model class
+     *
+     * @readonly
+     * @type {typeof Model}
+     * @memberOf Model
+     */
+    readonly static: typeof Model;
+    /**
+     * Update the existing model
+     *
+     * @augments {IModel|Object} data - The new model
+     * @returns {Object} Values that have been updated
+     *
+     * @memberOf Model
+     */
+    update(data: IModel | Object): Object;
+    /**
+     * Set a specific model property
+     *
+     * @argument {string} key - Property to be set
+     * @argument {T} value - Value to be set
+     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+     *
+     * @memberOf Model
+     */
+    assign<T>(key: string, value: T): T | IModel | Array<IModel>;
+    /**
+     * Assign a new reference to the model
+     *
+     * @template T
+     * @param {string} key - reference name
+     * @param {T} value - reference value
+     * @param {string} [type] - reference type
+     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+     *
+     * @memberOf Model
+     */
+    assignRef<T>(key: string, value: T, type?: string): T | IModel | Array<IModel>;
+    /**
+     * Convert the model into a plain JS Object in order to be serialized
+     *
+     * @returns {IDictionary} Plain JS Object representing the model
+     *
+     * @memberOf Model
+     */
+    toJS(): IDictionary;
     /**
      * Ensure the new model has a valid id
      *
@@ -218,14 +265,6 @@ export declare class Model implements IModel {
      */
     private __setRef<T>(ref, val);
     /**
-     * Static model class
-     *
-     * @readonly
-     * @type {typeof Model}
-     * @memberOf Model
-     */
-    readonly static: typeof Model;
-    /**
      * Update the model property
      *
      * @private
@@ -238,25 +277,6 @@ export declare class Model implements IModel {
      */
     private __updateKey(vals, data, key);
     /**
-     * Update the existing model
-     *
-     * @augments {IModel|Object} data - The new model
-     * @returns {Object} Values that have been updated
-     *
-     * @memberOf Model
-     */
-    update(data: IModel | Object): Object;
-    /**
-     * Set a specific model property
-     *
-     * @argument {string} key - Property to be set
-     * @argument {T} value - Value to be set
-     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
-     *
-     * @memberOf Model
-     */
-    assign<T>(key: string, value: T): T | IModel | Array<IModel>;
-    /**
      * Add getter if it doesn't exist yet
      *
      * @private
@@ -265,24 +285,4 @@ export declare class Model implements IModel {
      * @memberOf Model
      */
     private __ensureGetter(key);
-    /**
-     * Assign a new reference to the model
-     *
-     * @template T
-     * @param {string} key - reference name
-     * @param {T} value - reference value
-     * @param {string} [type] - reference type
-     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
-     *
-     * @memberOf Model
-     */
-    assignRef<T>(key: string, value: T, type?: string): T | IModel | Array<IModel>;
-    /**
-     * Convert the model into a plain JS Object in order to be serialized
-     *
-     * @returns {IDictionary} Plain JS Object representing the model
-     *
-     * @memberOf Model
-     */
-    toJS(): IDictionary;
 }

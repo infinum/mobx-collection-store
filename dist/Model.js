@@ -89,6 +89,92 @@ var Model = (function () {
         this.autoincrementValue++;
         return id;
     };
+    Object.defineProperty(Model.prototype, "static", {
+        /**
+         * Static model class
+         *
+         * @readonly
+         * @type {typeof Model}
+         * @memberOf Model
+         */
+        get: function () {
+            return this.constructor;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Update the existing model
+     *
+     * @augments {IModel|Object} data - The new model
+     * @returns {Object} Values that have been updated
+     *
+     * @memberOf Model
+     */
+    Model.prototype.update = function (data) {
+        if (data === this) {
+            return this; // Nothing to do - don't update with itself
+        }
+        var vals = {};
+        Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
+        return vals;
+    };
+    /**
+     * Set a specific model property
+     *
+     * @argument {string} key - Property to be set
+     * @argument {T} value - Value to be set
+     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+     *
+     * @memberOf Model
+     */
+    Model.prototype.assign = function (key, value) {
+        var val = value;
+        var isRef = key in this.__refs;
+        if (isRef) {
+            val = this.__setRef(key, value);
+        }
+        else {
+            // TODO: Could be optimised based on __initializedProps?
+            mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
+        }
+        this.__ensureGetter(key);
+        return val;
+        var _a;
+    };
+    /**
+     * Assign a new reference to the model
+     *
+     * @template T
+     * @param {string} key - reference name
+     * @param {T} value - reference value
+     * @param {string} [type] - reference type
+     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+     *
+     * @memberOf Model
+     */
+    Model.prototype.assignRef = function (key, value, type) {
+        if (key in this.__refs) {
+            return this.assign(key, value);
+        }
+        var item = value instanceof Array ? utils_1.first(value) : value;
+        this.__refs[key] = item instanceof Model ? utils_1.getType(item) : type;
+        var data = this.__setRef(key, value);
+        this.__initRefGetter(key, this.__refs[key]);
+        return data;
+    };
+    /**
+     * Convert the model into a plain JS Object in order to be serialized
+     *
+     * @returns {IDictionary} Plain JS Object representing the model
+     *
+     * @memberOf Model
+     */
+    Model.prototype.toJS = function () {
+        var data = mobx_1.toJS(this.__data);
+        data[consts_1.TYPE_PROP] = utils_1.getType(this);
+        return data;
+    };
     /**
      * Ensure the new model has a valid id
      *
@@ -201,7 +287,6 @@ var Model = (function () {
      */
     Model.prototype.__partialRefUpdate = function (ref, change) {
         var type = this.__refs[ref];
-        change.type;
         if (change.type === 'splice') {
             var added = change.added.map(this.__getValueRefs.bind(this, type));
             (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removedCount].concat(added));
@@ -260,20 +345,6 @@ var Model = (function () {
         return this.__collection ? this.__getReferencedModels(ref) : null;
         var _a;
     };
-    Object.defineProperty(Model.prototype, "static", {
-        /**
-         * Static model class
-         *
-         * @readonly
-         * @type {typeof Model}
-         * @memberOf Model
-         */
-        get: function () {
-            return this.constructor;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
      * Update the model property
      *
@@ -295,45 +366,6 @@ var Model = (function () {
         }
     };
     /**
-     * Update the existing model
-     *
-     * @augments {IModel|Object} data - The new model
-     * @returns {Object} Values that have been updated
-     *
-     * @memberOf Model
-     */
-    Model.prototype.update = function (data) {
-        if (data === this) {
-            return this; // Nothing to do - don't update with itself
-        }
-        var vals = {};
-        Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
-        return vals;
-    };
-    /**
-     * Set a specific model property
-     *
-     * @argument {string} key - Property to be set
-     * @argument {T} value - Value to be set
-     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
-     *
-     * @memberOf Model
-     */
-    Model.prototype.assign = function (key, value) {
-        var val = value;
-        var isRef = key in this.__refs;
-        if (isRef) {
-            val = this.__setRef(key, value);
-        }
-        else {
-            // TODO: Could be optimised based on __initializedProps?
-            mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
-        }
-        this.__ensureGetter(key);
-        return val;
-        var _a;
-    };
-    /**
      * Add getter if it doesn't exist yet
      *
      * @private
@@ -347,39 +379,6 @@ var Model = (function () {
             mobx_1.extendObservable(this, (_a = {}, _a[key] = this.__getProp(key), _a));
         }
         var _a;
-    };
-    /**
-     * Assign a new reference to the model
-     *
-     * @template T
-     * @param {string} key - reference name
-     * @param {T} value - reference value
-     * @param {string} [type] - reference type
-     * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
-     *
-     * @memberOf Model
-     */
-    Model.prototype.assignRef = function (key, value, type) {
-        if (key in this.__refs) {
-            return this.assign(key, value);
-        }
-        var item = value instanceof Array ? utils_1.first(value) : value;
-        this.__refs[key] = item instanceof Model ? utils_1.getType(item) : type;
-        var data = this.__setRef(key, value);
-        this.__initRefGetter(key, this.__refs[key]);
-        return data;
-    };
-    /**
-     * Convert the model into a plain JS Object in order to be serialized
-     *
-     * @returns {IDictionary} Plain JS Object representing the model
-     *
-     * @memberOf Model
-     */
-    Model.prototype.toJS = function () {
-        var data = mobx_1.toJS(this.__data);
-        data[consts_1.TYPE_PROP] = utils_1.getType(this);
-        return data;
     };
     return Model;
 }());
@@ -443,9 +442,6 @@ Model.enableAutoId = true;
 Model.autoincrementValue = 1;
 __decorate([
     mobx_1.action
-], Model.prototype, "___partialRefUpdate", null);
-__decorate([
-    mobx_1.action
 ], Model.prototype, "update", null);
 __decorate([
     mobx_1.action
@@ -453,3 +449,6 @@ __decorate([
 __decorate([
     mobx_1.action
 ], Model.prototype, "assignRef", null);
+__decorate([
+    mobx_1.action
+], Model.prototype, "___partialRefUpdate", null);

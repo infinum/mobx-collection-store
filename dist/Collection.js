@@ -46,45 +46,6 @@ var Collection = (function () {
         }
         mobx_1.extendObservable(this, computedProps);
     }
-    /**
-     * Get a list of the type models
-     *
-     * @private
-     * @argument {string} type - Type of the model
-     * @returns {IComputedValue<Array<IModel>>} Getter function
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__getByType = function (type) {
-        var _this = this;
-        return mobx_1.computed(function () { return _this.__data.filter(function (item) { return utils_1.getType(item) === type; }); });
-    };
-    /**
-     * Get the model constructor for a given model type
-     *
-     * @private
-     * @argument {string} type - The model type we need the constructor for
-     * @returns {IModelConstructor} The matching model constructor
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__getModel = function (type) {
-        return utils_1.first(this.static.types.filter(function (item) { return item.type === type; })) || Model_1.Model;
-    };
-    /**
-     * Initialize a model based on an imported Object
-     *
-     * @private
-     * @argument {Object} item - Imported model POJO
-     * @returns {IModel} The new model
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__initItem = function (item) {
-        var type = item[consts_1.TYPE_PROP];
-        var TypeModel = this.__getModel(type);
-        return new TypeModel(item, this);
-    };
     Object.defineProperty(Collection.prototype, "static", {
         /**
          * Static model class
@@ -113,26 +74,6 @@ var Collection = (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Prepare the model instance either by finding an existing one or creating a new one
-     *
-     * @private
-     * @param {IModel|Object} model - Model data
-     * @param {string} [type] - Model type
-     * @returns {IModel} - Model instance
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__getModelInstance = function (model, type) {
-        if (model instanceof Model_1.Model) {
-            model.__collection = this;
-            return model;
-        }
-        else {
-            var TypeModel = this.__getModel(type);
-            return new TypeModel(model, this);
-        }
-    };
     Collection.prototype.add = function (model, type) {
         var _this = this;
         if (model instanceof Array) {
@@ -174,25 +115,7 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.findAll = function (type) {
-        var item = utils_1.first(this.__data);
         return this.__data.filter(function (item) { return utils_1.getType(item) === type; });
-    };
-    /**
-     * Remove models from the collection
-     *
-     * @private
-     * @param {Array<IModel>} models - Models to remove
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.__removeModels = function (models) {
-        var _this = this;
-        models.forEach(function (model) {
-            if (model) {
-                _this.__data.remove(model);
-                model.__collection = null;
-            }
-        });
     };
     /**
      * Remove a specific model from the collection
@@ -242,6 +165,82 @@ var Collection = (function () {
     Collection.prototype.toJS = function () {
         return this.__data.map(function (item) { return item.toJS(); });
     };
+    /**
+     * Get a list of the type models
+     *
+     * @private
+     * @argument {string} type - Type of the model
+     * @returns {IComputedValue<Array<IModel>>} Getter function
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__getByType = function (type) {
+        var _this = this;
+        return mobx_1.computed(function () { return _this.__data.filter(function (item) { return utils_1.getType(item) === type; }); });
+    };
+    /**
+     * Get the model constructor for a given model type
+     *
+     * @private
+     * @argument {string} type - The model type we need the constructor for
+     * @returns {IModelConstructor} The matching model constructor
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__getModel = function (type) {
+        return utils_1.first(this.static.types.filter(function (item) { return item.type === type; })) || Model_1.Model;
+    };
+    /**
+     * Initialize a model based on an imported Object
+     *
+     * @private
+     * @argument {Object} item - Imported model POJO
+     * @returns {IModel} The new model
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__initItem = function (item) {
+        var type = item[consts_1.TYPE_PROP];
+        var TypeModel = this.__getModel(type);
+        return new TypeModel(item, this);
+    };
+    /**
+     * Prepare the model instance either by finding an existing one or creating a new one
+     *
+     * @private
+     * @param {IModel|Object} model - Model data
+     * @param {string} [type] - Model type
+     * @returns {IModel} - Model instance
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__getModelInstance = function (model, type) {
+        if (model instanceof Model_1.Model) {
+            model.__collection = this;
+            return model;
+        }
+        else {
+            var TypeModel = this.__getModel(type);
+            return new TypeModel(model, this);
+        }
+    };
+    /**
+     * Remove models from the collection
+     *
+     * @private
+     * @param {Array<IModel>} models - Models to remove
+     *
+     * @memberOf Collection
+     */
+    Collection.prototype.__removeModels = function (models) {
+        var _this = this;
+        models.forEach(function (model) {
+            if (model) {
+                _this.__data.remove(model);
+                model.__collection = null;
+            }
+        });
+    };
     return Collection;
 }());
 exports.Collection = Collection;
@@ -261,10 +260,10 @@ __decorate([
 ], Collection.prototype, "add", null);
 __decorate([
     mobx_1.action
-], Collection.prototype, "___removeModels", null);
-__decorate([
-    mobx_1.action
 ], Collection.prototype, "removeAll", null);
 __decorate([
     mobx_1.action
 ], Collection.prototype, "reset", null);
+__decorate([
+    mobx_1.action
+], Collection.prototype, "___removeModels", null);

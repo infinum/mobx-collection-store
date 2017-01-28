@@ -67,7 +67,7 @@ export function getType(instance: IModel) {
 export function assign(target: Object, ...args: Array<Object>) {
   args.forEach((nextSource) => {
     if (nextSource != null) {
-      for (var nextKey in nextSource) {
+      for (let nextKey in nextSource) {
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
           target[nextKey] = nextSource[nextKey];
         }

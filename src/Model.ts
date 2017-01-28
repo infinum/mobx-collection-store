@@ -1,16 +1,17 @@
 import {
-  observable, extendObservable, toJS, action, computed, intercept,
-  IArrayChange, IArraySplice,
-  IComputedValue, IObservableObject, IObservableArray
+  action, computed, extendObservable,
+  IArrayChange, IArraySplice, IComputedValue,
+  intercept, IObservableArray, IObservableObject, observable, toJS,
 } from 'mobx';
 
-import IReferences from './interfaces/IReferences';
-import IModel from './interfaces/IModel';
-import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
-import {TYPE_PROP, DEFAULT_TYPE, RESERVED_KEYS} from './consts';
-import {mapItems, first, getType, assign} from './utils';
+import IModel from './interfaces/IModel';
+import IModelConstructor from './interfaces/IModelConstructor';
+import IReferences from './interfaces/IReferences';
+
+import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
+import {assign, first, getType, mapItems} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 
@@ -23,30 +24,13 @@ type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 export class Model implements IModel {
 
   /**
-   * Collection the model belongs to
-   *
-   * @type {ICollection}
-   * @memberOf Model
-   */
-  __collection?: ICollection = null
-
-  /**
-   * List of properties that were initialized on the model
-   *
-   * @private
-   * @type {Array<string>}
-   * @memberOf Model
-   */
-  private __initializedProps: Array<string> = [];
-
-  /**
    * The attribute that should be used as the unique identifier
    *
    * @static
    * @type {string}
    * @memberOf Model
    */
-  static idAttribute: string = 'id'
+  public static idAttribute: string = 'id';
 
   /**
    * The references that the model can have to other models
@@ -55,16 +39,7 @@ export class Model implements IModel {
    * @type {IReferences}
    * @memberOf Model
    */
-  static refs: IReferences = {}
-
-  /**
-   * The model references
-   *
-   * @static
-   * @type {IReferences}
-   * @memberOf Model
-   */
-  private __refs: IReferences = {};
+  public static refs: IReferences = {};
 
   /**
    * Default values of model props
@@ -73,7 +48,7 @@ export class Model implements IModel {
    * @type {IDictionary}
    * @memberOf Model
    */
-  static defaults: IDictionary = {};
+  public static defaults: IDictionary = {};
 
   /**
    * Type of the model
@@ -82,7 +57,7 @@ export class Model implements IModel {
    * @type {string}
    * @memberOf Model
    */
-  static type: string = DEFAULT_TYPE
+  public static type: string = DEFAULT_TYPE;
 
   /**
    * Atribute name for the type attribute
@@ -91,7 +66,7 @@ export class Model implements IModel {
    * @type {string}
    * @memberOf Model
    */
-  static typeAttribute: string = TYPE_PROP;
+  public static typeAttribute: string = TYPE_PROP;
 
   /**
    * Defines if the model should use autoincrement id if none is defined
@@ -100,7 +75,34 @@ export class Model implements IModel {
    * @type {boolean}
    * @memberOf Model
    */
-  static enableAutoId: boolean = true;
+  public static enableAutoId: boolean = true;
+
+  /**
+   * Function that can process the received data (e.g. from an API) before it's transformed into a model
+   *
+   * @static
+   * @param {Object} [rawData={}] - Raw data
+   * @returns {Object} Transformed data
+   *
+   * @memberOf Model
+   */
+  public static preprocess(rawData: Object = {}): Object {
+    return rawData;
+  }
+
+  /**
+   * Function used for generating the autoincrement IDs
+   *
+   * @static
+   * @returns {number|string} id
+   *
+   * @memberOf Model
+   */
+  public static autoIdFunction(): number|string {
+    const id = this.autoincrementValue;
+    this.autoincrementValue++;
+    return id;
+  }
 
   /**
    * Autoincrement counter used for the builtin function
@@ -113,31 +115,30 @@ export class Model implements IModel {
   private static autoincrementValue = 1;
 
   /**
-   * Function that can process the received data (e.g. from an API) before it's transformed into a model
+   * Collection the model belongs to
    *
-   * @static
-   * @param {Object} [rawData={}] - Raw data
-   * @returns {Object} Transformed data
-   *
+   * @type {ICollection}
    * @memberOf Model
    */
-  static preprocess(rawData: Object = {}): Object {
-    return rawData;
-  }
+  public __collection?: ICollection = null;
 
   /**
-   * Function used for generating the autoincrement IDs
+   * List of properties that were initialized on the model
    *
-   * @static
-   * @returns {number|string} id
-   *
+   * @private
+   * @type {Array<string>}
    * @memberOf Model
    */
-  static autoIdFunction(): number|string {
-    const id = this.autoincrementValue;
-    this.autoincrementValue++;
-    return id;
-  }
+  private __initializedProps: Array<string> = [];
+
+  /**
+   * The model references
+   *
+   * @static
+   * @type {IReferences}
+   * @memberOf Model
+   */
+  private __refs: IReferences = {};
 
   /**
    * Internal data storage
@@ -146,7 +147,7 @@ export class Model implements IModel {
    * @type {IObservableObject}
    * @memberOf Model
    */
-  private __data: IObservableObject = observable({})
+  private __data: IObservableObject = observable({});
 
   /**
    * Creates an instance of Model.
@@ -169,6 +170,93 @@ export class Model implements IModel {
   }
 
   /**
+   * Static model class
+   *
+   * @readonly
+   * @type {typeof Model}
+   * @memberOf Model
+   */
+  get static(): typeof Model {
+    return <typeof Model> this.constructor;
+  }
+
+  /**
+   * Update the existing model
+   *
+   * @augments {IModel|Object} data - The new model
+   * @returns {Object} Values that have been updated
+   *
+   * @memberOf Model
+   */
+  @action public update(data: IModel | Object): Object {
+    if (data === this) {
+      return this; // Nothing to do - don't update with itself
+    }
+    const vals = {};
+
+    Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
+
+    return vals;
+  }
+
+  /**
+   * Set a specific model property
+   *
+   * @argument {string} key - Property to be set
+   * @argument {T} value - Value to be set
+   * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+   *
+   * @memberOf Model
+   */
+  @action public assign<T>(key: string, value: T): T|IModel|Array<IModel> {
+    let val: T|IModel|Array<IModel> = value;
+    const isRef: boolean = key in this.__refs;
+    if (isRef) {
+      val = this.__setRef(key, value);
+    } else {
+      // TODO: Could be optimised based on __initializedProps?
+      extendObservable(this.__data, {[key]: value});
+    }
+    this.__ensureGetter(key);
+    return val;
+  }
+
+  /**
+   * Assign a new reference to the model
+   *
+   * @template T
+   * @param {string} key - reference name
+   * @param {T} value - reference value
+   * @param {string} [type] - reference type
+   * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
+   *
+   * @memberOf Model
+   */
+  @action public assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel> {
+    if (key in this.__refs) { // Is already a reference
+      return this.assign<T>(key, value);
+    }
+    const item = value instanceof Array ? first(value) : value;
+    this.__refs[key] = item instanceof Model ? getType(item) : type;
+    const data = this.__setRef(key, value);
+    this.__initRefGetter(key, this.__refs[key]);
+    return data;
+  }
+
+  /**
+   * Convert the model into a plain JS Object in order to be serialized
+   *
+   * @returns {IDictionary} Plain JS Object representing the model
+   *
+   * @memberOf Model
+   */
+  public toJS(): IDictionary {
+    const data: IDictionary = toJS(this.__data);
+    data[TYPE_PROP] = getType(this);
+    return data;
+  }
+
+  /**
    * Ensure the new model has a valid id
    *
    * @private
@@ -185,7 +273,7 @@ export class Model implements IModel {
       } else {
         do {
           data[idAttribute] = this.static.autoIdFunction();
-        } while(collection.find(getType(this), data[idAttribute]));
+        } while (collection.find(getType(this), data[idAttribute]));
       }
     }
 
@@ -205,7 +293,7 @@ export class Model implements IModel {
 
     extendObservable(this, {
       [ref]: this.__getRef(ref),
-      [`${ref}Id`]: this.__getProp(ref)
+      [`${ref}Id`]: this.__getProp(ref),
     });
   }
 
@@ -236,7 +324,7 @@ export class Model implements IModel {
   private __getRef(ref: string): IComputedValue<IModel|Array<IModel>> {
     return computed(
       () => this.__collection ? this.__getReferencedModels(ref) : null,
-      (value) => this.assign(ref, value)
+      (value) => this.assign(ref, value),
     );
   }
 
@@ -252,7 +340,7 @@ export class Model implements IModel {
   private __getProp(key: string): IComputedValue<IModel> {
     return computed(
       () => this.__data[key],
-      (value) => this.assign(key, value)
+      (value) => this.assign(key, value),
     );
   }
 
@@ -289,7 +377,6 @@ export class Model implements IModel {
    */
   @action private __partialRefUpdate(ref: string, change: IChange): IChange {
     const type = this.__refs[ref];
-    change.type
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));
       this.__data[ref].splice(change.index, change.removedCount, ...added);
@@ -311,7 +398,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  private __getReferencedModels(key: string) : IModel|Array<IModel> {
+  private __getReferencedModels(key: string): IModel|Array<IModel> {
     let dataModels = mapItems<IModel>(this.__data[key], (refId: string) => {
       return this.__collection.find(this.__refs[key], refId);
     });
@@ -353,17 +440,6 @@ export class Model implements IModel {
   }
 
   /**
-   * Static model class
-   *
-   * @readonly
-   * @type {typeof Model}
-   * @memberOf Model
-   */
-  get static(): typeof Model {
-    return <typeof Model>this.constructor;
-  }
-
-  /**
    * Update the model property
    *
    * @private
@@ -385,47 +461,6 @@ export class Model implements IModel {
   }
 
   /**
-   * Update the existing model
-   *
-   * @augments {IModel|Object} data - The new model
-   * @returns {Object} Values that have been updated
-   *
-   * @memberOf Model
-   */
-  @action update(data: IModel | Object): Object {
-    if (data === this) {
-      return this; // Nothing to do - don't update with itself
-    }
-    const vals = {};
-
-    Object.keys(data).forEach(this.__updateKey.bind(this, vals, data));
-
-    return vals;
-  }
-
-  /**
-   * Set a specific model property
-   *
-   * @argument {string} key - Property to be set
-   * @argument {T} value - Value to be set
-   * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
-   *
-   * @memberOf Model
-   */
-  @action assign<T>(key: string, value: T): T|IModel|Array<IModel> {
-    let val: T|IModel|Array<IModel> = value;
-    const isRef: boolean = key in this.__refs;
-    if (isRef) {
-      val = this.__setRef(key, value);
-    } else {
-      // TODO: Could be optimised based on __initializedProps?
-      extendObservable(this.__data, {[key]: value});
-    }
-    this.__ensureGetter(key);
-    return val;
-  }
-
-  /**
    * Add getter if it doesn't exist yet
    *
    * @private
@@ -438,40 +473,5 @@ export class Model implements IModel {
       this.__initializedProps.push(key);
       extendObservable(this, {[key]: this.__getProp(key)});
     }
-  }
-
-  /**
-   * Assign a new reference to the model
-   *
-   * @template T
-   * @param {string} key - reference name
-   * @param {T} value - reference value
-   * @param {string} [type] - reference type
-   * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
-   *
-   * @memberOf Model
-   */
-  @action assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel> {
-    if (key in this.__refs) { // Is already a reference
-      return this.assign<T>(key, value);
-    }
-    const item = value instanceof Array ? first(value) : value;
-    this.__refs[key] = item instanceof Model ? getType(item) : type;
-    const data = this.__setRef(key, value);
-    this.__initRefGetter(key, this.__refs[key]);
-    return data;
-  }
-
-  /**
-   * Convert the model into a plain JS Object in order to be serialized
-   *
-   * @returns {IDictionary} Plain JS Object representing the model
-   *
-   * @memberOf Model
-   */
-  toJS(): IDictionary {
-    const data: IDictionary = toJS(this.__data);
-    data[TYPE_PROP] = getType(this);
-    return data;
   }
 }

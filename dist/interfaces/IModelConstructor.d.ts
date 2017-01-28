@@ -1,6 +1,6 @@
-import IModel from './IModel';
 import ICollection from './ICollection';
 import IDictionary from './IDictionary';
+import IModel from './IModel';
 /**
  * MobX Collection Model constructor interface
  *

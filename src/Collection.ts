@@ -1,15 +1,17 @@
 import {
-  extendObservable, observable, computed, action, runInAction,
-  IComputedValue, IObservableArray
+  action, computed, extendObservable,
+  IComputedValue, IObservableArray,
+  observable, runInAction,
 } from 'mobx';
 
-import IModel from './interfaces/IModel';
-import IDictionary from './interfaces/IDictionary';
-import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
+import IDictionary from './interfaces/IDictionary';
+import IModel from './interfaces/IModel';
+import IModelConstructor from './interfaces/IModelConstructor';
 import {Model} from './Model';
-import {TYPE_PROP, DEFAULT_TYPE} from './consts';
-import {first, matchModel, getType} from './utils';
+
+import {DEFAULT_TYPE, TYPE_PROP} from './consts';
+import {first, getType, matchModel} from './utils';
 
 /**
  * MobX Collection class
@@ -27,7 +29,7 @@ export class Collection implements ICollection {
    * @type {Array<IModelConstructor>}
    * @memberOf Collection
    */
-  static types: Array<IModelConstructor> = []
+  public static types: Array<IModelConstructor> = [];
 
   /**
    * Internal data storage
@@ -36,7 +38,7 @@ export class Collection implements ICollection {
    * @type {IObservableArray<IModel>}
    * @memberOf Collection
    */
-  private __data: IObservableArray<IModel> = observable([])
+  private __data: IObservableArray<IModel> = observable([]);
 
   /**
    * Creates an instance of Collection.
@@ -59,57 +61,14 @@ export class Collection implements ICollection {
   }
 
   /**
-   * Get a list of the type models
-   *
-   * @private
-   * @argument {string} type - Type of the model
-   * @returns {IComputedValue<Array<IModel>>} Getter function
-   *
-   * @memberOf Collection
-   */
-  private __getByType(type: string): IComputedValue<Array<IModel>> {
-    return computed(
-      () => this.__data.filter((item) => getType(item) === type)
-    );
-  }
-
-  /**
-   * Get the model constructor for a given model type
-   *
-   * @private
-   * @argument {string} type - The model type we need the constructor for
-   * @returns {IModelConstructor} The matching model constructor
-   *
-   * @memberOf Collection
-   */
-  private __getModel(type : string): IModelConstructor {
-    return first(this.static.types.filter((item) => item.type === type)) || Model;
-  }
-
-  /**
-   * Initialize a model based on an imported Object
-   *
-   * @private
-   * @argument {Object} item - Imported model POJO
-   * @returns {IModel} The new model
-   *
-   * @memberOf Collection
-   */
-  private __initItem(item: IDictionary): IModel {
-    const type = item[TYPE_PROP];
-    const TypeModel: IModelConstructor = this.__getModel(type);
-    return new TypeModel(item, this);
-  }
-
-  /**
    * Static model class
    *
    * @readonly
    * @type {typeof Collection}
    * @memberOf Collection
    */
-  get static(): typeof Collection {
-    return <typeof Collection>this.constructor;
+  public get static(): typeof Collection {
+    return <typeof Collection> this.constructor;
   }
 
   /**
@@ -119,28 +78,8 @@ export class Collection implements ICollection {
    * @type {number}
    * @memberOf Collection
    */
-  @computed get length(): number {
+  @computed public get length(): number {
     return this.__data.length;
-  }
-
-  /**
-   * Prepare the model instance either by finding an existing one or creating a new one
-   *
-   * @private
-   * @param {IModel|Object} model - Model data
-   * @param {string} [type] - Model type
-   * @returns {IModel} - Model instance
-   *
-   * @memberOf Collection
-   */
-  private __getModelInstance(model: IModel|Object, type?: string): IModel {
-    if (model instanceof Model) {
-      model.__collection = this;
-      return model;
-    } else {
-      const TypeModel: IModelConstructor = this.__getModel(type);
-      return new TypeModel(model, this);
-    }
   }
 
   /**
@@ -153,11 +92,11 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  add<T extends IModel>(model: Array<IModel>): Array<T>;
-  add<T extends IModel>(model: IModel): T;
-  add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
-  add<T extends IModel>(model: Object, type?: string): T;
-  @action add(model: any, type?: string) {
+  public add<T extends IModel>(model: Array<IModel>): Array<T>;
+  public add<T extends IModel>(model: IModel): T;
+  public add<T extends IModel>(model: Array<Object>, type?: string): Array<T>;
+  public add<T extends IModel>(model: Object, type?: string): T;
+  @action public add(model: any, type?: string) {
     if (model instanceof Array) {
       return model.map((item: IModel|Object) => this.add(item, type));
     }
@@ -185,7 +124,7 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  find<T extends IModel>(type: string, id?: string|number): T {
+  public find<T extends IModel>(type: string, id?: string|number): T {
     const modelList: Array<T> = id
       ? this.__data.filter((item) => matchModel(item, type, id)) as Array<T>
       : this.findAll<T>(type);
@@ -202,9 +141,123 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  findAll<T extends IModel>(type: string): Array<T> {
-    const item = first(this.__data);
+  public findAll<T extends IModel>(type: string): Array<T> {
     return this.__data.filter((item) => getType(item) === type) as Array<T>;
+  }
+
+  /**
+   * Remove a specific model from the collection
+   *
+   * @template T
+   * @argument {string} type - Type of the model that will be removed
+   * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
+   * @returns {T} Removed model
+   *
+   * @memberOf Collection
+   */
+  public remove<T extends IModel>(type: string, id?: string|number): T {
+    const model = this.find<T>(type, id);
+    this.__removeModels([model]);
+    return model;
+  }
+
+  /**
+   * Remove all models of the specified type from the collection
+   *
+   * @template T
+   * @argument {string} type - Type of the models that will be removed
+   * @returns {Array<T>} Removed models
+   *
+   * @memberOf Collection
+   */
+  @action public removeAll<T extends IModel>(type: string): Array<T> {
+    const models = this.findAll<T>(type);
+    this.__removeModels(models);
+    return models;
+  }
+
+  /**
+   * Reset the collection - remove all models
+   *
+   * @memberOf Collection
+   */
+  @action public reset(): void {
+    const models = [...this.__data];
+    this.__removeModels(models);
+  }
+
+  /**
+   * Convert the collection (and containing models) into a plain JS Object in order to be serialized
+   *
+   * @returns {Array<IDictionary>} Plain JS Object Array representing the collection and all its models
+   *
+   * @memberOf Collection
+   */
+  public toJS(): Array<IDictionary> {
+    return this.__data.map((item) => item.toJS());
+  }
+
+  /**
+   * Get a list of the type models
+   *
+   * @private
+   * @argument {string} type - Type of the model
+   * @returns {IComputedValue<Array<IModel>>} Getter function
+   *
+   * @memberOf Collection
+   */
+  private __getByType(type: string): IComputedValue<Array<IModel>> {
+    return computed(
+      () => this.__data.filter((item) => getType(item) === type),
+    );
+  }
+
+  /**
+   * Get the model constructor for a given model type
+   *
+   * @private
+   * @argument {string} type - The model type we need the constructor for
+   * @returns {IModelConstructor} The matching model constructor
+   *
+   * @memberOf Collection
+   */
+  private __getModel(type: string): IModelConstructor {
+    return first(this.static.types.filter((item) => item.type === type)) || Model;
+  }
+
+  /**
+   * Initialize a model based on an imported Object
+   *
+   * @private
+   * @argument {Object} item - Imported model POJO
+   * @returns {IModel} The new model
+   *
+   * @memberOf Collection
+   */
+  private __initItem(item: IDictionary): IModel {
+    const type = item[TYPE_PROP];
+    const TypeModel: IModelConstructor = this.__getModel(type);
+    return new TypeModel(item, this);
+  }
+
+  /**
+   * Prepare the model instance either by finding an existing one or creating a new one
+   *
+   * @private
+   * @param {IModel|Object} model - Model data
+   * @param {string} [type] - Model type
+   * @returns {IModel} - Model instance
+   *
+   * @memberOf Collection
+   */
+  private __getModelInstance(model: IModel|Object, type?: string): IModel {
+    if (model instanceof Model) {
+      model.__collection = this;
+      return model;
+    } else {
+      const TypeModel: IModelConstructor = this.__getModel(type);
+      return new TypeModel(model, this);
+    }
   }
 
   /**
@@ -222,57 +275,5 @@ export class Collection implements ICollection {
         model.__collection = null;
       }
     });
-  }
-
-  /**
-   * Remove a specific model from the collection
-   *
-   * @template T
-   * @argument {string} type - Type of the model that will be removed
-   * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
-   * @returns {T} Removed model
-   *
-   * @memberOf Collection
-   */
-  remove<T extends IModel>(type: string, id?: string|number): T {
-    const model = this.find<T>(type, id);
-    this.__removeModels([model]);
-    return model;
-  }
-
-  /**
-   * Remove all models of the specified type from the collection
-   *
-   * @template T
-   * @argument {string} type - Type of the models that will be removed
-   * @returns {Array<T>} Removed models
-   *
-   * @memberOf Collection
-   */
-  @action removeAll<T extends IModel>(type: string): Array<T> {
-    const models = this.findAll<T>(type);
-    this.__removeModels(models);
-    return models;
-  }
-
-  /**
-   * Reset the collection - remove all models
-   *
-   * @memberOf Collection
-   */
-  @action reset(): void {
-    const models = [...this.__data];
-    this.__removeModels(models);
-  }
-
-  /**
-   * Convert the collection (and containing models) into a plain JS Object in order to be serialized
-   *
-   * @returns {Array<IDictionary>} Plain JS Object Array representing the collection and all its models
-   *
-   * @memberOf Collection
-   */
-  toJS(): Array<IDictionary> {
-    return this.__data.map((item) => item.toJS());
   }
 }

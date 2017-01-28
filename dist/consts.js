@@ -8,5 +8,5 @@ exports.RESERVED_KEYS = [
     'static', 'assign', 'assignRef', 'update', 'toJS',
     '__collection', '__data', '__getProp', '__initializedProps',
     '__getRef', '__setRef', '__initRefGetter', '__initRefGetters',
-    '__partialRefUpdate', '__updateKey'
+    '__partialRefUpdate', '__updateKey',
 ];

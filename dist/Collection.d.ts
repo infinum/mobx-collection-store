@@ -1,7 +1,7 @@
-import IModel from './interfaces/IModel';
-import IDictionary from './interfaces/IDictionary';
-import IModelConstructor from './interfaces/IModelConstructor';
 import ICollection from './interfaces/ICollection';
+import IDictionary from './interfaces/IDictionary';
+import IModel from './interfaces/IModel';
+import IModelConstructor from './interfaces/IModelConstructor';
 /**
  * MobX Collection class
  *
@@ -35,36 +35,6 @@ export declare class Collection implements ICollection {
      */
     constructor(data?: Array<Object>);
     /**
-     * Get a list of the type models
-     *
-     * @private
-     * @argument {string} type - Type of the model
-     * @returns {IComputedValue<Array<IModel>>} Getter function
-     *
-     * @memberOf Collection
-     */
-    private __getByType(type);
-    /**
-     * Get the model constructor for a given model type
-     *
-     * @private
-     * @argument {string} type - The model type we need the constructor for
-     * @returns {IModelConstructor} The matching model constructor
-     *
-     * @memberOf Collection
-     */
-    private __getModel(type);
-    /**
-     * Initialize a model based on an imported Object
-     *
-     * @private
-     * @argument {Object} item - Imported model POJO
-     * @returns {IModel} The new model
-     *
-     * @memberOf Collection
-     */
-    private __initItem(item);
-    /**
      * Static model class
      *
      * @readonly
@@ -80,17 +50,6 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     readonly length: number;
-    /**
-     * Prepare the model instance either by finding an existing one or creating a new one
-     *
-     * @private
-     * @param {IModel|Object} model - Model data
-     * @param {string} [type] - Model type
-     * @returns {IModel} - Model instance
-     *
-     * @memberOf Collection
-     */
-    private __getModelInstance(model, type?);
     /**
      * Add a model or list of models to the collection
      *
@@ -127,15 +86,6 @@ export declare class Collection implements ICollection {
      */
     findAll<T extends IModel>(type: string): Array<T>;
     /**
-     * Remove models from the collection
-     *
-     * @private
-     * @param {Array<IModel>} models - Models to remove
-     *
-     * @memberOf Collection
-     */
-    private __removeModels(models);
-    /**
      * Remove a specific model from the collection
      *
      * @template T
@@ -170,4 +120,54 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     toJS(): Array<IDictionary>;
+    /**
+     * Get a list of the type models
+     *
+     * @private
+     * @argument {string} type - Type of the model
+     * @returns {IComputedValue<Array<IModel>>} Getter function
+     *
+     * @memberOf Collection
+     */
+    private __getByType(type);
+    /**
+     * Get the model constructor for a given model type
+     *
+     * @private
+     * @argument {string} type - The model type we need the constructor for
+     * @returns {IModelConstructor} The matching model constructor
+     *
+     * @memberOf Collection
+     */
+    private __getModel(type);
+    /**
+     * Initialize a model based on an imported Object
+     *
+     * @private
+     * @argument {Object} item - Imported model POJO
+     * @returns {IModel} The new model
+     *
+     * @memberOf Collection
+     */
+    private __initItem(item);
+    /**
+     * Prepare the model instance either by finding an existing one or creating a new one
+     *
+     * @private
+     * @param {IModel|Object} model - Model data
+     * @param {string} [type] - Model type
+     * @returns {IModel} - Model instance
+     *
+     * @memberOf Collection
+     */
+    private __getModelInstance(model, type?);
+    /**
+     * Remove models from the collection
+     *
+     * @private
+     * @param {Array<IModel>} models - Models to remove
+     *
+     * @memberOf Collection
+     */
+    private __removeModels(models);
 }
