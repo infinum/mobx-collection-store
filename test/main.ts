@@ -1,38 +1,41 @@
-import {computed, extendObservable, autorun, useStrict, action, toJS} from 'mobx';
+// tslint:disable:max-classes-per-file
+// tslint:disable:no-string-literal
+
+import {action, autorun, computed, extendObservable, toJS, useStrict} from 'mobx';
 useStrict(true);
 
-const expect = require('chai').expect;
+import {expect} from 'chai';
 
 import {Collection, Model} from '../src';
 
 import {assign} from '../src/utils';
 
-describe('MobX Collection Store', function() {
-  it('should do the basic init', function() {
+describe('MobX Collection Store', () => {
+  it('should do the basic init', () => {
     const collection = new Collection();
     expect(collection.find).to.be.a('function');
   });
 
-  it('should use basic models', function() {
+  it('should use basic models', () => {
     class FooModel extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-      foo: number;
-      bar: number;
+      public foo: number;
+      public bar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
     const model = collection.add<FooModel>({
-      id: 1,
-      foo: 1,
       bar: 0,
-      fooBar: 0.5
+      foo: 1,
+      fooBar: 0.5,
+      id: 1,
     }, 'foo');
 
     expect(collection.length).to.equal(1);
@@ -43,34 +46,34 @@ describe('MobX Collection Store', function() {
     expect(model.static.type).to.equal('foo');
   });
 
-  it('should be able to upsert models', function() {
+  it('should be able to upsert models', () => {
     class FooModel extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-      foo: number;
-      bar: number;
-      fooBar: number;
+      public foo: number;
+      public bar: number;
+      public fooBar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
     const model = collection.add<FooModel>({
-      id: 1,
-      foo: 1,
       bar: 0,
-      fooBar: 0.5
+      foo: 1,
+      fooBar: 0.5,
+      id: 1,
     }, 'foo');
 
     const model2 = collection.add<FooModel>({
-      id: 1,
-      foo: 2,
       bar: 1,
-      fooBar: 1.5
+      foo: 2,
+      fooBar: 1.5,
+      id: 1,
     }, 'foo');
 
     expect(collection.length).to.equal(1);
@@ -79,30 +82,30 @@ describe('MobX Collection Store', function() {
     expect(model.bar).to.equal(1);
   });
 
-  it('should support basic relations and serializing', function() {
+  it('should support basic relations and serializing', () => {
     class FooModel extends Model {
-      static type = 'foo';
-      static refs = {bar: 'foo', fooBar: 'foo'};
+      public static type = 'foo';
+      public static refs = {bar: 'foo', fooBar: 'foo'};
 
-      foo: number
-      bar: FooModel;
-      barId: number;
-      fooBar: FooModel;
-      fooBarId: number;
+      public foo: number;
+      public bar: FooModel;
+      public barId: number;
+      public fooBar: FooModel;
+      public fooBarId: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
     const model = collection.add<FooModel>({
-      id: 1,
-      foo: 0,
       bar: 1,
-      fooBar: 0.5
+      foo: 0,
+      fooBar: 0.5,
+      id: 1,
     }, 'foo');
 
     // Check if the references are ok
@@ -150,54 +153,54 @@ describe('MobX Collection Store', function() {
     expect(collection2.length).to.equal(0);
   });
 
-  it('should work for the readme example', function() {
+  it('should work for the readme example', () => {
     class Person extends Model {
-      static type = 'person';
-      static refs = {spouse: 'person'};
+      public static type = 'person';
+      public static refs = {spouse: 'person'};
 
-      firstName: string;
-      lastName: string;
-      spouse: Person;
+      public firstName: string;
+      public lastName: string;
+      public spouse: Person;
 
-      @computed get fullName(): string {
+      @computed public get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
       }
     }
 
     class Pet extends Model {
-      static type = 'pet';
-      static refs = {owner: 'person'}
+      public static type = 'pet';
+      public static refs = {owner: 'person'};
 
-      owner: Person;
-      ownerId: number;
+      public owner: Person;
+      public ownerId: number;
     }
 
     class MyCollection extends Collection {
-      static types = [Person, Pet]
-      person: Array<Person>;
-      pet: Array<Pet>;
+      public static types = [Person, Pet];
+      public person: Array<Person>;
+      public pet: Array<Pet>;
     }
 
     const collection = new MyCollection();
 
     const john = collection.add<Person>({
-      id: 1,
-      spouse: 2,
       firstName: 'John',
-      lastName: 'Doe'
+      id: 1,
+      lastName: 'Doe',
+      spouse: 2,
     }, 'person');
 
     const fido = collection.add<Pet>({
       id: 1,
+      name: 'Fido',
       owner: john,
-      name: 'Fido'
     }, 'pet');
 
     const jane = new Person({
-      id: 2,
-      spouse: 1,
       firstName: 'Jane',
-      lastName: 'Doe'
+      id: 2,
+      lastName: 'Doe',
+      spouse: 1,
     });
     collection.add(jane);
 
@@ -208,9 +211,9 @@ describe('MobX Collection Store', function() {
     expect(collection.length).to.equal(3);
 
     fido.assign('owner', {
-      id: 3,
       firstName: 'Dave',
-      lastName: 'Jones'
+      id: 3,
+      lastName: 'Jones',
     });
 
     expect(fido.owner.fullName).to.equal('Dave Jones');
@@ -226,76 +229,76 @@ describe('MobX Collection Store', function() {
     expect(collection.length).to.equal(0);
   });
 
-  it('should support default props', function() {
+  it('should support default props', () => {
     class FooModel extends Model {
-      static type = 'foo';
-      static defaults = {
-        foo: 4
+      public static type = 'foo';
+      public static defaults = {
+        foo: 4,
       };
 
-      foo: number;
-      bar: number;
+      public foo: number;
+      public bar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
 
     const model1 = collection.add<FooModel>({
-      id: 1,
-      foo: 1,
       bar: 0,
-      fooBar: 0.5
+      foo: 1,
+      fooBar: 0.5,
+      id: 1,
     }, 'foo');
 
     expect(model1.foo).to.equal(1);
 
     const model2 = collection.add<FooModel>({
-      id: 2,
       bar: 0,
-      fooBar: 0.5
+      fooBar: 0.5,
+      id: 2,
     }, 'foo');
 
     expect(model2.foo).to.equal(4);
   });
 
-  it('should support array refereces', action(function() {
+  it('should support array refereces', action(() => {
     class FooModel extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-      static refs = {fooBar: 'foo'};
+      public static refs = {fooBar: 'foo'};
 
-      id: number;
-      foo: number;
-      bar: number;
-      fooBar: FooModel|Array<FooModel>;
-      fooBarId: number|Array<number>;
+      public id: number;
+      public foo: number;
+      public bar: number;
+      public fooBar: FooModel|Array<FooModel>;
+      public fooBarId: number|Array<number>;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
 
     const models = collection.add<FooModel>([{
-      id: 1,
       foo: 1,
+      id: 1,
     }, {
+      foo: 2,
       id: 2,
-      foo: 2
     }, {
+      foo: 3,
       id: 3,
-      foo: 3
     }, {
+      foo: 4,
       id: 4,
-      foo: 4
     }] as Array<Object>, 'foo');
 
     const first = models.shift();
@@ -313,26 +316,26 @@ describe('MobX Collection Store', function() {
     expect(first.fooBar[2].foo).to.equal(2);
   }));
 
-  it('should call autorun when needed', function(done) {
+  it('should call autorun when needed', (done) => {
     class FooModel extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-      foo: number;
-      bar: number;
+      public foo: number;
+      public bar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
 
     const model = collection.add<FooModel>({
-      id: 1,
+      bar: 3,
       foo: 1,
-      bar: 3
+      id: 1,
     }, 'foo');
 
     let runs = 0;
@@ -351,34 +354,33 @@ describe('MobX Collection Store', function() {
     model.foo = 5;
   });
 
-  it('should support dynamic references', function() {
+  it('should support dynamic references', () => {
     class FooModel extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-
-      foo: number;
+      public foo: number;
     }
 
     class TestCollection extends Collection {
-      static types = [FooModel];
+      public static types = [FooModel];
 
-      foo: Array<FooModel>;
+      public foo: Array<FooModel>;
     }
 
     const collection = new TestCollection();
 
     const models = collection.add<FooModel>([{
-      id: 1,
       foo: 1,
+      id: 1,
     }, {
+      foo: 2,
       id: 2,
-      foo: 2
     }, {
+      foo: 3,
       id: 3,
-      foo: 3
     }, {
+      foo: 4,
       id: 4,
-      foo: 4
     }] as Array<Object>, 'foo');
 
     const first = models.shift();
@@ -388,21 +390,21 @@ describe('MobX Collection Store', function() {
     expect(first['bar'][1].foo).to.equal(3);
   });
 
-  it('should support generic references', function() {
+  it('should support generic references', () => {
     const collection = new Collection();
 
     const models = collection.add<Model>([{
-      id: 1,
       foo: 1,
+      id: 1,
     }, {
+      foo: 2,
       id: 2,
-      foo: 2
     }, {
+      foo: 3,
       id: 3,
-      foo: 3
     }, {
+      foo: 4,
       id: 4,
-      foo: 4
     }] as Array<Object>);
 
     const first = models.shift();
@@ -412,30 +414,30 @@ describe('MobX Collection Store', function() {
     expect(first['bar'][1].foo).to.equal(3);
   });
 
-  it('should work with autoincrement', function() {
+  it('should work with autoincrement', () => {
     class Foo extends Model {
-      static type = 'foo';
-      static idAttribute = 'myID';
-      myID: number;
+      public static type = 'foo';
+      public static idAttribute = 'myID';
+      public myID: number;
     }
 
     class Bar extends Model {
-      static type = 'bar';
-      static enableAutoId = false;
-      id: number;
+      public static type = 'bar';
+      public static enableAutoId = false;
+      public id: number;
     }
 
     class Baz extends Model {
-      static type = 'baz';
-      static autoIdFunction() {
+      public static type = 'baz';
+      public static autoId() {
         return Math.random();
       }
-      id: number;
+      public id: number;
     }
 
     class TestCollection extends Collection {
-      static types = [Foo, Bar, Baz];
-      foo: Array<Foo>;
+      public static types = [Foo, Bar, Baz];
+      public foo: Array<Foo>;
     }
 
     const collection = new TestCollection();
@@ -459,13 +461,13 @@ describe('MobX Collection Store', function() {
     expect(baz1.id).to.be.within(0, 1);
   });
 
-  it('should support typeAttribute', function() {
+  it('should support typeAttribute', () => {
     class TestModel extends Model {
-      static typeAttribute = 'foo';
+      public static typeAttribute = 'foo';
     }
 
     class TestCollection extends Collection {
-      static types = [TestModel];
+      public static types = [TestModel];
     }
 
     const collection = new TestCollection();
@@ -480,13 +482,13 @@ describe('MobX Collection Store', function() {
     expect(baz.length).to.equal(0);
   });
 
-  it('should handle null references', function() {
+  it('should handle null references', () => {
     class Foo extends Model {
-      static type = 'foo';
+      public static type = 'foo';
     }
 
     class TestCollection extends Collection {
-      static types = [Foo];
+      public static types = [Foo];
     }
 
     const collection = new TestCollection();
@@ -501,36 +503,36 @@ describe('MobX Collection Store', function() {
     expect(model['empty']).to.equal(null);
   });
 
-  it('should support references during collection add', function() {
+  it('should support references during collection add', () => {
     class Foo extends Model {
-      static type = 'foo';
+      public static type = 'foo';
 
-      static refs = {bar: 'bar'}
+      public static refs = {bar: 'bar'};
 
-      foo: number;
-      bar: Bar|Array<Bar>
+      public foo: number;
+      public bar: Bar|Array<Bar>;
     }
 
     class Bar extends Model {
-      static type = 'bar';
-      bar: number;
+      public static type = 'bar';
+      public bar: number;
     }
 
     class TestCollection extends Collection {
-      static types = [Foo, Bar];
-      foo: Array<Foo>;
-      bar: Array<Bar>;
+      public static types = [Foo, Bar];
+      public foo: Array<Foo>;
+      public bar: Array<Bar>;
     }
 
     const collection = new TestCollection();
 
     const foo = collection.add<Foo>({
+      bar: {
+        bar: 3,
+        id: 4,
+      },
       foo: 2,
       id: 1,
-      bar: {
-        id: 4,
-        bar: 3
-      }
     }, 'foo');
 
     expect(foo.foo).to.equal(2);
@@ -539,15 +541,15 @@ describe('MobX Collection Store', function() {
     expect(collection.bar).to.have.length(1);
 
     const foo2 = collection.add<Foo>({
+      bar: [{
+        bar: 8,
+        id: 7,
+      }, {
+        bar: 10,
+        id: 9,
+      }],
       foo: 6,
       id: 5,
-      bar: [{
-        id: 7,
-        bar: 8
-      }, {
-        id: 9,
-        bar: 10
-      }]
     }, 'foo');
 
     expect(foo2.bar[0].bar).to.equal(8);
@@ -556,68 +558,68 @@ describe('MobX Collection Store', function() {
     expect(collection.bar).to.have.length(3);
   });
 
-  it('should work for a real world scenario', function() {
+  it('should work for a real world scenario', () => {
     class User extends Model {
-      static type = 'user';
-      email: string;
+      public static type = 'user';
+      public email: string;
     }
 
     class Cart extends Model {
-      static type = 'cart';
-      static refs = {user: 'user', products: 'cartItem'};
-      user: User|Array<User>;
-      products: CartItem|Array<CartItem>;
-      id: number;
+      public static type = 'cart';
+      public static refs = {user: 'user', products: 'cartItem'};
+      public user: User|Array<User>;
+      public products: CartItem|Array<CartItem>;
+      public id: number;
     }
 
     class CartItem extends Model {
-      static type = 'cartItem';
-      static refs = {product: 'products'};
-      product: Product|Array<Product>;
-      quantity: number;
-      id: number;
+      public static type = 'cartItem';
+      public static refs = {product: 'products'};
+      public product: Product|Array<Product>;
+      public quantity: number;
+      public id: number;
     }
 
     class Product extends Model {
-      static type = 'products';
-      name: string;
-      price: number;
+      public static type = 'products';
+      public name: string;
+      public price: number;
     }
 
     class TestCollection extends Collection {
-      static types = [User, Cart, CartItem, Product];
-      user: Array<User>;
-      cart: Array<Cart>;
-      cartItem: Array<CartItem>;
-      products: Array<Product>;
+      public static types = [User, Cart, CartItem, Product];
+      public user: Array<User>;
+      public cart: Array<Cart>;
+      public cartItem: Array<CartItem>;
+      public products: Array<Product>;
     }
 
     const collection = new TestCollection();
 
     const cart = collection.add<Cart>({
-      "id": 1,
-      "user": {
-        "id": 1,
-        "username": "jdoe42",
-        "email": "test@example.com",
-        "token": "dc9dcd8116673372e96cc0410821da6a",
-        "role": 1
-      },
-      "products": [{
-        "product": {
-          "id": 1,
-          "name": "Electrons",
-          "price": 9.99
+      id: 1,
+      products: [{
+        product: {
+          id: 1,
+          name: 'Electrons',
+          price: 9.99,
         },
-        "quantity": 8
+        quantity: 8,
       }, {
-        "product": {
-          "id": 2,
-          "name": "Protons",
-          "price": 5.99
+        product: {
+          id: 2,
+          name: 'Protons',
+          price: 5.99,
         },
-        "quantity": 2
-      }]
+        quantity: 2,
+      }],
+      user: {
+        email: 'test@example.com',
+        id: 1,
+        role: 1,
+        token: 'dc9dcd8116673372e96cc0410821da6a',
+        username: 'jdoe42',
+      },
     }, 'cart');
 
     expect(collection.user).to.have.length(1);
@@ -631,39 +633,39 @@ describe('MobX Collection Store', function() {
     expect(cart.products[0].product.name).to.equal('Electrons');
   });
 
-  it('should work with preprocess', function() {
+  it('should work with preprocess', () => {
     class Foo extends Model {
-      static type = 'foo';
-      static refs = {bar: 'bar'};
-      static preprocess(rawData) {
+      public static type = 'foo';
+      public static refs = {bar: 'bar'};
+      public static preprocess(rawData) {
         return assign({newProp: 1}, rawData);
       }
-      bar: Bar|Array<Bar>;
+      public bar: Bar|Array<Bar>;
     }
 
     class Bar extends Model {
-      static type = 'bar';
-      static preprocess(rawData) {
+      public static type = 'bar';
+      public static preprocess(rawData) {
         return assign({barProp: 2}, rawData);
       }
     }
 
     class TestCollection extends Collection {
-      static types = [Foo, Bar];
+      public static types = [Foo, Bar];
     }
 
     const collection = new TestCollection();
 
     const foo = collection.add<Foo>({
+      bar: [{
+        bar: 8,
+        id: 7,
+      }, {
+        bar: 10,
+        id: 9,
+      }],
       foo: 6,
       id: 5,
-      bar: [{
-        id: 7,
-        bar: 8
-      }, {
-        id: 9,
-        bar: 10
-      }]
     }, 'foo');
 
     expect(foo['newProp']).to.equal(1);
@@ -671,18 +673,18 @@ describe('MobX Collection Store', function() {
     expect(foo.bar[1]['barProp']).to.equal(2);
   });
 
-  it('should update an exiting reference', function() {
+  it('should update an exiting reference', () => {
     class Foo extends Model {
-      static type = 'foo';
-      static refs = {self: 'foo'};
+      public static type = 'foo';
+      public static refs = {self: 'foo'};
 
-      self: Foo|Array<Foo>;
-      id: number;
-      foo: number;
+      public self: Foo|Array<Foo>;
+      public id: number;
+      public foo: number;
     }
 
     class TestCollection extends Collection {
-      static types = [Foo]
+      public static types = [Foo];
     }
 
     const collection = new TestCollection();
@@ -696,15 +698,15 @@ describe('MobX Collection Store', function() {
     expect(model.self).to.equal(model);
   });
 
-  it('should not update a reserved key', function() {
+  it('should not update a reserved key', () => {
     class Foo extends Model {
-      static type = 'foo';
-      id: number;
-      foo: number;
+      public static type = 'foo';
+      public id: number;
+      public foo: number;
     }
 
     class TestCollection extends Collection {
-      static types = [Foo]
+      public static types = [Foo];
     }
 
     const collection = new TestCollection();
@@ -718,17 +720,17 @@ describe('MobX Collection Store', function() {
     expect(model.foo).to.equal(3);
   });
 
-  it('should suport updating the array items in the reference', action(function() {
+  it('should suport updating the array items in the reference', action(() => {
     class Foo extends Model {
-      static type = 'foo';
-      static refs = {bar: 'foo'}
-      id: number;
-      foo: number;
-      bar: Foo|Array<Foo>;
+      public static type = 'foo';
+      public static refs = {bar: 'foo'};
+      public id: number;
+      public foo: number;
+      public bar: Foo|Array<Foo>;
     }
 
     class TestCollection extends Collection {
-      static types = [Foo]
+      public static types = [Foo];
     }
 
     const collection = new TestCollection();
