@@ -58,7 +58,8 @@ export declare class Model implements IModel {
      */
     static enableAutoId: boolean;
     /**
-     * Function that can process the received data (e.g. from an API) before it's transformed into a model
+     * Function that can process the received data (e.g. from an API) before
+     * it's transformed into a model
      *
      * @static
      * @param {Object} [rawData={}] - Raw data
@@ -147,7 +148,7 @@ export declare class Model implements IModel {
      *
      * @argument {string} key - Property to be set
      * @argument {T} value - Value to be set
-     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+     * @returns {T|IModel} The assigned value (Can be an IModel)
      *
      * @memberOf Model
      */

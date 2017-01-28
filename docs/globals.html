@@ -915,24 +915,6 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class">
 			<a href="classes/model.html" class="tsd-kind-icon">Model</a>
 		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/imodel.html" class="tsd-kind-icon">IModel</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a>
-		</li>
-		<li class=" tsd-kind-type-alias tsd-is-not-exported">
-			<a href="globals.html#ichange" class="tsd-kind-icon">IChange</a>
-		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
 			<a href="globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
 		</li>
@@ -968,7 +950,7 @@ img { max-width: 100%; }
 			<a href="https://codeclimate.com/github/infinum/mobx-collection-store/coverage"><img src="https://codeclimate.com/github/infinum/mobx-collection-store/badges/coverage.svg" alt="Test Coverage"></a></p>
 			<p><a href="https://david-dm.org/infinum/mobx-collection-store"><img src="https://david-dm.org/infinum/mobx-collection-store.svg" alt="Dependency Status"></a>
 			<a href="https://david-dm.org/infinum/mobx-collection-store#info=devDependencies"><img src="https://david-dm.org/infinum/mobx-collection-store/dev-status.svg" alt="devDependency Status"></a></p>
-			<p>Data store for MobX. Influenced by <a href="http://backbonejs.org/#Collection">Backbone Collections</a> and <a href="https://github.com/infinum/mobx-jsonapi-store">mobx-jsonapi-store</a>.</p>
+			<p>Structured data store for MobX. Partially influenced by <a href="http://backbonejs.org/#Collection">Backbone Collections</a>.</p>
 			<h2 id="-basic-usage-examples-basic-js-"><a href="examples/basic.js">Basic usage</a></h2>
 			<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> {Collection} <span class="hljs-keyword">from</span> <span class="hljs-string">'mobx-collection-store'</span>;
 
@@ -1008,6 +990,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<li><a href="examples/relationships.js">JavaScript version</a></li>
 				<li><a href="examples/relationships.ts">TypeScript version</a></li>
 			</ul>
+			<p>More examples (both JS and TS) are in the <a href="examples/">examples</a> folder.</p>
 			<h2 id="-docs-https-infinum-github-io-mobx-collection-store-index-html-"><a href="https://infinum.github.io/mobx-collection-store/index.html">Docs</a></h2>
 			<h3 id="-collection-https-infinum-github-io-mobx-collection-store-classes-collection-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/collection.html">Collection</a></h3>
 			<h3 id="-model-https-infinum-github-io-mobx-collection-store-classes-model-html-"><a href="https://infinum.github.io/mobx-collection-store/classes/model.html">Model</a></h3>
@@ -1025,22 +1008,6 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-class"><a href="classes/collection.html" class="tsd-kind-icon">Collection</a></li>
 							<li class="tsd-kind-class"><a href="classes/model.html" class="tsd-kind-icon">Model</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Interfaces</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface"><a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/imodel.html" class="tsd-kind-icon">IModel</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-not-exported">
-						<h3>Type aliases</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-type-alias tsd-is-not-exported"><a href="globals.html#ichange" class="tsd-kind-icon">IChange</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
@@ -1062,19 +1029,6 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 						</ul>
 					</section>
 				</div>
-			</section>
-		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-			<h2>Type aliases</h2>
-			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-not-exported">
-				<a name="ichange" class="tsd-anchor"></a>
-				<h3>IChange</h3>
-				<div class="tsd-signature tsd-kind-icon">IChange<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IArraySplice</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">IArrayChange</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in Model.ts:16</li>
-					</ul>
-				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
@@ -1193,7 +1147,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<a name="gettype" class="tsd-anchor"></a>
 				<h3>get<wbr>Type</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Type<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Type<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1210,7 +1164,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>instance: <a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a></h5>
+								<h5>instance: <span class="tsd-signature-type">IModel</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>Model instance</p>
 								</div>
@@ -1279,7 +1233,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<a name="matchmodel" class="tsd-anchor"></a>
 				<h3>match<wbr>Model</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">match<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">match<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1301,7 +1255,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>item: <a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a></h5>
+								<h5>item: <span class="tsd-signature-type">IModel</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>Model that&#39;s beeing matched</p>
 								</div>

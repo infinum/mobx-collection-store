@@ -64,7 +64,8 @@ var Model = (function () {
         this.update(data);
     }
     /**
-     * Function that can process the received data (e.g. from an API) before it's transformed into a model
+     * Function that can process the received data (e.g. from an API) before
+     * it's transformed into a model
      *
      * @static
      * @param {Object} [rawData={}] - Raw data
@@ -124,7 +125,7 @@ var Model = (function () {
      *
      * @argument {string} key - Property to be set
      * @argument {T} value - Value to be set
-     * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+     * @returns {T|IModel} The assigned value (Can be an IModel)
      *
      * @memberOf Model
      */
@@ -269,7 +270,7 @@ var Model = (function () {
         if (!item) {
             return null;
         }
-        else if (typeof item === 'object') {
+        if (typeof item === 'object') {
             var model = this.__collection.add(item, type);
             if (utils_1.getType(model) !== type) {
                 throw new Error("The model should be a '" + type + "'");

@@ -8,7 +8,7 @@
 [![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
 [![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
 
-Data store for MobX. Influenced by [Backbone Collections](http://backbonejs.org/#Collection) and [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store).
+Structured data store for MobX. Partially influenced by [Backbone Collections](http://backbonejs.org/#Collection).
 
 ## [Basic usage](examples/basic.js)
 
@@ -62,6 +62,8 @@ In order to use relationships, you'll need to create new model and collection cl
 
 * [JavaScript version](examples/relationships.js)
 * [TypeScript version](examples/relationships.ts)
+
+More examples (both JS and TS) are in the [examples](examples/) folder.
 
 ## [Docs](https://infinum.github.io/mobx-collection-store/index.html)
 

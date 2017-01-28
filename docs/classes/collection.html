@@ -950,24 +950,6 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class">
 			<a href="model.html" class="tsd-kind-icon">Model</a>
 		</li>
-		<li class=" tsd-kind-interface">
-			<a href="../interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="../interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="../interfaces/imodel.html" class="tsd-kind-icon">IModel</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="../interfaces/imodelconstructor.html" class="tsd-kind-icon">IModel<wbr>Constructor</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="../interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a>
-		</li>
-		<li class=" tsd-kind-type-alias tsd-is-not-exported">
-			<a href="../globals.html#ichange" class="tsd-kind-icon">IChange</a>
-		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
 			<a href="../globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
 		</li>
@@ -1026,7 +1008,7 @@ img { max-width: 100%; }
 		<section class="tsd-panel">
 			<h3>Implements</h3>
 			<ul class="tsd-hierarchy">
-				<li><a href="../interfaces/icollection.html" class="tsd-signature-type">ICollection</a></li>
+				<li><span class="tsd-signature-type">ICollection</span></li>
 			</ul>
 		</section>
 		<section class="tsd-panel-group tsd-index-group">
@@ -1108,7 +1090,7 @@ img { max-width: 100%; }
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="types" class="tsd-anchor"></a>
 				<h3>types</h3>
-				<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/imodelconstructor.html" class="tsd-signature-type">IModelConstructor</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+				<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IModelConstructor</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
 						<li>Defined in Collection.ts:32</li>
@@ -1138,7 +1120,6 @@ img { max-width: 100%; }
 				<h3>length</h3>
 				<div class="tsd-signature tsd-kind-icon">length<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
-					<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#length">length</a></p>
 					<ul>
 						<li>Defined in Collection.ts:81</li>
 					</ul>
@@ -1191,15 +1172,14 @@ img { max-width: 100%; }
 				<a name="add" class="tsd-anchor"></a>
 				<h3>add</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IModel</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					<li class="tsd-signature tsd-kind-icon">add&lt;T&gt;<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#add">add</a></p>
 							<ul>
 								<li>Defined in Collection.ts:95</li>
 							</ul>
@@ -1226,13 +1206,13 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>model: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>model: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IModel</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1240,7 +1220,6 @@ img { max-width: 100%; }
 					</li>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#add">add</a></p>
 							<ul>
 								<li>Defined in Collection.ts:96</li>
 							</ul>
@@ -1248,20 +1227,19 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>model: <a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h5>
+								<h5>model: <span class="tsd-signature-type">IModel</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
 					</li>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#add">add</a></p>
 							<ul>
 								<li>Defined in Collection.ts:97</li>
 							</ul>
@@ -1269,7 +1247,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1285,7 +1263,6 @@ img { max-width: 100%; }
 					</li>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#add">add</a></p>
 							<ul>
 								<li>Defined in Collection.ts:98</li>
 							</ul>
@@ -1293,7 +1270,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1318,7 +1295,6 @@ img { max-width: 100%; }
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#find">find</a></p>
 							<ul>
 								<li>Defined in Collection.ts:127</li>
 							</ul>
@@ -1345,7 +1321,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1371,7 +1347,6 @@ img { max-width: 100%; }
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#findall">findAll</a></p>
 							<ul>
 								<li>Defined in Collection.ts:144</li>
 							</ul>
@@ -1395,7 +1370,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1418,7 +1393,6 @@ img { max-width: 100%; }
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#remove">remove</a></p>
 							<ul>
 								<li>Defined in Collection.ts:158</li>
 							</ul>
@@ -1445,7 +1419,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1471,7 +1445,6 @@ img { max-width: 100%; }
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#removeall">removeAll</a></p>
 							<ul>
 								<li>Defined in Collection.ts:173</li>
 							</ul>
@@ -1495,7 +1468,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
-								<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/imodel.html" class="tsd-signature-type">IModel</a></h4>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IModel</span></h4>
 							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1518,7 +1491,6 @@ img { max-width: 100%; }
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#reset">reset</a></p>
 							<ul>
 								<li>Defined in Collection.ts:184</li>
 							</ul>
@@ -1541,12 +1513,11 @@ img { max-width: 100%; }
 				<a name="tojs" class="tsd-anchor"></a>
 				<h3>toJS</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">toJS<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/idictionary.html" class="tsd-signature-type">IDictionary</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">toJS<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IDictionary</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#tojs">toJS</a></p>
 							<ul>
 								<li>Defined in Collection.ts:196</li>
 							</ul>
@@ -1561,7 +1532,7 @@ img { max-width: 100%; }
 								</dd>
 							</dl>
 						</div>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/idictionary.html" class="tsd-signature-type">IDictionary</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IDictionary</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						<p>Plain JS Object Array representing the collection and all its models</p>
 					</li>
 				</ul>

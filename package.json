@@ -6,11 +6,11 @@
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "ntsc -p ./src",
+    "build": "ntsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty src/index.ts",
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
-    "docs": "typedoc --mode file --theme minimal --tsconfig ./src/tsconfig.json --excludePrivate --out ./docs ./src",
+    "docs": "typedoc --mode file --theme minimal --tsconfig ./tsconfig.json --excludePrivate --excludeNotExported --out ./docs ./src",
     "docs:add": "npm run docs && git add docs/",
     "dist:add": "npm run build && git add dist/",
     "precommit": "npm run lint && npm test && npm run dist:add && npm run docs:add"

@@ -78,7 +78,8 @@ export class Model implements IModel {
   public static enableAutoId: boolean = true;
 
   /**
-   * Function that can process the received data (e.g. from an API) before it's transformed into a model
+   * Function that can process the received data (e.g. from an API) before
+   * it's transformed into a model
    *
    * @static
    * @param {Object} [rawData={}] - Raw data
@@ -204,7 +205,7 @@ export class Model implements IModel {
    *
    * @argument {string} key - Property to be set
    * @argument {T} value - Value to be set
-   * @returns {T|IModel} The set value (Can be an IModel if the value vas a reference)
+   * @returns {T|IModel} The assigned value (Can be an IModel)
    *
    * @memberOf Model
    */
@@ -358,7 +359,8 @@ export class Model implements IModel {
   private __getValueRefs<T>(type: string, item: T): number|string {
     if (!item) { // Handle case when the ref is unsetted
       return null;
-    } else if (typeof item === 'object') {
+    }
+    if (typeof item === 'object') {
       const model = this.__collection.add(item, type);
       if (getType(model) !== type) {
         throw new Error(`The model should be a '${type}'`);
