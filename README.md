@@ -1,7 +1,10 @@
 # mobx-collection-store
 
 [![npm version](https://badge.fury.io/js/mobx-collection-store.svg)](https://badge.fury.io/js/mobx-collection-store)
+
 [![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
+[![Test Coverage](https://codeclimate.com/github/infinum/mobx-collection-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-collection-store/coverage)
+
 [![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
 [![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
 
