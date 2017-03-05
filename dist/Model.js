@@ -209,11 +209,15 @@ var Model = (function () {
     Model.prototype.__initRefGetter = function (ref, type) {
         this.__initializedProps.push(ref, ref + "Id");
         this.__refs[ref] = type || this.static.refs[ref];
-        mobx_1.extendObservable(this, (_a = {},
-            _a[ref] = this.__getRef(ref),
-            _a[ref + "Id"] = this.__getProp(ref),
-            _a));
-        var _a;
+        // Make sure the reference is observable, even if there is no default data
+        if (!(ref in this.__data)) {
+            mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = null, _a));
+        }
+        mobx_1.extendObservable(this, (_b = {},
+            _b[ref] = this.__getRef(ref),
+            _b[ref + "Id"] = this.__getProp(ref),
+            _b));
+        var _a, _b;
     };
     /**
      * Initialize the reference getters based on the static refs property

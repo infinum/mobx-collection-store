@@ -292,6 +292,11 @@ export class Model implements IModel {
     this.__initializedProps.push(ref, `${ref}Id`);
     this.__refs[ref] = type || this.static.refs[ref];
 
+    // Make sure the reference is observable, even if there is no default data
+    if (!(ref in this.__data)) {
+      extendObservable(this.__data, {[ref]: null});
+    }
+
     extendObservable(this, {
       [ref]: this.__getRef(ref),
       [`${ref}Id`]: this.__getProp(ref),

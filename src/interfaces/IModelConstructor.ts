@@ -49,6 +49,8 @@ interface IModelConstructor {
    */
   enableAutoId: boolean;
 
+  new (initialData?: Object, collection?: ICollection): IModel;
+
   /**
    * Function used for generating the autoincrement IDs
    *
@@ -57,8 +59,6 @@ interface IModelConstructor {
    * @memberOf IModelConstructor
    */
   autoIdFunction(): number|string;
-
-  new (initialData?: Object, collection?: ICollection): IModel;
 }
 
 export default IModelConstructor;
