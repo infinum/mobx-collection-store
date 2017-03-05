@@ -20,6 +20,7 @@ describe('MobX Collection Store', () => {
     class FooModel extends Model {
       public static type = 'foo';
 
+      public id: number|string;
       public foo: number;
       public bar: number;
     }
@@ -44,6 +45,13 @@ describe('MobX Collection Store', () => {
     expect(model.foo).to.equal(1);
     expect(model.bar).to.equal(0);
     expect(model.static.type).to.equal('foo');
+
+    const model2 = new FooModel({
+      bar: 1,
+    });
+
+    expect(model2.bar).to.equal(1);
+    expect(model2.id).to.not.be.an('undefined');
   });
 
   it('should be able to upsert models', () => {

@@ -194,7 +194,7 @@ var Model = (function () {
             else {
                 do {
                     data[idAttribute] = this.static.autoIdFunction();
-                } while (collection.find(utils_1.getType(this), data[idAttribute]));
+                } while (collection && collection.find(utils_1.getType(this), data[idAttribute]));
             }
         }
     };

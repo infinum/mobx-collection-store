@@ -274,7 +274,7 @@ export class Model implements IModel {
       } else {
         do {
           data[idAttribute] = this.static.autoIdFunction();
-        } while (collection.find(getType(this), data[idAttribute]));
+        } while (collection && collection.find(getType(this), data[idAttribute]));
       }
     }
 
