@@ -780,4 +780,109 @@ describe('MobX Collection Store', () => {
 
     expect(foo.foo).to.equal(foo);
   }));
+
+  it('should support basic model timetravel', () => {
+    class FooModel extends Model {
+      public static type = 'foo';
+
+      public id: number|string;
+      public foo: number;
+    }
+
+    class TestCollection extends Collection {
+      public static types = [FooModel];
+
+      public foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<FooModel>({
+      foo: 1,
+      id: 1,
+    }, 'foo');
+
+    // [->1]
+    expect(model.foo).to.equal(1);
+
+    // [->2, 1]
+    model.foo++;
+    expect(model.foo).to.equal(2);
+
+    // [->4, 2, 1]
+    model.foo = 4;
+    expect(model.foo).to.equal(4);
+
+    // [4, ->2, 1]
+    model.undo();
+    expect(model.foo).to.equal(2);
+
+    // [4, 2, ->1]
+    model.undo();
+    expect(model.foo).to.equal(1);
+
+    // [4, 2, ->1]
+    model.undo();
+    expect(model.foo).to.equal(1);
+
+    // [4, ->2, 1]
+    model.redo();
+    expect(model.foo).to.equal(2);
+
+    // [->5, 2, 1]
+    model.foo = 5;
+    expect(model.foo).to.equal(5);
+
+    // [->5, 2, 1]
+    model.redo();
+    expect(model.foo).to.equal(5);
+
+    // [5, ->2, 1]
+    model.undo();
+    expect(model.foo).to.equal(2);
+  });
+
+  it('should support reference timetravel', () => {
+    class FooModel extends Model {
+      public static type = 'foo';
+      public static refs = {foo: 'foo'};
+
+      public id: number|string;
+      public foo: FooModel;
+      public fooId: number|string;
+    }
+
+    class TestCollection extends Collection {
+      public static types = [FooModel];
+
+      public foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<FooModel>({
+      foo: 1,
+      id: 1,
+    }, 'foo');
+
+    const model2 = collection.add<FooModel>({
+      foo: 2,
+      id: 2,
+    }, 'foo');
+
+    expect(model.foo.id).to.equal(1);
+
+    model.foo = model2;
+    expect(model.foo.id).to.equal(2);
+
+    model.foo = model;
+    expect(model.foo.id).to.equal(1);
+
+    model.undo();
+    expect(model.foo.id).to.equal(2);
+
+    model.undo();
+    expect(model.foo.id).to.equal(1);
+
+    model.redo();
+    expect(model.foo.id).to.equal(2);
+  });
 });

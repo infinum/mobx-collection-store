@@ -1,3 +1,4 @@
+import { History } from './History';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
@@ -8,7 +9,7 @@ import IReferences from './interfaces/IReferences';
  * @class Model
  * @implements {IModel}
  */
-export declare class Model implements IModel {
+export declare class Model extends History implements IModel {
     /**
      * The attribute that should be used as the unique identifier
      *

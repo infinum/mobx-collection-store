@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6,6 +11,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var mobx_1 = require("mobx");
+var History_1 = require("./History");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
 /**
@@ -14,7 +20,8 @@ var utils_1 = require("./utils");
  * @class Model
  * @implements {IModel}
  */
-var Model = (function () {
+var Model = (function (_super) {
+    __extends(Model, _super);
     /**
      * Creates an instance of Model.
      *
@@ -25,13 +32,14 @@ var Model = (function () {
      */
     function Model(initialData, collection) {
         if (initialData === void 0) { initialData = {}; }
+        var _this = _super.call(this) || this;
         /**
          * Collection the model belongs to
          *
          * @type {ICollection}
          * @memberOf Model
          */
-        this.__collection = null;
+        _this.__collection = null;
         /**
          * List of properties that were initialized on the model
          *
@@ -39,7 +47,7 @@ var Model = (function () {
          * @type {Array<string>}
          * @memberOf Model
          */
-        this.__initializedProps = [];
+        _this.__initializedProps = [];
         /**
          * The model references
          *
@@ -47,7 +55,7 @@ var Model = (function () {
          * @type {IReferences}
          * @memberOf Model
          */
-        this.__refs = {};
+        _this.__refs = {};
         /**
          * Internal data storage
          *
@@ -55,13 +63,14 @@ var Model = (function () {
          * @type {IObservableObject}
          * @memberOf Model
          */
-        this.__data = mobx_1.observable({});
-        var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
-        this.__ensureId(data, collection);
+        _this.__data = mobx_1.observable({});
+        var data = utils_1.assign({}, _this.static.defaults, _this.static.preprocess(initialData));
+        _this.__ensureId(data, collection);
         // No need for it to be observable
-        this.__collection = collection;
-        this.__initRefGetters();
-        this.update(data);
+        _this.__collection = collection;
+        _this.__initRefGetters();
+        _this.update(data);
+        return _this;
     }
     /**
      * Function that can process the received data (e.g. from an API) before
@@ -136,6 +145,7 @@ var Model = (function () {
             val = this.__setRef(key, value);
         }
         else {
+            this.__addStep(this, key, this.__data[key], value);
             // TODO: Could be optimised based on __initializedProps?
             mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
         }
@@ -344,6 +354,7 @@ var Model = (function () {
         var type = this.__refs[ref];
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
         // TODO: Could be optimised based on __initializedProps?
+        this.__addStep(this, ref, this.__data[ref], refs);
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
         // Handle the case when the ref is unsetted
         if (!refs) {
@@ -389,7 +400,7 @@ var Model = (function () {
         var _a;
     };
     return Model;
-}());
+}(History_1.History));
 exports.Model = Model;
 /**
  * The attribute that should be used as the unique identifier

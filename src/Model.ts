@@ -4,6 +4,8 @@ import {
   intercept, IObservableArray, IObservableObject, observable, toJS,
 } from 'mobx';
 
+import {History} from './History';
+import IChange from './interfaces/IChange';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
@@ -13,7 +15,7 @@ import IReferences from './interfaces/IReferences';
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
 import {assign, first, getType, mapItems} from './utils';
 
-type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
+type IArrayUpdate = IArraySplice<IModel> | IArrayChange<IModel>;
 
 /**
  * MobX Collection Model class
@@ -21,7 +23,7 @@ type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
  * @class Model
  * @implements {IModel}
  */
-export class Model implements IModel {
+export class Model extends History implements IModel {
 
   /**
    * The attribute that should be used as the unique identifier
@@ -159,6 +161,7 @@ export class Model implements IModel {
    * @memberOf Model
    */
   constructor(initialData: Object = {}, collection?: ICollection) {
+    super();
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
     this.__ensureId(data, collection);
@@ -215,6 +218,7 @@ export class Model implements IModel {
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
+      this.__addStep(this, key, this.__data[key], value);
       // TODO: Could be optimised based on __initializedProps?
       extendObservable(this.__data, {[key]: value});
     }
@@ -385,7 +389,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  @action private __partialRefUpdate(ref: string, change: IChange): IChange {
+  @action private __partialRefUpdate(ref: string, change: IArrayUpdate): IArrayUpdate {
     const type = this.__refs[ref];
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));
@@ -415,7 +419,7 @@ export class Model implements IModel {
 
     if (dataModels instanceof Array) {
       const data: IObservableArray<IModel> = observable(dataModels);
-      intercept(data, (change: IChange) => this.__partialRefUpdate(key, change));
+      intercept(data, (change: IArrayUpdate) => this.__partialRefUpdate(key, change));
       return data;
     }
 
@@ -438,6 +442,7 @@ export class Model implements IModel {
     const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
 
     // TODO: Could be optimised based on __initializedProps?
+    this.__addStep(this, ref, this.__data[ref], refs);
     extendObservable(this.__data, {[ref]: refs});
 
     // Handle the case when the ref is unsetted
