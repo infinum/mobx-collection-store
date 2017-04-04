@@ -1,3 +1,4 @@
+import IChange from './IChange';
 import IModel from './IModel';
 import IModelConstructor from './IModelConstructor';
 
@@ -87,6 +88,8 @@ interface ICollection {
    * @memberOf ICollection
    */
   toJS(): Array<Object>;
+
+  __onAction(change: IChange);
 }
 
 export default ICollection;

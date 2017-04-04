@@ -10,10 +10,10 @@
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
-    "docs": "typedoc --mode file --theme minimal --tsconfig ./tsconfig.json --excludePrivate --out ./docs ./src",
-    "docs:add": "npm run docs && git add docs/",
     "dist:add": "npm run build && git add dist/",
-    "precommit": "npm run lint && npm test && npm run dist:add && npm run docs:add"
+    "precommit": "npm run lint && npm test && npm run dist:add",
+    "__example": "npm run build && cp -r dist/* ../timetravel-example/node_modules/mobx-collection-store/dist",
+    "_example": "nodemon -e ts -i node_modules -i dist -x npm run __example"
   },
   "repository": {
     "type": "git",
@@ -62,20 +62,18 @@
     "@types/node": "^7.0.8",
     "chai": "^3.5.0",
     "husky": "^0.13.2",
-    "mobx": "^3.1.5",
+    "mobx": "^3.1.7",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "ntypescript": "^1.201609302242.1",
     "nyc": "^10.1.2",
     "ts-node": "^2.1.0",
     "tslint": "^4.5.1",
-    "typedoc": "0.5.5",
+    "typedoc": "^0.5.7",
     "typescript": "^2.2.1"
   },
   "peerDependencies": {
     "mobx": "^2.7.0 || ^3"
   },
-  "dependencies": {
-    "typedoc": "^0.5.5"
-  }
+  "dependencies": {}
 }

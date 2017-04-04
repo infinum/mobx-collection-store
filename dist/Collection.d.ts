@@ -1,3 +1,4 @@
+import IChange from './interfaces/IChange';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
@@ -120,6 +121,7 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     toJS(): Array<IDictionary>;
+    __onAction(change: IChange): void;
     /**
      * Get a list of the type models
      *

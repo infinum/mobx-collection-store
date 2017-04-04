@@ -5,7 +5,7 @@ var History = (function () {
         /**
          * History stack
          *
-         * @private
+         * @protected
          * @type {IObservableArray<IChange>}
          * @memberOf Model
          */
@@ -13,7 +13,7 @@ var History = (function () {
         /**
          * Current position in the history stack
          *
-         * @private
+         * @protected
          * @type {number}
          * @memberOf Model
          */
@@ -21,7 +21,7 @@ var History = (function () {
         /**
          * The flag that determines if the current change should be saved to history
          *
-         * @private
+         * @protected
          * @type {boolean}
          * @memberOf Model
          */
@@ -74,27 +74,6 @@ var History = (function () {
         this.__historyIgnore = true;
         this[key] = value; // This change needs to be ignored in history!
         this.__historyIgnore = historyStatus;
-    };
-    /**
-     * Save the change to the history stack
-     *
-     * @protected
-     * @param {string} key Changed property
-     * @param {*} oldValue Old property value
-     * @param {*} newValue New property value
-     *
-     * @memberOf Model
-     */
-    History.prototype.__addStep = function (model, key, oldValue, newValue) {
-        if (!this.__historyIgnore) {
-            var change_1 = { model: model, key: key, oldValue: oldValue, newValue: newValue, timestamp: Date.now() };
-            // TODO: Should probably be optimized
-            this.__history.replace([change_1].concat(this.__history.slice(this.__historyPointer)));
-            this.__historyPointer = 0;
-            this.__actionListeners.forEach(function (callback) {
-                callback(change_1);
-            });
-        }
     };
     return History;
 }());

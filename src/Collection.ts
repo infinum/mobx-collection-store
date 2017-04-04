@@ -4,6 +4,7 @@ import {
   observable, runInAction,
 } from 'mobx';
 
+import IChange from './interfaces/IChange';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
@@ -195,6 +196,10 @@ export class Collection implements ICollection {
    */
   public toJS(): Array<IDictionary> {
     return this.__data.map((item) => item.toJS());
+  }
+
+  public __onAction(change: IChange) {
+    // console.log(change);
   }
 
   /**

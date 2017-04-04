@@ -1,6 +1,7 @@
 import {IObservableObject} from 'mobx';
 
 import ICollection from './ICollection';
+import IDictionary from './IDictionary';
 import IModelConstructor from './IModelConstructor';
 
 /**
@@ -63,11 +64,11 @@ interface IModel {
   /**
    * Convert the model into a plain JS Object in order to be serialized
    *
-   * @returns {Object} Plain JS Object representing the model
+   * @returns {IDictionary} Plain JS Object representing the model
    *
    * @memberOf IModel
    */
-  toJS(): Object;
+  toJS(): IDictionary;
 }
 
 export default IModel;

@@ -262,6 +262,34 @@ export class Model extends History implements IModel {
   }
 
   /**
+   * Save the change to the history stack
+   *
+   * @protected
+   * @param {string} key Changed property
+   * @param {*} oldValue Old property value
+   * @param {*} newValue New property value
+   *
+   * @memberOf Model
+   */
+  protected __addStep(model: IModel, key: string, oldValue: any, newValue: any): void {
+    if (!this.__historyIgnore) {
+      const change: IChange = {model, key, oldValue, newValue, timestamp: Date.now()};
+
+      // TODO: Should probably be optimized
+      this.__history.replace([change, ...this.__history.slice(this.__historyPointer)]);
+      this.__historyPointer = 0;
+
+      this.__actionListeners.forEach((callback) => {
+        callback(change);
+      });
+
+      if (this.__collection) {
+        this.__collection.__onAction(change);
+      }
+    }
+  }
+
+  /**
    * Ensure the new model has a valid id
    *
    * @private

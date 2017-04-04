@@ -1,3 +1,4 @@
+import IChange from './IChange';
 import IModel from './IModel';
 /**
  * MobX Collection interface
@@ -77,5 +78,6 @@ interface ICollection {
      * @memberOf ICollection
      */
     toJS(): Array<Object>;
+    __onAction(change: IChange): any;
 }
 export default ICollection;

@@ -175,6 +175,17 @@ export declare class Model extends History implements IModel {
      */
     toJS(): IDictionary;
     /**
+     * Save the change to the history stack
+     *
+     * @protected
+     * @param {string} key Changed property
+     * @param {*} oldValue Old property value
+     * @param {*} newValue New property value
+     *
+     * @memberOf Model
+     */
+    protected __addStep(model: IModel, key: string, oldValue: any, newValue: any): void;
+    /**
      * Ensure the new model has a valid id
      *
      * @private

@@ -1,30 +1,31 @@
-import IModel from './interfaces/IModel';
+import { IObservableArray } from 'mobx';
+import IChange from './interfaces/IChange';
 export declare class History {
     /**
      * History stack
      *
-     * @private
+     * @protected
      * @type {IObservableArray<IChange>}
      * @memberOf Model
      */
-    private __history;
+    protected __history: IObservableArray<IChange>;
     /**
      * Current position in the history stack
      *
-     * @private
+     * @protected
      * @type {number}
      * @memberOf Model
      */
-    private __historyPointer;
+    protected __historyPointer: number;
     /**
      * The flag that determines if the current change should be saved to history
      *
-     * @private
+     * @protected
      * @type {boolean}
      * @memberOf Model
      */
-    private __historyIgnore;
-    private __actionListeners;
+    protected __historyIgnore: boolean;
+    protected __actionListeners: IObservableArray<(IChange) => any>;
     /**
      * Undo the last model change
      *
@@ -48,15 +49,4 @@ export declare class History {
      * @memberOf Model
      */
     protected __executeChange(key: any, value: any): void;
-    /**
-     * Save the change to the history stack
-     *
-     * @protected
-     * @param {string} key Changed property
-     * @param {*} oldValue Old property value
-     * @param {*} newValue New property value
-     *
-     * @memberOf Model
-     */
-    protected __addStep(model: IModel, key: string, oldValue: any, newValue: any): void;
 }

@@ -165,6 +165,9 @@ var Collection = (function () {
     Collection.prototype.toJS = function () {
         return this.__data.map(function (item) { return item.toJS(); });
     };
+    Collection.prototype.__onAction = function (change) {
+        // console.log(change);
+    };
     /**
      * Get a list of the type models
      *

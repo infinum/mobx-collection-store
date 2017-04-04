@@ -8,31 +8,31 @@ export class History {
   /**
    * History stack
    *
-   * @private
+   * @protected
    * @type {IObservableArray<IChange>}
    * @memberOf Model
    */
-  private __history: IObservableArray<IChange> = observable([]);
+  protected __history: IObservableArray<IChange> = observable([]);
 
   /**
    * Current position in the history stack
    *
-   * @private
+   * @protected
    * @type {number}
    * @memberOf Model
    */
-  private __historyPointer: number = 0;
+  protected __historyPointer: number = 0;
 
   /**
    * The flag that determines if the current change should be saved to history
    *
-   * @private
+   * @protected
    * @type {boolean}
    * @memberOf Model
    */
-  private __historyIgnore: boolean = false;
+  protected __historyIgnore: boolean = false;
 
-  private __actionListeners: IObservableArray<(IChange) => any> = observable.shallowArray([]);
+  protected __actionListeners: IObservableArray<(IChange) => any> = observable.shallowArray([]);
 
   /**
    * Undo the last model change
@@ -84,29 +84,5 @@ export class History {
     this.__historyIgnore = true;
     this[key] = value; // This change needs to be ignored in history!
     this.__historyIgnore = historyStatus;
-  }
-
-  /**
-   * Save the change to the history stack
-   *
-   * @protected
-   * @param {string} key Changed property
-   * @param {*} oldValue Old property value
-   * @param {*} newValue New property value
-   *
-   * @memberOf Model
-   */
-  protected __addStep(model: IModel, key: string, oldValue: any, newValue: any): void {
-    if (!this.__historyIgnore) {
-      const change: IChange = {model, key, oldValue, newValue, timestamp: Date.now()};
-
-      // TODO: Should probably be optimized
-      this.__history.replace([change, ...this.__history.slice(this.__historyPointer)]);
-      this.__historyPointer = 0;
-
-      this.__actionListeners.forEach((callback) => {
-        callback(change);
-      });
-    }
   }
 }
