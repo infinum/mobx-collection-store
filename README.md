@@ -10,6 +10,8 @@
 
 Structured data store for MobX. Partially influenced by [Backbone Collections](http://backbonejs.org/#Collection).
 
+**Using [JSON API](http://jsonapi.org/)?** Check out [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store) - All mobx-collection-store features, and JSON API helpers in one place.
+
 ## [Basic usage](examples/basic.js)
 
 ```javascript
@@ -34,6 +36,9 @@ console.log(collection.length); // 2
 john.lastName = 'Williams';
 console.log(john.lastName); // 'Williams'
 ```
+
+For more advanced [use-cases](#advanced-examples), check out the [examples](examples/) folder.
+
 ## Installation
 
 ```bash
