@@ -56,7 +56,7 @@ describe('MobX Collection Store', () => {
 
   it('should support enums for types', () => {
     enum type {
-      FOO = 1,
+      FOO,
       BAR,
     }
 
