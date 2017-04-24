@@ -1,4 +1,5 @@
 import IModel from './interfaces/IModel';
+import IType from './interfaces/IType';
 
 import {DEFAULT_TYPE} from './consts';
 
@@ -31,13 +32,13 @@ export function first(arr: Array<any>): any {
  *
  * @private
  * @param {IModel} item - Model that's beeing matched
- * @param {string} type - Model type to match
+ * @param {IType} type - Model type to match
  * @param {(string|number)} id - Model ID to match
  * @returns {boolean} True if the model matches the parameters
  *
  * @memberOf Collection
  */
-export function matchModel(item: IModel, type: string, id: string|number): boolean {
+export function matchModel(item: IModel, type: IType, id: string|number): boolean {
   return getType(item) === type && item[item.static.idAttribute] === id;
 }
 
@@ -48,7 +49,7 @@ export function matchModel(item: IModel, type: string, id: string|number): boole
  * @param {IModel} instance - Model instance
  * @returns Model instance type
  */
-export function getType(instance: IModel) {
+export function getType(instance: IModel): IType {
   return instance.static.type === DEFAULT_TYPE
     ? instance[instance.static.typeAttribute]
     : instance.static.type;

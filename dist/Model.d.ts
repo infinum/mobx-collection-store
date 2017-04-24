@@ -2,6 +2,7 @@ import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IReferences from './interfaces/IReferences';
+import IType from './interfaces/IType';
 /**
  * MobX Collection Model class
  *
@@ -37,10 +38,10 @@ export declare class Model implements IModel {
      * Type of the model
      *
      * @static
-     * @type {string}
+     * @type {IType}
      * @memberOf Model
      */
-    static type: string;
+    static type: IType;
     /**
      * Atribute name for the type attribute
      *
@@ -159,12 +160,12 @@ export declare class Model implements IModel {
      * @template T
      * @param {string} key - reference name
      * @param {T} value - reference value
-     * @param {string} [type] - reference type
+     * @param {IType} [type] - reference type
      * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
      *
      * @memberOf Model
      */
-    assignRef<T>(key: string, value: T, type?: string): T | IModel | Array<IModel>;
+    assignRef<T>(key: string, value: T, type?: IType): T | IModel | Array<IModel>;
     /**
      * Convert the model into a plain JS Object in order to be serialized
      *
@@ -225,7 +226,7 @@ export declare class Model implements IModel {
      *
      * @private
      * @template T
-     * @param {string} type - type of the reference
+     * @param {IType} type - type of the reference
      * @param {T} item - model reference
      * @returns {number|string}
      *
@@ -236,7 +237,7 @@ export declare class Model implements IModel {
      * Update the referenced array on push/pull/update
      *
      * @private
-     * @param {string} ref - reference name
+     * @param {IType} ref - reference name
      * @param {any} change - MobX change object
      * @returns {null} no direct change
      *

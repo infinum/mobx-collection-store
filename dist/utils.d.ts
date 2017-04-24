@@ -1,4 +1,5 @@
 import IModel from './interfaces/IModel';
+import IType from './interfaces/IType';
 /**
  * Iterate trough an single item or array of items
  *
@@ -22,13 +23,13 @@ export declare function first(arr: Array<any>): any;
  *
  * @private
  * @param {IModel} item - Model that's beeing matched
- * @param {string} type - Model type to match
+ * @param {IType} type - Model type to match
  * @param {(string|number)} id - Model ID to match
  * @returns {boolean} True if the model matches the parameters
  *
  * @memberOf Collection
  */
-export declare function matchModel(item: IModel, type: string, id: string | number): boolean;
+export declare function matchModel(item: IModel, type: IType, id: string | number): boolean;
 /**
  * Get the dynamic/static model type
  *
@@ -36,7 +37,7 @@ export declare function matchModel(item: IModel, type: string, id: string | numb
  * @param {IModel} instance - Model instance
  * @returns Model instance type
  */
-export declare function getType(instance: IModel): any;
+export declare function getType(instance: IModel): IType;
 /**
  * Assign objects to the target object
  * Not a complete implementation (Object.assign)

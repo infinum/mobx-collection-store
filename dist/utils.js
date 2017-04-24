@@ -29,7 +29,7 @@ exports.first = first;
  *
  * @private
  * @param {IModel} item - Model that's beeing matched
- * @param {string} type - Model type to match
+ * @param {IType} type - Model type to match
  * @param {(string|number)} id - Model ID to match
  * @returns {boolean} True if the model matches the parameters
  *

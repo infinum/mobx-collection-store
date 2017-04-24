@@ -54,6 +54,38 @@ describe('MobX Collection Store', () => {
     expect(model2.id).to.not.be.an('undefined');
   });
 
+  it('should support enums for types', () => {
+    enum type {
+      FOO = 1,
+      BAR,
+    }
+
+    class FooModel extends Model {
+      public static type = type.FOO;
+
+      public id: number|string;
+      public foo: number;
+      public bar: number;
+    }
+
+    class TestCollection extends Collection {
+      public static types = [FooModel];
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<FooModel>({
+      bar: 0,
+      foo: 1,
+      fooBar: 0.5,
+      id: 1,
+    }, type.FOO);
+
+    expect(collection.length).to.equal(1);
+    expect(collection.findAll(type.FOO).length).to.equal(1);
+    expect(collection.find<FooModel>(type.FOO, 1)).to.equal(model);
+    expect(model.foo).to.equal(1);
+  });
+
   it('should be able to upsert models', () => {
     class FooModel extends Model {
       public static type = 'foo';

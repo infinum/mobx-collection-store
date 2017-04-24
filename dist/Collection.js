@@ -93,7 +93,7 @@ var Collection = (function () {
      * Find a specific model
      *
      * @template T
-     * @argument {string} type - Type of the model that will be searched for
+     * @argument {IType} type - Type of the model that will be searched for
      * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be returned)
      * @returns {T} Found model
      *
@@ -109,7 +109,7 @@ var Collection = (function () {
      * Find all models of the specified type
      *
      * @template T
-     * @argument {string} type - Type of the models that will be searched for
+     * @argument {IType} type - Type of the models that will be searched for
      * @returns {Array<T>} Found models
      *
      * @memberOf Collection
@@ -121,7 +121,7 @@ var Collection = (function () {
      * Remove a specific model from the collection
      *
      * @template T
-     * @argument {string} type - Type of the model that will be removed
+     * @argument {IType} type - Type of the model that will be removed
      * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be removed)
      * @returns {T} Removed model
      *
@@ -136,7 +136,7 @@ var Collection = (function () {
      * Remove all models of the specified type from the collection
      *
      * @template T
-     * @argument {string} type - Type of the models that will be removed
+     * @argument {IType} type - Type of the models that will be removed
      * @returns {Array<T>} Removed models
      *
      * @memberOf Collection
@@ -169,7 +169,7 @@ var Collection = (function () {
      * Get a list of the type models
      *
      * @private
-     * @argument {string} type - Type of the model
+     * @argument {IType} type - Type of the model
      * @returns {IComputedValue<Array<IModel>>} Getter function
      *
      * @memberOf Collection
@@ -182,7 +182,7 @@ var Collection = (function () {
      * Get the model constructor for a given model type
      *
      * @private
-     * @argument {string} type - The model type we need the constructor for
+     * @argument {IType} type - The model type we need the constructor for
      * @returns {IModelConstructor} The matching model constructor
      *
      * @memberOf Collection
@@ -209,7 +209,7 @@ var Collection = (function () {
      *
      * @private
      * @param {IModel|Object} model - Model data
-     * @param {string} [type] - Model type
+     * @param {IType} [type] - Model type
      * @returns {IModel} - Model instance
      *
      * @memberOf Collection

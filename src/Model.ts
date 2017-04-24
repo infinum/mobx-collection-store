@@ -9,6 +9,7 @@ import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import IReferences from './interfaces/IReferences';
+import IType from './interfaces/IType';
 
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
 import {assign, first, getType, mapItems} from './utils';
@@ -54,10 +55,10 @@ export class Model implements IModel {
    * Type of the model
    *
    * @static
-   * @type {string}
+   * @type {IType}
    * @memberOf Model
    */
-  public static type: string = DEFAULT_TYPE;
+  public static type: IType = DEFAULT_TYPE;
 
   /**
    * Atribute name for the type attribute
@@ -228,12 +229,12 @@ export class Model implements IModel {
    * @template T
    * @param {string} key - reference name
    * @param {T} value - reference value
-   * @param {string} [type] - reference type
+   * @param {IType} [type] - reference type
    * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
    *
    * @memberOf Model
    */
-  @action public assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel> {
+  @action public assignRef<T>(key: string, value: T, type?: IType): T|IModel|Array<IModel> {
     if (key in this.__refs) { // Is already a reference
       return this.assign<T>(key, value);
     }
@@ -288,7 +289,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  private __initRefGetter(ref: string, type?: string) {
+  private __initRefGetter(ref: string, type?: IType) {
     this.__initializedProps.push(ref, `${ref}Id`);
     this.__refs[ref] = type || this.static.refs[ref];
 
@@ -355,13 +356,13 @@ export class Model implements IModel {
    *
    * @private
    * @template T
-   * @param {string} type - type of the reference
+   * @param {IType} type - type of the reference
    * @param {T} item - model reference
    * @returns {number|string}
    *
    * @memberOf Model
    */
-  private __getValueRefs<T>(type: string, item: T): number|string {
+  private __getValueRefs<T>(type: IType, item: T): number|string {
     if (!item) { // Handle case when the ref is unsetted
       return null;
     }
@@ -379,13 +380,13 @@ export class Model implements IModel {
    * Update the referenced array on push/pull/update
    *
    * @private
-   * @param {string} ref - reference name
+   * @param {IType} ref - reference name
    * @param {any} change - MobX change object
    * @returns {null} no direct change
    *
    * @memberOf Model
    */
-  @action private __partialRefUpdate(ref: string, change: IChange): IChange {
+  @action private __partialRefUpdate(ref: IType, change: IChange): IChange {
     const type = this.__refs[ref];
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));

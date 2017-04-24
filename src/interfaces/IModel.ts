@@ -2,6 +2,7 @@ import {IObservableObject} from 'mobx';
 
 import ICollection from './ICollection';
 import IModelConstructor from './IModelConstructor';
+import IType from './IType';
 
 /**
  * MobX Collection Model instance interface
@@ -53,12 +54,12 @@ interface IModel {
    * @template T
    * @param {string} key - reference name
    * @param {T} value - reference value
-   * @param {string} [type] - reference type
+   * @param {IType} [type] - reference type
    * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
    *
    * @memberOf Model
    */
-  assignRef<T>(key: string, value: T, type?: string): T|IModel|Array<IModel>;
+  assignRef<T>(key: string, value: T, type?: IType): T|IModel|Array<IModel>;
 
   /**
    * Convert the model into a plain JS Object in order to be serialized

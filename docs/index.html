@@ -933,6 +933,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-type-alias tsd-is-not-exported">
 			<a href="globals.html#ichange" class="tsd-kind-icon">IChange</a>
 		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="globals.html#itype" class="tsd-kind-icon">IType</a>
+		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
 			<a href="globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
 		</li>
@@ -1041,10 +1044,11 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 							<li class="tsd-kind-interface"><a href="interfaces/ireferences.html" class="tsd-kind-icon">IReferences</a></li>
 						</ul>
 					</section>
-					<section class="tsd-index-section tsd-is-not-exported">
+					<section class="tsd-index-section ">
 						<h3>Type aliases</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-type-alias tsd-is-not-exported"><a href="globals.html#ichange" class="tsd-kind-icon">IChange</a></li>
+							<li class="tsd-kind-type-alias"><a href="globals.html#itype" class="tsd-kind-icon">IType</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
@@ -1068,7 +1072,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				</div>
 			</section>
 		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Type aliases</h2>
 			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-not-exported">
 				<a name="ichange" class="tsd-anchor"></a>
@@ -1076,7 +1080,17 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<div class="tsd-signature tsd-kind-icon">IChange<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IArraySplice</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">IArrayChange</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Model.ts:16</li>
+						<li>Defined in Model.ts:17</li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias">
+				<a name="itype" class="tsd-anchor"></a>
+				<h3>IType</h3>
+				<div class="tsd-signature tsd-kind-icon">IType<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in interfaces/IType.ts:1</li>
 					</ul>
 				</aside>
 			</section>
@@ -1132,7 +1146,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:67</li>
+								<li>Defined in utils.ts:68</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1171,7 +1185,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:25</li>
+								<li>Defined in utils.ts:26</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1197,13 +1211,13 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<a name="gettype" class="tsd-anchor"></a>
 				<h3>get<wbr>Type</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Type<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Type<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#itype" class="tsd-signature-type">IType</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:51</li>
+								<li>Defined in utils.ts:52</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1220,7 +1234,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 								</div>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						<h4 class="tsd-returns-title">Returns <a href="globals.html#itype" class="tsd-signature-type">IType</a></h4>
 						<p>Model instance type</p>
 					</li>
 				</ul>
@@ -1235,7 +1249,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:14</li>
+								<li>Defined in utils.ts:15</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1283,13 +1297,13 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 				<a name="matchmodel" class="tsd-anchor"></a>
 				<h3>match<wbr>Model</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">match<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">match<wbr>Model<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><a href="interfaces/imodel.html" class="tsd-signature-type">IModel</a>, type<span class="tsd-signature-symbol">: </span><a href="globals.html#itype" class="tsd-signature-type">IType</a>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in utils.ts:40</li>
+								<li>Defined in utils.ts:41</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1311,7 +1325,7 @@ john.lastName = <span class="hljs-string">'Williams'</span>;
 								</div>
 							</li>
 							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
+								<h5>type: <a href="globals.html#itype" class="tsd-signature-type">IType</a></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>Model type to match</p>
 								</div>

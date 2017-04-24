@@ -149,7 +149,7 @@ var Model = (function () {
      * @template T
      * @param {string} key - reference name
      * @param {T} value - reference value
-     * @param {string} [type] - reference type
+     * @param {IType} [type] - reference type
      * @returns {(T|IModel|Array<IModel>)} - referenced model(s)
      *
      * @memberOf Model
@@ -264,7 +264,7 @@ var Model = (function () {
      *
      * @private
      * @template T
-     * @param {string} type - type of the reference
+     * @param {IType} type - type of the reference
      * @param {T} item - model reference
      * @returns {number|string}
      *
@@ -287,7 +287,7 @@ var Model = (function () {
      * Update the referenced array on push/pull/update
      *
      * @private
-     * @param {string} ref - reference name
+     * @param {IType} ref - reference name
      * @param {any} change - MobX change object
      * @returns {null} no direct change
      *
@@ -419,7 +419,7 @@ Model.defaults = {};
  * Type of the model
  *
  * @static
- * @type {string}
+ * @type {IType}
  * @memberOf Model
  */
 Model.type = consts_1.DEFAULT_TYPE;

@@ -1,6 +1,7 @@
 import ICollection from './ICollection';
 import IDictionary from './IDictionary';
 import IModel from './IModel';
+import IType from './IType';
 
 /**
  * MobX Collection Model constructor interface
@@ -12,10 +13,10 @@ interface IModelConstructor {
   /**
    * Type of the model
    *
-   * @type {string}
+   * @type {IType}
    * @memberOf IModelConstructor
    */
-  type: string;
+  type: IType;
 
   /**
    * Atribute name for the type attribute

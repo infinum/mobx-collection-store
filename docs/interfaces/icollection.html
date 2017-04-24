@@ -959,6 +959,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-type-alias tsd-is-not-exported">
 			<a href="../globals.html#ichange" class="tsd-kind-icon">IChange</a>
 		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../globals.html#itype" class="tsd-kind-icon">IType</a>
+		</li>
 		<li class=" tsd-kind-variable tsd-is-private">
 			<a href="../globals.html#default_type" class="tsd-kind-icon">DEFAULT_<wbr>TYPE</a>
 		</li>
@@ -1048,7 +1051,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in interfaces/ICollection.ts:17</li>
+						<li>Defined in interfaces/ICollection.ts:18</li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1072,16 +1075,16 @@ img { max-width: 100%; }
 				<a name="add" class="tsd-anchor"></a>
 				<h3>add</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, type<span class="tsd-signature-symbol">?: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
 					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
-					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span>, type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span>, type<span class="tsd-signature-symbol">?: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
 					<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:28</li>
+								<li>Defined in interfaces/ICollection.ts:29</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1093,7 +1096,7 @@ img { max-width: 100%; }
 								<dd><p>{Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported</p>
 								</dd>
 								<dt>argument</dt>
-								<dd><p>{string} [type] - The model type to be imported (not relevant if the model is an instance of Model)</p>
+								<dd><p>{IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)</p>
 								</dd>
 								<dt>memberof</dt>
 								<dd><p>ICollection</p>
@@ -1106,7 +1109,7 @@ img { max-width: 100%; }
 								<h5>model: <span class="tsd-signature-type">Object</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">string</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="imodel.html" class="tsd-signature-type">IModel</a></h4>
@@ -1115,7 +1118,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:29</li>
+								<li>Defined in interfaces/ICollection.ts:30</li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1129,7 +1132,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:30</li>
+								<li>Defined in interfaces/ICollection.ts:31</li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1138,7 +1141,7 @@ img { max-width: 100%; }
 								<h5>model: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">string</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1146,7 +1149,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:31</li>
+								<li>Defined in interfaces/ICollection.ts:32</li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1163,13 +1166,13 @@ img { max-width: 100%; }
 				<a name="find" class="tsd-anchor"></a>
 				<h3>find</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-					<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+					<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:42</li>
+								<li>Defined in interfaces/ICollection.ts:43</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1178,7 +1181,7 @@ img { max-width: 100%; }
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>argument</dt>
-								<dd><p>{string} type - Type of the model that will be searched for</p>
+								<dd><p>{IType} type - Type of the model that will be searched for</p>
 								</dd>
 								<dt>argument</dt>
 								<dd><p>{string|number} [id] - ID of the model (if none is defined, the first result will be returned)</p>
@@ -1191,7 +1194,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
+								<h5>type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
@@ -1206,13 +1209,13 @@ img { max-width: 100%; }
 				<a name="findall" class="tsd-anchor"></a>
 				<h3>find<wbr>All</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-					<li class="tsd-signature tsd-kind-icon">find<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">find<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:52</li>
+								<li>Defined in interfaces/ICollection.ts:53</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1221,7 +1224,7 @@ img { max-width: 100%; }
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>argument</dt>
-								<dd><p>{string} type - Type of the models that will be searched for</p>
+								<dd><p>{IType} type - Type of the models that will be searched for</p>
 								</dd>
 								<dt>memberof</dt>
 								<dd><p>ICollection</p>
@@ -1231,7 +1234,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
+								<h5>type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1243,13 +1246,13 @@ img { max-width: 100%; }
 				<a name="remove" class="tsd-anchor"></a>
 				<h3>remove</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-					<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
+					<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a>, id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="imodel.html" class="tsd-signature-type">IModel</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:63</li>
+								<li>Defined in interfaces/ICollection.ts:64</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1258,7 +1261,7 @@ img { max-width: 100%; }
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>argument</dt>
-								<dd><p>{string} type - Type of the model that will be removed</p>
+								<dd><p>{IType} type - Type of the model that will be removed</p>
 								</dd>
 								<dt>argument</dt>
 								<dd><p>{string|number} [id] - ID of the model (if none is defined, the first result will be removed)</p>
@@ -1271,7 +1274,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
+								<h5>type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
@@ -1286,13 +1289,13 @@ img { max-width: 100%; }
 				<a name="removeall" class="tsd-anchor"></a>
 				<h3>remove<wbr>All</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-					<li class="tsd-signature tsd-kind-icon">remove<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">remove<wbr>All<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../globals.html#itype" class="tsd-signature-type">IType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:73</li>
+								<li>Defined in interfaces/ICollection.ts:74</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1301,7 +1304,7 @@ img { max-width: 100%; }
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>argument</dt>
-								<dd><p>{string} type - Type of the models that will be removed</p>
+								<dd><p>{IType} type - Type of the models that will be removed</p>
 								</dd>
 								<dt>memberof</dt>
 								<dd><p>ICollection</p>
@@ -1311,7 +1314,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>type: <span class="tsd-signature-type">string</span></h5>
+								<h5>type: <a href="../globals.html#itype" class="tsd-signature-type">IType</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="imodel.html" class="tsd-signature-type">IModel</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1329,7 +1332,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:80</li>
+								<li>Defined in interfaces/ICollection.ts:81</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1356,7 +1359,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in interfaces/ICollection.ts:89</li>
+								<li>Defined in interfaces/ICollection.ts:90</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
