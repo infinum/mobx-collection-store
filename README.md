@@ -1,5 +1,7 @@
 # mobx-collection-store
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/mobx-collection-store.svg)](https://greenkeeper.io/)
+
 [![npm version](https://badge.fury.io/js/mobx-collection-store.svg)](https://badge.fury.io/js/mobx-collection-store)
 
 [![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
