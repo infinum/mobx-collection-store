@@ -16,15 +16,15 @@ interface ICollection {
     /**
      * Add a model or list of models to the collection
      *
-     * @argument {Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported
+     * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported
      * @argument {IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)
      * @returns {IModel|Array<IModel>} Model instance(s)
      *
      * @memberOf ICollection
      */
-    add(model: Object, type?: IType): IModel;
+    add(model: object, type?: IType): IModel;
     add(model: IModel): IModel;
-    add(model: Array<Object>, type?: IType): Array<IModel>;
+    add(model: Array<object>, type?: IType): Array<IModel>;
     add(model: Array<IModel>): Array<IModel>;
     /**
      * Find a specific model
@@ -73,10 +73,10 @@ interface ICollection {
     /**
      * Convert the collection (and containing models) into a plain JS Object in order to be serialized
      *
-     * @returns {Array<Object>} Plain JS Object Array representing the collection and all its models
+     * @returns {Array<object>} Plain JS Object Array representing the collection and all its models
      *
      * @memberOf ICollection
      */
-    toJS(): Array<Object>;
+    toJS(): Array<object>;
 }
 export default ICollection;

@@ -63,12 +63,12 @@ export declare class Model implements IModel {
      * it's transformed into a model
      *
      * @static
-     * @param {Object} [rawData={}] - Raw data
-     * @returns {Object} Transformed data
+     * @param {object} [rawData={}] - Raw data
+     * @returns {object} Transformed data
      *
      * @memberOf Model
      */
-    static preprocess(rawData?: Object): Object;
+    static preprocess(rawData?: object): object;
     /**
      * Function used for generating the autoincrement IDs
      *
@@ -126,7 +126,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    constructor(initialData?: Object, collection?: ICollection);
+    constructor(initialData?: object, collection?: ICollection);
     /**
      * Static model class
      *
@@ -138,12 +138,12 @@ export declare class Model implements IModel {
     /**
      * Update the existing model
      *
-     * @augments {IModel|Object} data - The new model
-     * @returns {Object} Values that have been updated
+     * @augments {IModel|object} data - The new model
+     * @returns {object} Values that have been updated
      *
      * @memberOf Model
      */
-    update(data: IModel | Object): Object;
+    update(data: IModel | object): object;
     /**
      * Set a specific model property
      *
@@ -194,6 +194,16 @@ export declare class Model implements IModel {
      */
     private __initRefGetter(ref, type?);
     /**
+     * An calculated external reference getter
+     *
+     * @private
+     * @param {IExternalRef} ref - Reference definition
+     * @returns {(IComputedValue<IModel|Array<IModel>>)}
+     *
+     * @memberof Model
+     */
+    private __getExternalRef(ref);
+    /**
      * Initialize the reference getters based on the static refs property
      *
      * @private
@@ -232,7 +242,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __getValueRefs<T>(type, item);
+    private __getValueRefs(type, item);
     /**
      * Update the referenced array on push/pull/update
      *

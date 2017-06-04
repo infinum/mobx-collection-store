@@ -1,11 +1,12 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var consts_1 = require("./consts");
 /**
  * Iterate trough an single item or array of items
  *
  * @private
  * @template T
- * @param {(Object|Array<Object>)} data - Data that needs to be iterated
+ * @param {(object|Array<object>)} data - Data that needs to be iterated
  * @param {Function} fn - Function to call for every item
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
@@ -58,8 +59,8 @@ exports.getType = getType;
  * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
  *
  * @private
- * @param {Object} target - Target object
- * @param {Array<Object>} args - Objects to be assigned
+ * @param {object} target - Target object
+ * @param {Array<object>} args - Objects to be assigned
  * @returns
  */
 function assign(target) {

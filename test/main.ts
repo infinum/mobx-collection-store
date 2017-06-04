@@ -754,7 +754,7 @@ describe('MobX Collection Store', () => {
 
     expect(model.assign).to.be.a('function');
     expect(model.id).to.equal(1);
-    model.update({id: 2, assign: true, foo: 3});
+    model.update({id: 2, assign: true, foo: 3} as object);
     expect(model.assign).to.be.a('function');
     expect(model.id).to.equal(1);
     expect(model.foo).to.equal(3);
@@ -812,4 +812,48 @@ describe('MobX Collection Store', () => {
 
     expect(foo.foo).to.equal(foo);
   }));
+
+  describe('relationships', () => {
+    it('should support many to one/many relationships', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        public static refs = {bars: {model: 'bar', property: 'fooBar'}};
+
+        public bars: Bar|Array<Bar>;
+      }
+
+      class Bar extends Model {
+        public static type = 'bar';
+        public static refs = {fooBar: 'foo'};
+
+        public fooBar: Foo|Array<Foo>;
+      }
+
+      class TestStore extends Collection {
+        public static types = [Foo, Bar];
+      }
+
+      const store = new TestStore();
+
+      const foo = store.add<Foo>({id: 1, type: 'foo'}, 'foo');
+      const bars = store.add<Bar>([{
+        fooBar: 1,
+        id: 2,
+        type: 'bar',
+      }, {
+        fooBar: 2,
+        id: 3,
+        type: 'bar',
+      }, {
+        fooBar: 1,
+        id: 4,
+        type: 'bar',
+      }], 'bar');
+
+      expect(bars).to.have.length(3);
+      expect(foo.bars).to.have.length(2);
+      expect(foo.bars[0].id).to.equal(2);
+      expect(foo.bars[1].id).to.equal(4);
+    });
+  });
 });

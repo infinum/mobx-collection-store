@@ -30,12 +30,12 @@ interface IModel {
   /**
    * Update the existing model
    *
-   * @augments {IModel|Object} data - The new model
-   * @returns {Object} Values that have been updated
+   * @augments {IModel|object} data - The new model
+   * @returns {object} Values that have been updated
    *
    * @memberOf IModel
    */
-  update(data: IModel|Object): Object;
+  update(data: IModel|object): object;
 
   /**
    * Set a specific model property
@@ -64,11 +64,11 @@ interface IModel {
   /**
    * Convert the model into a plain JS Object in order to be serialized
    *
-   * @returns {Object} Plain JS Object representing the model
+   * @returns {object} Plain JS Object representing the model
    *
    * @memberOf IModel
    */
-  toJS(): Object;
+  toJS(): object;
 }
 
 export default IModel;

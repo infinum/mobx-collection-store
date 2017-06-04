@@ -1,11 +1,13 @@
 import {
   action, computed, extendObservable,
   IArrayChange, IArraySplice, IComputedValue,
-  intercept, IObservableArray, IObservableObject, observable, toJS,
+  intercept, IObservableArray, IObservableObject,
+  isObservableArray, observable, toJS,
 } from 'mobx';
 
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
+import IExternalRef from './interfaces/IExternalRef';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
 import IReferences from './interfaces/IReferences';
@@ -83,12 +85,12 @@ export class Model implements IModel {
    * it's transformed into a model
    *
    * @static
-   * @param {Object} [rawData={}] - Raw data
-   * @returns {Object} Transformed data
+   * @param {object} [rawData={}] - Raw data
+   * @returns {object} Transformed data
    *
    * @memberOf Model
    */
-  public static preprocess(rawData: Object = {}): Object {
+  public static preprocess(rawData: object = {}): object {
     return rawData;
   }
 
@@ -140,7 +142,7 @@ export class Model implements IModel {
    * @type {IReferences}
    * @memberOf Model
    */
-  private __refs: IReferences = {};
+  private __refs: {[key: string]: number|string} = {};
 
   /**
    * Internal data storage
@@ -159,7 +161,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  constructor(initialData: Object = {}, collection?: ICollection) {
+  constructor(initialData: object = {}, collection?: ICollection) {
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
     this.__ensureId(data, collection);
@@ -179,18 +181,18 @@ export class Model implements IModel {
    * @memberOf Model
    */
   get static(): typeof Model {
-    return <typeof Model> this.constructor;
+    return this.constructor as typeof Model;
   }
 
   /**
    * Update the existing model
    *
-   * @augments {IModel|Object} data - The new model
-   * @returns {Object} Values that have been updated
+   * @augments {IModel|object} data - The new model
+   * @returns {object} Values that have been updated
    *
    * @memberOf Model
    */
-  @action public update(data: IModel | Object): Object {
+  @action public update(data: IModel | object): object {
     if (data === this) {
       return this; // Nothing to do - don't update with itself
     }
@@ -235,9 +237,14 @@ export class Model implements IModel {
    * @memberOf Model
    */
   @action public assignRef<T>(key: string, value: T, type?: IType): T|IModel|Array<IModel> {
+    if (typeof this.static.refs[key] === 'object') {
+      throw new Error(key + ' is an external reference');
+    }
+
     if (key in this.__refs) { // Is already a reference
       return this.assign<T>(key, value);
     }
+
     const item = value instanceof Array ? first(value) : value;
     this.__refs[key] = item instanceof Model ? getType(item) : type;
     const data = this.__setRef(key, value);
@@ -290,17 +297,47 @@ export class Model implements IModel {
    * @memberOf Model
    */
   private __initRefGetter(ref: string, type?: IType) {
-    this.__initializedProps.push(ref, `${ref}Id`);
-    this.__refs[ref] = type || this.static.refs[ref];
+    const staticRef = this.static.refs[ref];
+    if (typeof staticRef === 'object') {
+      extendObservable(this, {
+        [ref]: this.__getExternalRef(staticRef),
+      });
+    } else {
+      this.__initializedProps.push(ref, `${ref}Id`);
+      this.__refs[ref] = type || staticRef;
 
-    // Make sure the reference is observable, even if there is no default data
-    if (!(ref in this.__data)) {
-      extendObservable(this.__data, {[ref]: null});
+      // Make sure the reference is observable, even if there is no default data
+      if (!(ref in this.__data)) {
+        extendObservable(this.__data, {[ref]: null});
+      }
+
+      extendObservable(this, {
+        [ref]: this.__getRef(ref),
+        [`${ref}Id`]: this.__getProp(ref),
+      });
     }
+  }
 
-    extendObservable(this, {
-      [ref]: this.__getRef(ref),
-      [`${ref}Id`]: this.__getProp(ref),
+  /**
+   * An calculated external reference getter
+   *
+   * @private
+   * @param {IExternalRef} ref - Reference definition
+   * @returns {(IComputedValue<IModel|Array<IModel>>)}
+   *
+   * @memberof Model
+   */
+  private __getExternalRef(ref: IExternalRef): IComputedValue<IModel|Array<IModel>> {
+    return computed(() => {
+      return this.__collection.findAll(ref.model)
+        .filter((model: IModel) => {
+          const prop = model[ref.property];
+          if (prop instanceof Array || isObservableArray(prop)) {
+            return prop.indexOf(this) !== -1;
+          } else {
+            return prop === this;
+          }
+        });
     });
   }
 
@@ -362,7 +399,7 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  private __getValueRefs<T>(type: IType, item: T): number|string {
+  private __getValueRefs(type: IType, item: IModel | object): number|string {
     if (!item) { // Handle case when the ref is unsetted
       return null;
     }
@@ -410,7 +447,7 @@ export class Model implements IModel {
    * @memberOf Model
    */
   private __getReferencedModels(key: string): IModel|Array<IModel> {
-    let dataModels = mapItems<IModel>(this.__data[key], (refId: string) => {
+    const dataModels = mapItems<IModel>(this.__data[key], (refId: string) => {
       return this.__collection.find(this.__refs[key], refId);
     });
 

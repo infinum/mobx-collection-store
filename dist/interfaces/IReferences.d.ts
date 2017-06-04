@@ -1,3 +1,4 @@
+import IExternalRef from './IExternalRef';
 import IType from './IType';
 /**
  * Model references mapping interface
@@ -5,6 +6,6 @@ import IType from './IType';
  * @interface IReferences
  */
 interface IReferences {
-    [name: string]: IType;
+    [name: string]: IType | IExternalRef;
 }
 export default IReferences;

@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
 var Model_1 = require("./Model");
 var consts_1 = require("./consts");
@@ -20,7 +21,7 @@ var Collection = (function () {
     /**
      * Creates an instance of Collection.
      *
-     * @param {Array<Object>} [data=[]]
+     * @param {Array<object>} [data=[]]
      *
      * @memberOf Collection
      */
@@ -243,7 +244,6 @@ var Collection = (function () {
     };
     return Collection;
 }());
-exports.Collection = Collection;
 /**
  * List of custom model types
  *
@@ -266,4 +266,5 @@ __decorate([
 ], Collection.prototype, "reset", null);
 __decorate([
     mobx_1.action
-], Collection.prototype, "___removeModels", null);
+], Collection.prototype, "__removeModels", null);
+exports.Collection = Collection;

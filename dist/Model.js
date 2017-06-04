@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
@@ -68,8 +69,8 @@ var Model = (function () {
      * it's transformed into a model
      *
      * @static
-     * @param {Object} [rawData={}] - Raw data
-     * @returns {Object} Transformed data
+     * @param {object} [rawData={}] - Raw data
+     * @returns {object} Transformed data
      *
      * @memberOf Model
      */
@@ -107,8 +108,8 @@ var Model = (function () {
     /**
      * Update the existing model
      *
-     * @augments {IModel|Object} data - The new model
-     * @returns {Object} Values that have been updated
+     * @augments {IModel|object} data - The new model
+     * @returns {object} Values that have been updated
      *
      * @memberOf Model
      */
@@ -155,6 +156,9 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.assignRef = function (key, value, type) {
+        if (typeof this.static.refs[key] === 'object') {
+            throw new Error(key + ' is an external reference');
+        }
         if (key in this.__refs) {
             return this.assign(key, value);
         }
@@ -207,17 +211,49 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__initRefGetter = function (ref, type) {
-        this.__initializedProps.push(ref, ref + "Id");
-        this.__refs[ref] = type || this.static.refs[ref];
-        // Make sure the reference is observable, even if there is no default data
-        if (!(ref in this.__data)) {
-            mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = null, _a));
+        var staticRef = this.static.refs[ref];
+        if (typeof staticRef === 'object') {
+            mobx_1.extendObservable(this, (_a = {},
+                _a[ref] = this.__getExternalRef(staticRef),
+                _a));
         }
-        mobx_1.extendObservable(this, (_b = {},
-            _b[ref] = this.__getRef(ref),
-            _b[ref + "Id"] = this.__getProp(ref),
-            _b));
-        var _a, _b;
+        else {
+            this.__initializedProps.push(ref, ref + "Id");
+            this.__refs[ref] = type || staticRef;
+            // Make sure the reference is observable, even if there is no default data
+            if (!(ref in this.__data)) {
+                mobx_1.extendObservable(this.__data, (_b = {}, _b[ref] = null, _b));
+            }
+            mobx_1.extendObservable(this, (_c = {},
+                _c[ref] = this.__getRef(ref),
+                _c[ref + "Id"] = this.__getProp(ref),
+                _c));
+        }
+        var _a, _b, _c;
+    };
+    /**
+     * An calculated external reference getter
+     *
+     * @private
+     * @param {IExternalRef} ref - Reference definition
+     * @returns {(IComputedValue<IModel|Array<IModel>>)}
+     *
+     * @memberof Model
+     */
+    Model.prototype.__getExternalRef = function (ref) {
+        var _this = this;
+        return mobx_1.computed(function () {
+            return _this.__collection.findAll(ref.model)
+                .filter(function (model) {
+                var prop = model[ref.property];
+                if (prop instanceof Array || mobx_1.isObservableArray(prop)) {
+                    return prop.indexOf(_this) !== -1;
+                }
+                else {
+                    return prop === _this;
+                }
+            });
+        });
     };
     /**
      * Initialize the reference getters based on the static refs property
@@ -390,7 +426,6 @@ var Model = (function () {
     };
     return Model;
 }());
-exports.Model = Model;
 /**
  * The attribute that should be used as the unique identifier
  *
@@ -459,4 +494,5 @@ __decorate([
 ], Model.prototype, "assignRef", null);
 __decorate([
     mobx_1.action
-], Model.prototype, "___partialRefUpdate", null);
+], Model.prototype, "__partialRefUpdate", null);
+exports.Model = Model;

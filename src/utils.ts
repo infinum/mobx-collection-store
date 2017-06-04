@@ -8,11 +8,11 @@ import {DEFAULT_TYPE} from './consts';
  *
  * @private
  * @template T
- * @param {(Object|Array<Object>)} data - Data that needs to be iterated
+ * @param {(object|Array<object>)} data - Data that needs to be iterated
  * @param {Function} fn - Function to call for every item
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
-export function mapItems<T>(data: Object|Array<Object>, fn: Function): T|Array<T> {
+export function mapItems<T>(data: object|Array<object>, fn: (item: any) => T): T|Array<T> {
   return data instanceof Array ? data.map((item) => fn(item)) : fn(data);
 }
 
@@ -61,14 +61,14 @@ export function getType(instance: IModel): IType {
  * Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign polyfill
  *
  * @private
- * @param {Object} target - Target object
- * @param {Array<Object>} args - Objects to be assigned
+ * @param {object} target - Target object
+ * @param {Array<object>} args - Objects to be assigned
  * @returns
  */
-export function assign(target: Object, ...args: Array<Object>) {
+export function assign(target: object, ...args: Array<object>) {
   args.forEach((nextSource) => {
     if (nextSource != null) {
-      for (let nextKey in nextSource) {
+      for (const nextKey in nextSource) {
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
           target[nextKey] = nextSource[nextKey];
         }

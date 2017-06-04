@@ -30,11 +30,11 @@ export declare class Collection implements ICollection {
     /**
      * Creates an instance of Collection.
      *
-     * @param {Array<Object>} [data=[]]
+     * @param {Array<object>} [data=[]]
      *
      * @memberOf Collection
      */
-    constructor(data?: Array<Object>);
+    constructor(data?: Array<object>);
     /**
      * Static model class
      *
@@ -55,7 +55,7 @@ export declare class Collection implements ICollection {
      * Add a model or list of models to the collection
      *
      * @template T
-     * @argument {Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported
+     * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported
      * @argument {IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)
      * @returns {IModel|Array<IModel>|T|Array<T>} Model instance(s)
      *
@@ -63,8 +63,8 @@ export declare class Collection implements ICollection {
      */
     add<T extends IModel>(model: Array<IModel>): Array<T>;
     add<T extends IModel>(model: IModel): T;
-    add<T extends IModel>(model: Array<Object>, type?: IType): Array<T>;
-    add<T extends IModel>(model: Object, type?: IType): T;
+    add<T extends IModel>(model: Array<object>, type?: IType): Array<T>;
+    add<T extends IModel>(model: object, type?: IType): T;
     /**
      * Find a specific model
      *

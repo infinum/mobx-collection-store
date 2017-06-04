@@ -1,12 +1,12 @@
 {
   "name": "mobx-collection-store",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Data collection store for MobX",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "ntsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty src/index.ts",
+    "build": "tsc --outDir ./dist --experimentalDecorators --target es5 --module commonjs --declaration --pretty src/index.ts",
     "test": "NODE_ENV=test nyc mocha",
     "lint": "tslint './src/**/*.ts'",
     "watch": "nodemon -e .ts -i node_modules -i dist -i coverage -x mocha",
@@ -58,19 +58,19 @@
     ]
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.38",
-    "@types/node": "^7.0.4",
-    "chai": "^3.5.0",
-    "husky": "^0.13.1",
-    "mobx": "^3.0.2",
-    "mocha": "^3.2.0",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.27",
+    "chai": "^4.0.1",
+    "husky": "^0.13.4",
+    "mobx": "^3.1.11",
+    "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "ntypescript": "^1.201609302242.1",
-    "nyc": "^10.1.2",
-    "ts-node": "^2.0.0",
-    "tslint": "^5.1.0",
-    "typedoc": "^0.5.5",
-    "typescript": "^2.1.5"
+    "nyc": "^11.0.2",
+    "ts-node": "^3.0.4",
+    "tslint": "^5.4.2",
+    "typedoc": "^0.7.1",
+    "typescript": "^2.3.4"
   },
   "peerDependencies": {
     "mobx": "^2.7.0 || ^3"

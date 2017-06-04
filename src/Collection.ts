@@ -44,11 +44,11 @@ export class Collection implements ICollection {
   /**
    * Creates an instance of Collection.
    *
-   * @param {Array<Object>} [data=[]]
+   * @param {Array<object>} [data=[]]
    *
    * @memberOf Collection
    */
-  constructor(data: Array<Object> = []) {
+  constructor(data: Array<object> = []) {
     runInAction(() => {
       this.__data.push(...data.map(this.__initItem, this));
     });
@@ -69,7 +69,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   public get static(): typeof Collection {
-    return <typeof Collection> this.constructor;
+    return this.constructor as typeof Collection;
   }
 
   /**
@@ -87,7 +87,7 @@ export class Collection implements ICollection {
    * Add a model or list of models to the collection
    *
    * @template T
-   * @argument {Object|IModel|Array<Object>|Array<IModel>} model - The model or array of models to be imported
+   * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported
    * @argument {IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)
    * @returns {IModel|Array<IModel>|T|Array<T>} Model instance(s)
    *
@@ -95,11 +95,11 @@ export class Collection implements ICollection {
    */
   public add<T extends IModel>(model: Array<IModel>): Array<T>;
   public add<T extends IModel>(model: IModel): T;
-  public add<T extends IModel>(model: Array<Object>, type?: IType): Array<T>;
-  public add<T extends IModel>(model: Object, type?: IType): T;
+  public add<T extends IModel>(model: Array<object>, type?: IType): Array<T>;
+  public add<T extends IModel>(model: object, type?: IType): T;
   @action public add(model: any, type?: IType) {
     if (model instanceof Array) {
-      return model.map((item: IModel|Object) => this.add(item, type));
+      return model.map((item: IModel|object) => this.add(item, type));
     }
 
     const instance: IModel = this.__getModelInstance(model, type);
@@ -251,7 +251,7 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  private __getModelInstance(model: IModel|Object, type?: IType): IModel {
+  private __getModelInstance(model: IModel|object, type?: IType): IModel {
     if (model instanceof Model) {
       model.__collection = this;
       return model;

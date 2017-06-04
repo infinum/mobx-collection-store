@@ -43,7 +43,7 @@ interface IModelConstructor {
      * @memberOf IModelConstructor
      */
     enableAutoId: boolean;
-    new (initialData?: Object, collection?: ICollection): IModel;
+    new (initialData?: object, collection?: ICollection): IModel;
     /**
      * Function used for generating the autoincrement IDs
      *
