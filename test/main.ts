@@ -196,11 +196,12 @@ describe('MobX Collection Store', () => {
   it('should work for the readme example', () => {
     class Person extends Model {
       public static type = 'person';
-      public static refs = {spouse: 'person'};
+      public static refs = {spouse: 'person', pets: {model: 'pet', property: 'owner'}};
 
       public firstName: string;
       public lastName: string;
       public spouse: Person;
+      public pets: Array<Pet>;
 
       @computed public get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
@@ -246,6 +247,7 @@ describe('MobX Collection Store', () => {
 
     expect(john.spouse.fullName).to.equal('Jane Doe');
     expect(fido.owner.fullName).to.equal('John Doe');
+    expect(john.pets.length).to.equal(1);
     expect(fido.owner.spouse.fullName).to.equal('Jane Doe');
     expect(collection.person.length).to.equal(2);
     expect(collection.length).to.equal(3);

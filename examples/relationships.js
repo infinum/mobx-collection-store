@@ -19,7 +19,7 @@ class Person extends Model {
   // }
 }
 Person.type = 'person';
-Person.refs = {spouse: 'person'};
+Person.refs = {spouse: 'person', pets: {model: 'pet', property: 'owner'}};
 
 class Pet extends Model {}
 Pet.type = 'pet';
@@ -52,6 +52,7 @@ const jane = new Person({
 collection.add(jane); // No need for the type argument since we're passing a real model
 
 console.log(john.spouse.fullName); // 'Jane Doe'
+console.log(john.pets[0].name); // 'Fido'
 console.log(fido.owner.fullName); // 'John Doe'
 console.log(fido.owner.spouse.fullName); // 'Jane Doe'
 console.log(collection.person.length); // 2

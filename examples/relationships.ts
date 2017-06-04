@@ -7,11 +7,12 @@ import {Collection, Model} from '../src';
 
 class Person extends Model {
   public static type = 'person';
-  public static refs = {spouse: 'person'};
+  public static refs = {spouse: 'person', pets: {model: 'pet', property: 'owner'}};
 
   public firstName: string;
   public lastName: string;
   public spouse: Person;
+  public pets: Array<Pet>;
 
   @computed public get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
@@ -24,6 +25,7 @@ class Pet extends Model {
 
   public owner: Person;
   public ownerId: number;
+  public name: string;
 }
 
 class MyCollection extends Collection {
@@ -56,6 +58,7 @@ const jane = new Person({
 collection.add(jane);
 
 console.log(john.spouse.fullName); // 'Jane Doe'
+console.log(john.pets[0].name); // 'Fido'
 console.log(fido.owner.fullName); // 'John Doe'
 console.log(fido.owner.spouse.fullName); // 'Jane Doe'
 console.log(collection.person.length); // 2
