@@ -339,7 +339,7 @@ describe('MobX Collection Store', () => {
     }, {
       foo: 4,
       id: 4,
-    }] as Array<Object>, 'foo');
+    }] as Array<object>, 'foo');
 
     const first = models.shift();
     const second = models.shift();
@@ -421,7 +421,7 @@ describe('MobX Collection Store', () => {
     }, {
       foo: 4,
       id: 4,
-    }] as Array<Object>, 'foo');
+    }] as Array<object>, 'foo');
 
     const first = models.shift();
 
@@ -445,7 +445,7 @@ describe('MobX Collection Store', () => {
     }, {
       foo: 4,
       id: 4,
-    }] as Array<Object>);
+    }] as Array<object>);
 
     const first = models.shift();
 
