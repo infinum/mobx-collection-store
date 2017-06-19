@@ -27,6 +27,7 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     private __data;
+    private __modelHash;
     /**
      * Creates an instance of Collection.
      *

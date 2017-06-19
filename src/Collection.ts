@@ -41,6 +41,8 @@ export class Collection implements ICollection {
    */
   private __data: IObservableArray<IModel> = observable([]);
 
+  private __modelHash: IDictionary = {};
+
   /**
    * Creates an instance of Collection.
    *
@@ -50,7 +52,15 @@ export class Collection implements ICollection {
    */
   constructor(data: Array<object> = []) {
     runInAction(() => {
-      this.__data.push(...data.map(this.__initItem, this));
+      const items = data
+        .map(this.__initItem, this)
+        .map((item) => {
+          const modelType = getType(item);
+          this.__modelHash[modelType] = this.__modelHash[modelType] || {};
+          this.__modelHash[modelType][item[item.static.idAttribute]] = item;
+          return item;
+        });
+      this.__data.push(...items);
     });
 
     const computedProps: IDictionary = {};
@@ -103,13 +113,17 @@ export class Collection implements ICollection {
     }
 
     const instance: IModel = this.__getModelInstance(model, type);
+    const modelType = getType(instance);
 
     const id = instance[instance.static.idAttribute];
-    const existing = this.find(getType(instance), id);
+    const existing = this.find(modelType, id);
     if (existing) {
       existing.update(model);
       return existing;
     }
+
+    this.__modelHash[modelType] = this.__modelHash[modelType] || {};
+    this.__modelHash[modelType][id] = instance;
 
     this.__data.push(instance);
     return instance;
@@ -126,8 +140,9 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   public find<T extends IModel>(type: IType, id?: string|number): T {
-    return this.__data
-      .find((item) => id ? matchModel(item, type, id) : getType(item) === type) as T || null;
+    return id
+      ? ((this.__modelHash[type] && this.__modelHash[type][id]) || null)
+      : (this.__data.find((item) => getType(item) === type) as T) || null;
   }
 
   /**
@@ -270,6 +285,7 @@ export class Collection implements ICollection {
     models.forEach((model) => {
       if (model) {
         this.__data.remove(model);
+        this.__modelHash[getType(model)][model[model.static.idAttribute]] = null;
         model.__collection = null;
       }
     });

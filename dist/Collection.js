@@ -36,8 +36,17 @@ var Collection = (function () {
          * @memberOf Collection
          */
         this.__data = mobx_1.observable([]);
+        this.__modelHash = {};
         mobx_1.runInAction(function () {
-            (_a = _this.__data).push.apply(_a, data.map(_this.__initItem, _this));
+            var items = data
+                .map(_this.__initItem, _this)
+                .map(function (item) {
+                var modelType = utils_1.getType(item);
+                _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
+                _this.__modelHash[modelType][item[item.static.idAttribute]] = item;
+                return item;
+            });
+            (_a = _this.__data).push.apply(_a, items);
             var _a;
         });
         var computedProps = {};
@@ -81,12 +90,15 @@ var Collection = (function () {
             return model.map(function (item) { return _this.add(item, type); });
         }
         var instance = this.__getModelInstance(model, type);
+        var modelType = utils_1.getType(instance);
         var id = instance[instance.static.idAttribute];
-        var existing = this.find(utils_1.getType(instance), id);
+        var existing = this.find(modelType, id);
         if (existing) {
             existing.update(model);
             return existing;
         }
+        this.__modelHash[modelType] = this.__modelHash[modelType] || {};
+        this.__modelHash[modelType][id] = instance;
         this.__data.push(instance);
         return instance;
     };
@@ -101,8 +113,9 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.find = function (type, id) {
-        return this.__data
-            .find(function (item) { return id ? utils_1.matchModel(item, type, id) : utils_1.getType(item) === type; }) || null;
+        return id
+            ? ((this.__modelHash[type] && this.__modelHash[type][id]) || null)
+            : this.__data.find(function (item) { return utils_1.getType(item) === type; }) || null;
     };
     /**
      * Find all models of the specified type
@@ -236,6 +249,7 @@ var Collection = (function () {
         models.forEach(function (model) {
             if (model) {
                 _this.__data.remove(model);
+                _this.__modelHash[utils_1.getType(model)][model[model.static.idAttribute]] = null;
                 model.__collection = null;
             }
         });
