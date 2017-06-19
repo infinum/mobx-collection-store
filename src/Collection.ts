@@ -126,11 +126,8 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   public find<T extends IModel>(type: IType, id?: string|number): T {
-    const modelList: Array<T> = id
-      ? this.__data.filter((item) => matchModel(item, type, id)) as Array<T>
-      : this.findAll<T>(type);
-
-    return first(modelList) || null;
+    return this.__data
+      .find((item) => id ? matchModel(item, type, id) : getType(item) === type) as T || null;
   }
 
   /**

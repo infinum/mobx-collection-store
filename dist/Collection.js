@@ -101,10 +101,8 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.prototype.find = function (type, id) {
-        var modelList = id
-            ? this.__data.filter(function (item) { return utils_1.matchModel(item, type, id); })
-            : this.findAll(type);
-        return utils_1.first(modelList) || null;
+        return this.__data
+            .find(function (item) { return id ? utils_1.matchModel(item, type, id) : utils_1.getType(item) === type; }) || null;
     };
     /**
      * Find all models of the specified type
