@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
-    "@types/node": "^7.0.27",
+    "@types/node": "^8.0.1",
     "chai": "^4.0.1",
     "husky": "^0.13.4",
     "mobx": "^3.1.11",
