@@ -77,6 +77,11 @@ The library contains the following elements:
 
 ## License
 
-The MIT License
+The [MIT License](LICENSE)
 
-![](https://assets.infinum.co/assets/brand-logo-9e079bfa1875e17c8c1f71d1fee49cf0.svg) © 2017 Infinum Inc.
+## Credits
+
+mobx-collection-store is maintained and sponsored by
+[Infinum](http://www.infinum.co).
+
+<img src="https://infinum.co/infinum.png" width="264">
