@@ -857,5 +857,41 @@ describe('MobX Collection Store', () => {
       expect(foo.bars[0].id).to.equal(2);
       expect(foo.bars[1].id).to.equal(4);
     });
+
+    it('should support relationships to itself', () => {
+      class Person extends Model {
+        public static type = 'person';
+        public static refs = {
+          children: {
+            model: 'person',
+            property: 'parents',
+          },
+          parents: 'person',
+          spouse: 'person',
+        };
+
+        public firstName: string;
+        public spouse: Person;
+        public children: Array<Person>;
+        public parents: Person|Array<Person>;
+      }
+
+      class Store extends Collection {}
+      Store.types = [Person];
+
+      const collection = new Store();
+      const steve = collection.add({firstName: 'Steve'}, 'person') as Person;
+      const jane = collection.add({firstName: 'Jane'}, 'person') as Person;
+      const bob = collection.add({firstName: 'Bob'}, 'person') as Person;
+      const john = collection.add({firstName: 'John'}, 'person') as Person;
+
+      steve.spouse = jane;
+
+      bob.parents = [steve, jane];
+      john.parents = steve;
+
+      expect(steve.children).to.have.length(2);
+      expect(jane.children).to.have.length(1);
+    });
   });
 });

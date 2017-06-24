@@ -13,7 +13,10 @@ import {DEFAULT_TYPE} from './consts';
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
 export function mapItems<T>(data: object|Array<object>, fn: (item: any) => T): T|Array<T> {
-  return data instanceof Array ? data.map((item) => fn(item)) : fn(data);
+  if (data instanceof Array) {
+    return data.map((item) => fn(item));
+  }
+  return data === null ? null : fn(data);
 }
 
 /**

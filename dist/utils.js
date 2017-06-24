@@ -11,7 +11,10 @@ var consts_1 = require("./consts");
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
 function mapItems(data, fn) {
-    return data instanceof Array ? data.map(function (item) { return fn(item); }) : fn(data);
+    if (data instanceof Array) {
+        return data.map(function (item) { return fn(item); });
+    }
+    return data === null ? null : fn(data);
 }
 exports.mapItems = mapItems;
 /**
