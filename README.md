@@ -1,20 +1,20 @@
 # mobx-collection-store
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/mobx-collection-store.svg)](https://greenkeeper.io/)
-
-[![npm version](https://badge.fury.io/js/mobx-collection-store.svg)](https://badge.fury.io/js/mobx-collection-store)
-
-[![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
-[![Test Coverage](https://codeclimate.com/github/infinum/mobx-collection-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-collection-store/coverage)
-
-[![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
-[![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
-
 Structured data store for MobX. Partially influenced by [Backbone Collections](http://backbonejs.org/#Collection).
 
 **Using [JSON API](http://jsonapi.org/)?** Check out [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store) - All mobx-collection-store features, and JSON API helpers in one place.
 
-## [Basic usage](examples/basic.js)
+***
+
+[![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
+[![Test Coverage](https://codeclimate.com/github/infinum/mobx-collection-store/badges/coverage.svg)](https://codeclimate.com/github/infinum/mobx-collection-store/coverage)
+[![npm version](https://badge.fury.io/js/mobx-collection-store.svg)](https://badge.fury.io/js/mobx-collection-store)
+
+[![Dependency Status](https://david-dm.org/infinum/mobx-collection-store.svg)](https://david-dm.org/infinum/mobx-collection-store)
+[![devDependency Status](https://david-dm.org/infinum/mobx-collection-store/dev-status.svg)](https://david-dm.org/infinum/mobx-collection-store#info=devDependencies)
+[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/mobx-collection-store.svg)](https://greenkeeper.io/)
+
+## Basic usage
 
 ```javascript
 import {Collection} from 'mobx-collection-store';
@@ -39,46 +39,27 @@ john.lastName = 'Williams';
 console.log(john.lastName); // 'Williams'
 ```
 
-For more advanced [use-cases](#advanced-examples), check out the [examples](examples/) folder.
+For more advanced use-cases, check out the [getting started](https://github.com/infinum/mobx-collection-store/wiki/Getting-started) guide, or the [examples](examples) folder.
 
 ## Installation
 
+To install, use `npm` or `yarn`. The lib has a peer dependency of `mobx` 2.7.0 or later (including MobX 3).
+
 ```bash
-npm install --save mobx-collection-store
+npm install mobx-collection-store mobx --save
 ```
 
-### Dependencies
+```bash
+yarn add mobx-collection-store mobx
+```
 
-The only (peer) dependency of this lib is `mobx` version 2.7.0 or newer (including MobX 3).
+Since the lib is exposed as a set of CommonJS modules, you'll need something like [webpack](https://webpack.js.org/) or browserify in order to use it in the browser.
 
-### TypeScript
+Don't forget to [prepare your code for production](https://webpack.js.org/guides/production/) for better performance!
 
-Since this lib was written using TypeScript, it also exposes TS typings. If you're not using TypeScript for your development, this won't be relevant to you.
+## [Getting started](https://github.com/infinum/mobx-collection-store/wiki/Getting-started)
 
-### Usage
-
-Since the lib is exposed as a set of `CommonJS` modules, you'll need something like [`webpack`](https://webpack.js.org/concepts/) or `browserify` in order to use it in the browser.
-
-Don't forget to minify your code before production for better performance!
-
-## Advanced examples
-
-### Relationships
-
-In order to use relationships, you'll need to create new model and collection classes that extend the original ones:
-
-* [JavaScript version](examples/relationships.js)
-* [TypeScript version](examples/relationships.ts)
-
-More examples (both JS and TS) are in the [examples](examples/) folder.
-
-## [Docs](https://infinum.github.io/mobx-collection-store/index.html)
-
-### [Collection](https://infinum.github.io/mobx-collection-store/classes/collection.html)
-
-### [Model](https://infinum.github.io/mobx-collection-store/classes/model.html)
-
-*Note:* New properties should be added to the model by using the `assign` or `assignRef` methods, not by direct assignment.
+## [API reference](https://github.com/infinum/mobx-collection-store/wiki/API-reference)
 
 ## License
 
