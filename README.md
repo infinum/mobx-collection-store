@@ -57,12 +57,26 @@ Since the lib is exposed as a set of CommonJS modules, you'll need something lik
 
 Don't forget to [prepare your code for production](https://webpack.js.org/guides/production/) for better performance!
 
-## [Getting started](https://github.com/infinum/mobx-collection-store/wiki/Getting-started)
+## Getting started
 
-## [API reference](https://github.com/infinum/mobx-collection-store/wiki/API-reference)
+The main idea behind the library is to have one instance of the collection that contains multiple model types. This way, there can be references between models that can handle all use cases, including circular dependencies.
+
+* [Installation](https://github.com/infinum/mobx-collection-store/wiki/Installation)
+* [Defining models](https://github.com/infinum/mobx-collection-store/wiki/Defining-models)
+* [References](https://github.com/infinum/mobx-collection-store/wiki/References)
+* [Configuring the collection](https://github.com/infinum/mobx-collection-store/wiki/Configuring-the-collection)
+* [Using the collection](https://github.com/infinum/mobx-collection-store/wiki/Using-the-collection)
+
+## API reference
+
+The library contains the following elements:
+
+* [Collection](https://github.com/infinum/mobx-collection-store/wiki/Collection)
+* [Model](https://github.com/infinum/mobx-collection-store/wiki/Model)
+* [TypeScript interfaces](https://github.com/infinum/mobx-collection-store/wiki/Interfaces)
 
 ## License
 
 The MIT License
 
-![](https://assets.infinum.co/assets/brand-logo-9e079bfa1875e17c8c1f71d1fee49cf0.svg) © 2016 Infinum Inc.
+![](https://assets.infinum.co/assets/brand-logo-9e079bfa1875e17c8c1f71d1fee49cf0.svg) © 2017 Infinum Inc.
