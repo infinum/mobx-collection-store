@@ -39,7 +39,7 @@ interface IModel {
      *
      * @memberOf IModel
      */
-    assign<T>(key: string, value: T): T | IModel;
+    assign<T>(key: string, value: T): T | IModel | Array<IModel>;
     /**
      * Assign a new reference to the model
      *

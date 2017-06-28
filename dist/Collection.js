@@ -254,29 +254,29 @@ var Collection = (function () {
             }
         });
     };
+    /**
+     * List of custom model types
+     *
+     * @static
+     * @type {Array<IModelConstructor>}
+     * @memberOf Collection
+     */
+    Collection.types = [];
+    __decorate([
+        mobx_1.computed
+    ], Collection.prototype, "length", null);
+    __decorate([
+        mobx_1.action
+    ], Collection.prototype, "add", null);
+    __decorate([
+        mobx_1.action
+    ], Collection.prototype, "removeAll", null);
+    __decorate([
+        mobx_1.action
+    ], Collection.prototype, "reset", null);
+    __decorate([
+        mobx_1.action
+    ], Collection.prototype, "__removeModels", null);
     return Collection;
 }());
-/**
- * List of custom model types
- *
- * @static
- * @type {Array<IModelConstructor>}
- * @memberOf Collection
- */
-Collection.types = [];
-__decorate([
-    mobx_1.computed
-], Collection.prototype, "length", null);
-__decorate([
-    mobx_1.action
-], Collection.prototype, "add", null);
-__decorate([
-    mobx_1.action
-], Collection.prototype, "removeAll", null);
-__decorate([
-    mobx_1.action
-], Collection.prototype, "reset", null);
-__decorate([
-    mobx_1.action
-], Collection.prototype, "__removeModels", null);
 exports.Collection = Collection;

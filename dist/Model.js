@@ -424,75 +424,75 @@ var Model = (function () {
         }
         var _a;
     };
+    /**
+     * The attribute that should be used as the unique identifier
+     *
+     * @static
+     * @type {string}
+     * @memberOf Model
+     */
+    Model.idAttribute = 'id';
+    /**
+     * The references that the model can have to other models
+     *
+     * @static
+     * @type {IReferences}
+     * @memberOf Model
+     */
+    Model.refs = {};
+    /**
+     * Default values of model props
+     *
+     * @static
+     * @type {IDictionary}
+     * @memberOf Model
+     */
+    Model.defaults = {};
+    /**
+     * Type of the model
+     *
+     * @static
+     * @type {IType}
+     * @memberOf Model
+     */
+    Model.type = consts_1.DEFAULT_TYPE;
+    /**
+     * Atribute name for the type attribute
+     *
+     * @static
+     * @type {string}
+     * @memberOf Model
+     */
+    Model.typeAttribute = consts_1.TYPE_PROP;
+    /**
+     * Defines if the model should use autoincrement id if none is defined
+     *
+     * @static
+     * @type {boolean}
+     * @memberOf Model
+     */
+    Model.enableAutoId = true;
+    /**
+     * Autoincrement counter used for the builtin function
+     *
+     * @private
+     * @static
+     *
+     * @memberOf Model
+     */
+    Model.autoincrementValue = 1;
+    __decorate([
+        mobx_1.action
+    ], Model.prototype, "update", null);
+    __decorate([
+        mobx_1.action
+    ], Model.prototype, "assign", null);
+    __decorate([
+        mobx_1.action
+    ], Model.prototype, "assignRef", null);
+    __decorate([
+        mobx_1.action
+    ], Model.prototype, "__partialRefUpdate", null);
     return Model;
 }());
-/**
- * The attribute that should be used as the unique identifier
- *
- * @static
- * @type {string}
- * @memberOf Model
- */
-Model.idAttribute = 'id';
-/**
- * The references that the model can have to other models
- *
- * @static
- * @type {IReferences}
- * @memberOf Model
- */
-Model.refs = {};
-/**
- * Default values of model props
- *
- * @static
- * @type {IDictionary}
- * @memberOf Model
- */
-Model.defaults = {};
-/**
- * Type of the model
- *
- * @static
- * @type {IType}
- * @memberOf Model
- */
-Model.type = consts_1.DEFAULT_TYPE;
-/**
- * Atribute name for the type attribute
- *
- * @static
- * @type {string}
- * @memberOf Model
- */
-Model.typeAttribute = consts_1.TYPE_PROP;
-/**
- * Defines if the model should use autoincrement id if none is defined
- *
- * @static
- * @type {boolean}
- * @memberOf Model
- */
-Model.enableAutoId = true;
-/**
- * Autoincrement counter used for the builtin function
- *
- * @private
- * @static
- *
- * @memberOf Model
- */
-Model.autoincrementValue = 1;
-__decorate([
-    mobx_1.action
-], Model.prototype, "update", null);
-__decorate([
-    mobx_1.action
-], Model.prototype, "assign", null);
-__decorate([
-    mobx_1.action
-], Model.prototype, "assignRef", null);
-__decorate([
-    mobx_1.action
-], Model.prototype, "__partialRefUpdate", null);
 exports.Model = Model;
