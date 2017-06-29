@@ -894,4 +894,71 @@ describe('MobX Collection Store', () => {
       expect(jane.children).to.have.length(1);
     });
   });
+
+  describe('snapshots', () => {
+    it('should support snapshots', () => {
+      class FooModel extends Model {
+        public static type = 'foo';
+
+        public id: number|string;
+        public foo: number;
+        public bar: number;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [FooModel];
+
+        public foo: Array<FooModel>;
+      }
+
+      const collection = new TestCollection();
+      const model = collection.add<FooModel>({
+        bar: 0,
+        foo: 1,
+        fooBar: 0.5,
+        id: 1,
+      }, 'foo');
+
+      const raw = model.snapshot;
+      expect(raw).to.eql({
+        bar: 0,
+        foo: 1,
+        fooBar: 0.5,
+        id: 1,
+        // tslint:disable-next-line:object-literal-sort-keys
+        __type__: 'foo',
+      });
+
+      model.foo++;
+
+      expect(raw).to.eql({
+        bar: 0,
+        foo: 1,
+        fooBar: 0.5,
+        id: 1,
+        // tslint:disable-next-line:object-literal-sort-keys
+        __type__: 'foo',
+      });
+
+      const raw2 = model.snapshot;
+      expect(raw2).to.eql({
+        bar: 0,
+        foo: 2,
+        fooBar: 0.5,
+        id: 1,
+        // tslint:disable-next-line:object-literal-sort-keys
+        __type__: 'foo',
+      });
+
+      const rawCollection = collection.snapshot;
+      expect(rawCollection).to.eql([{
+        bar: 0,
+        foo: 2,
+        fooBar: 0.5,
+        id: 1,
+        // tslint:disable-next-line:object-literal-sort-keys
+        __type__: 'foo',
+      }]);
+    });
+  });
 });

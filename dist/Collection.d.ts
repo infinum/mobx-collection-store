@@ -123,6 +123,13 @@ export declare class Collection implements ICollection {
      */
     toJS(): Array<IDictionary>;
     /**
+     * Exposed snapshot state of the collection
+     *
+     * @readonly
+     * @memberof Collection
+     */
+    readonly snapshot: object[];
+    /**
      * Get a list of the type models
      *
      * @private

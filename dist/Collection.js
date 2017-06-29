@@ -177,6 +177,19 @@ var Collection = (function () {
     Collection.prototype.toJS = function () {
         return this.__data.map(function (item) { return item.toJS(); });
     };
+    Object.defineProperty(Collection.prototype, "snapshot", {
+        /**
+         * Exposed snapshot state of the collection
+         *
+         * @readonly
+         * @memberof Collection
+         */
+        get: function () {
+            return this.__data.map(function (item) { return item.snapshot; });
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Get a list of the type models
      *
@@ -274,6 +287,9 @@ var Collection = (function () {
     __decorate([
         mobx_1.action
     ], Collection.prototype, "reset", null);
+    __decorate([
+        mobx_1.computed
+    ], Collection.prototype, "snapshot", null);
     __decorate([
         mobx_1.action
     ], Collection.prototype, "__removeModels", null);

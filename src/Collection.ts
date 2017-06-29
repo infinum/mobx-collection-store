@@ -211,6 +211,16 @@ export class Collection implements ICollection {
   }
 
   /**
+   * Exposed snapshot state of the collection
+   *
+   * @readonly
+   * @memberof Collection
+   */
+  @computed public get snapshot() {
+    return this.__data.map((item) => item.snapshot);
+  }
+
+  /**
    * Get a list of the type models
    *
    * @private

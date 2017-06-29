@@ -14,6 +14,13 @@ interface ICollection {
      */
     length: number;
     /**
+     * Exposed snapshot state of the collection
+     *
+     * @readonly
+     * @memberof Collection
+     */
+    snapshot: Array<object>;
+    /**
      * Add a model or list of models to the collection
      *
      * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported

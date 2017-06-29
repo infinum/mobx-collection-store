@@ -175,6 +175,13 @@ export declare class Model implements IModel {
      */
     toJS(): IDictionary;
     /**
+     * Exposed snapshot state of the model
+     *
+     * @readonly
+     * @memberof Model
+     */
+    readonly snapshot: IDictionary;
+    /**
      * Ensure the new model has a valid id
      *
      * @private

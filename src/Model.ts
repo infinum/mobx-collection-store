@@ -266,6 +266,16 @@ export class Model implements IModel {
   }
 
   /**
+   * Exposed snapshot state of the model
+   *
+   * @readonly
+   * @memberof Model
+   */
+  @computed public get snapshot() {
+    return this.toJS();
+  }
+
+  /**
    * Ensure the new model has a valid id
    *
    * @private

@@ -22,6 +22,13 @@ interface IModel {
      */
     static: IModelConstructor;
     /**
+     * Exposed snapshot state of the model
+     *
+     * @readonly
+     * @memberof Model
+     */
+    snapshot: object;
+    /**
      * Update the existing model
      *
      * @augments {IModel|object} data - The new model

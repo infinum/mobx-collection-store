@@ -180,6 +180,19 @@ var Model = (function () {
         data[consts_1.TYPE_PROP] = utils_1.getType(this);
         return data;
     };
+    Object.defineProperty(Model.prototype, "snapshot", {
+        /**
+         * Exposed snapshot state of the model
+         *
+         * @readonly
+         * @memberof Model
+         */
+        get: function () {
+            return this.toJS();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Ensure the new model has a valid id
      *
@@ -490,6 +503,9 @@ var Model = (function () {
     __decorate([
         mobx_1.action
     ], Model.prototype, "assignRef", null);
+    __decorate([
+        mobx_1.computed
+    ], Model.prototype, "snapshot", null);
     __decorate([
         mobx_1.action
     ], Model.prototype, "__partialRefUpdate", null);
