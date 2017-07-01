@@ -66,6 +66,7 @@ The main idea behind the library is to have one instance of the collection that 
 * [References](https://github.com/infinum/mobx-collection-store/wiki/References)
 * [Configuring the collection](https://github.com/infinum/mobx-collection-store/wiki/Configuring-the-collection)
 * [Using the collection](https://github.com/infinum/mobx-collection-store/wiki/Using-the-collection)
+* [Persisting data locally](https://github.com/infinum/mobx-collection-store/wiki/Persisting-data-locally)
 
 ## API reference
 
