@@ -61,19 +61,34 @@ var Collection = (function () {
     Collection.prototype.insert = function (data) {
         var _this = this;
         var items = [].concat(data)
-            .map(this.__initItem, this)
             .map(function (item) {
-            var modelType = utils_1.getType(item);
-            if (!modelType) {
+            var type = item[consts_1.TYPE_PROP];
+            if (!type) {
                 throw new Error('The input is not valid. Make sure you used model.toJS or model.snapshot to serialize it');
             }
-            _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
-            _this.__modelHash[modelType][item[item.static.idAttribute]] = item;
             return item;
+        })
+            .map(function (item) {
+            var modelType = item[consts_1.TYPE_PROP];
+            var type = _this.__getModel(modelType);
+            var existing = _this.__modelHash[modelType] && _this.__modelHash[modelType][item[type.idAttribute]];
+            if (existing) {
+                // tslint:disable-next-line:no-string-literal
+                existing['__silent'] = true;
+                existing.update(item);
+                // tslint:disable-next-line:no-string-literal
+                existing['__silent'] = false;
+                return existing;
+            }
+            else {
+                var instance = _this.__initItem(item);
+                _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
+                _this.__modelHash[modelType][item[instance.static.idAttribute]] = instance;
+                _this.__data.push(instance);
+                return instance;
+            }
         });
-        (_a = this.__data).push.apply(_a, items);
         return items;
-        var _a;
     };
     Object.defineProperty(Collection.prototype, "static", {
         /**
@@ -281,7 +296,7 @@ var Collection = (function () {
     Collection.prototype.__initItem = function (item) {
         var type = item[consts_1.TYPE_PROP];
         var TypeModel = this.__getModel(type);
-        return new TypeModel(item, this, this.__onPatchTrigger);
+        return new TypeModel(item, this);
     };
     /**
      * Prepare the model instance either by finding an existing one or creating a new one
@@ -296,13 +311,11 @@ var Collection = (function () {
     Collection.prototype.__getModelInstance = function (model, type) {
         if (model instanceof Model_1.Model) {
             model.__collection = this;
-            // tslint:disable-next-line:no-string-literal
-            model['__patchListeners'].push(this.__onPatchTrigger);
             return model;
         }
         else {
             var TypeModel = this.__getModel(type);
-            return new TypeModel(model, this, this.__onPatchTrigger);
+            return new TypeModel(model, this);
         }
     };
     /**
@@ -321,7 +334,6 @@ var Collection = (function () {
                 _this.__modelHash[utils_1.getType(model)][model[model.static.idAttribute]] = null;
                 model.__collection = null;
                 // tslint:disable-next-line:no-string-literal
-                model['__patchListeners'] = model['__patchListeners'].filter(function (item) { return item !== _this.__onPatchTrigger; });
                 _this.__triggerChange(patchType_1.default.REMOVE, model, undefined, model);
             }
         });

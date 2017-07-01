@@ -27,6 +27,14 @@ interface ICollection {
   snapshot: Array<object>;
 
   /**
+   * Insert serialized models into the store
+   *
+   * @param {(Array<object>|object)} data models to insert
+   * @memberof Collection
+   */
+  insert(data: Array<object>|object): Array<IModel>;
+
+  /**
    * Add a model or list of models to the collection
    *
    * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported

@@ -164,6 +164,15 @@ export class Model implements IModel {
   private __patchListeners: Array<(change: IPatch, model: IModel) => void> = [];
 
   /**
+   * Determines if the patch listeners should be called on change
+   *
+   * @private
+   * @type {boolean}
+   * @memberof Model
+   */
+  private __silent: boolean = true;
+
+  /**
    * Creates an instance of Model.
    *
    * @param {Object} initialData
@@ -184,6 +193,7 @@ export class Model implements IModel {
     this.__initRefGetters();
     this.update(data);
     this.__patchListeners.push(listener);
+    this.__silent = false;
   }
 
   /**
@@ -611,6 +621,14 @@ export class Model implements IModel {
    * @memberof Model
    */
   private __triggerChange(type: patchType, field: string, value?: any, oldValue?: any): void {
+    if (this.__silent) {
+      return;
+    }
+
+    if (type === patchType.REPLACE && value === oldValue) {
+      return;
+    }
+
     const patchObj: IPatch = {
       oldValue,
       op: type,
@@ -619,5 +637,10 @@ export class Model implements IModel {
     };
 
     this.__patchListeners.forEach((listener) => typeof listener === 'function' && listener(patchObj, this));
+
+    if (this.__collection) {
+      // tslint:disable-next-line:no-string-literal
+      this.__collection['__onPatchTrigger'](patchObj, this);
+    }
   }
 }

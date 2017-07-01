@@ -127,6 +127,14 @@ export declare class Model implements IModel {
      */
     private __patchListeners;
     /**
+     * Determines if the patch listeners should be called on change
+     *
+     * @private
+     * @type {boolean}
+     * @memberof Model
+     */
+    private __silent;
+    /**
      * Creates an instance of Model.
      *
      * @param {Object} initialData

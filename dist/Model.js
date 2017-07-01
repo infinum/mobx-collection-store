@@ -65,6 +65,14 @@ var Model = (function () {
          * @memberof Model
          */
         this.__patchListeners = [];
+        /**
+         * Determines if the patch listeners should be called on change
+         *
+         * @private
+         * @type {boolean}
+         * @memberof Model
+         */
+        this.__silent = true;
         var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
         var idAttribute = this.static.idAttribute;
         this.__ensureId(data, collection);
@@ -74,6 +82,7 @@ var Model = (function () {
         this.__initRefGetters();
         this.update(data);
         this.__patchListeners.push(listener);
+        this.__silent = false;
     }
     /**
      * Function that can process the received data (e.g. from an API) before
@@ -509,6 +518,12 @@ var Model = (function () {
      */
     Model.prototype.__triggerChange = function (type, field, value, oldValue) {
         var _this = this;
+        if (this.__silent) {
+            return;
+        }
+        if (type === patchType_1.default.REPLACE && value === oldValue) {
+            return;
+        }
         var patchObj = {
             oldValue: oldValue,
             op: type,
@@ -516,6 +531,10 @@ var Model = (function () {
             value: value,
         };
         this.__patchListeners.forEach(function (listener) { return typeof listener === 'function' && listener(patchObj, _this); });
+        if (this.__collection) {
+            // tslint:disable-next-line:no-string-literal
+            this.__collection['__onPatchTrigger'](patchObj, this);
+        }
     };
     /**
      * The attribute that should be used as the unique identifier

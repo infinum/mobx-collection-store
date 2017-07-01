@@ -79,18 +79,37 @@ export class Collection implements ICollection {
    */
   @action public insert(data: Array<object>|object): Array<IModel> {
     const items = [].concat(data)
-      .map(this.__initItem, this)
       .map((item) => {
-        const modelType = getType(item);
-        if (!modelType) {
+        const type: IType = item[TYPE_PROP];
+        if (!type) {
           throw new Error('The input is not valid. Make sure you used model.toJS or model.snapshot to serialize it');
         }
-
-        this.__modelHash[modelType] = this.__modelHash[modelType] || {};
-        this.__modelHash[modelType][item[item.static.idAttribute]] = item;
         return item;
+      })
+      .map((item) => {
+        const modelType: IType = item[TYPE_PROP];
+        const type = this.__getModel(modelType);
+
+        const existing = this.__modelHash[modelType] && this.__modelHash[modelType][item[type.idAttribute]];
+
+        if (existing) {
+          // tslint:disable-next-line:no-string-literal
+          existing['__silent'] = true;
+
+          existing.update(item);
+
+          // tslint:disable-next-line:no-string-literal
+          existing['__silent'] = false;
+          return existing;
+        } else {
+          const instance = this.__initItem(item);
+          this.__modelHash[modelType] = this.__modelHash[modelType] || {};
+          this.__modelHash[modelType][item[instance.static.idAttribute]] = instance;
+          this.__data.push(instance);
+          return instance;
+        }
       });
-    this.__data.push(...items);
+
     return items;
   }
 
@@ -318,7 +337,7 @@ export class Collection implements ICollection {
   private __initItem(item: IDictionary): IModel {
     const type: IType = item[TYPE_PROP];
     const TypeModel: IModelConstructor = this.__getModel(type);
-    return new TypeModel(item, this, this.__onPatchTrigger);
+    return new TypeModel(item, this);
   }
 
   /**
@@ -334,13 +353,10 @@ export class Collection implements ICollection {
   private __getModelInstance(model: IModel|object, type?: IType): IModel {
     if (model instanceof Model) {
       model.__collection = this;
-
-      // tslint:disable-next-line:no-string-literal
-      model['__patchListeners'].push(this.__onPatchTrigger);
       return model;
     } else {
       const TypeModel: IModelConstructor = this.__getModel(type);
-      return new TypeModel(model, this, this.__onPatchTrigger);
+      return new TypeModel(model, this);
     }
   }
 
@@ -360,7 +376,6 @@ export class Collection implements ICollection {
         model.__collection = null;
 
         // tslint:disable-next-line:no-string-literal
-        model['__patchListeners'] = model['__patchListeners'].filter((item) => item !== this.__onPatchTrigger);
         this.__triggerChange(patchType.REMOVE, model, undefined, model);
       }
     });
