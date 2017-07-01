@@ -4,6 +4,8 @@ Structured data store for MobX. Partially influenced by [Backbone Collections](h
 
 **Using [JSON API](http://jsonapi.org/)?** Check out [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store) - All mobx-collection-store features, and JSON API helpers in one place.
 
+**Can be used with [Redux DevTools](https://github.com/infinum/mobx-collection-store/wiki/Redux-DevTools).**
+
 ***
 
 [![Build Status](https://travis-ci.org/infinum/mobx-collection-store.svg?branch=master)](https://travis-ci.org/infinum/mobx-collection-store)
@@ -67,6 +69,7 @@ The main idea behind the library is to have one instance of the collection that 
 * [Configuring the collection](https://github.com/infinum/mobx-collection-store/wiki/Configuring-the-collection)
 * [Using the collection](https://github.com/infinum/mobx-collection-store/wiki/Using-the-collection)
 * [Persisting data locally](https://github.com/infinum/mobx-collection-store/wiki/Persisting-data-locally)
+* [Redux DevTools](https://github.com/infinum/mobx-collection-store/wiki/Redux-DevTools)
 
 ## API reference
 
