@@ -2,6 +2,7 @@ import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
 /**
  * MobX Collection class
@@ -28,6 +29,13 @@ export declare class Collection implements ICollection {
      */
     private __data;
     private __modelHash;
+    /**
+     * A list of all registered patch listeners
+     *
+     * @private
+     * @memberof Model
+     */
+    private __patchListeners;
     /**
      * Creates an instance of Collection.
      *
@@ -137,6 +145,21 @@ export declare class Collection implements ICollection {
      */
     readonly snapshot: object[];
     /**
+     * Add a listener for patches
+     *
+     * @param {(data: IPatch) => void} listener A new listener
+     * @returns {() => void} Function used to remove the listener
+     * @memberof Collection
+     */
+    patchListen(listener: (data: IPatch, model: IModel) => void): () => void;
+    /**
+     * Apply an existing JSONPatch on the model
+     *
+     * @param {IPatch} patch The patch object
+     * @memberof Collection
+     */
+    applyPatch(patch: IPatch): void;
+    /**
      * Get a list of the type models
      *
      * @private
@@ -186,4 +209,23 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     private __removeModels(models);
+    /**
+     * Function that creates a patch object and calls all listeners
+     *
+     * @private
+     * @param {patchType} type Action type
+     * @param {string} field Field where the action was made
+     * @param {*} [value] The new value (if it applies)
+     * @memberof Model
+     */
+    private __triggerChange(type, model, value?, oldValue?);
+    /**
+     * Pass model patches trough to the collection listeners
+     *
+     * @private
+     * @param {IPatch} patch Model patch object
+     * @param {IModel} model Updated model
+     * @memberof Collection
+     */
+    private __onPatchTrigger(patch, model);
 }

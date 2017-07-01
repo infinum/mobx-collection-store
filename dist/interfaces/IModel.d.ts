@@ -1,5 +1,6 @@
 import ICollection from './ICollection';
 import IModelConstructor from './IModelConstructor';
+import IPatch from './IPatch';
 import IType from './IType';
 /**
  * MobX Collection Model instance interface
@@ -60,6 +61,13 @@ interface IModel {
      */
     assignRef<T>(key: string, value: T, type?: IType): T | IModel | Array<IModel>;
     /**
+     * Unassign a property from the model
+     *
+     * @param {string} key A property to unassign
+     * @memberof Model
+     */
+    unassign(key: string): void;
+    /**
      * Convert the model into a plain JS Object in order to be serialized
      *
      * @returns {object} Plain JS Object representing the model
@@ -67,5 +75,20 @@ interface IModel {
      * @memberOf IModel
      */
     toJS(): object;
+    /**
+     * Add a listener for patches
+     *
+     * @param {(data: IPatch) => void} listener A new listener
+     * @returns {() => void} Function used to remove the listener
+     * @memberof Model
+     */
+    patchListen(listener: (data: IPatch, model: IModel) => void): () => void;
+    /**
+     * Apply an existing JSONPatch on the model
+     *
+     * @param {IPatch} patch The patch object
+     * @memberof Model
+     */
+    applyPatch(patch: IPatch): void;
 }
 export default IModel;

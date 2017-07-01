@@ -1,6 +1,7 @@
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
+import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 /**
@@ -119,6 +120,13 @@ export declare class Model implements IModel {
      */
     private __data;
     /**
+     * A list of all registered patch listeners
+     *
+     * @private
+     * @memberof Model
+     */
+    private __patchListeners;
+    /**
      * Creates an instance of Model.
      *
      * @param {Object} initialData
@@ -126,7 +134,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    constructor(initialData?: object, collection?: ICollection);
+    constructor(initialData?: object, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void);
     /**
      * Static model class
      *
@@ -167,6 +175,13 @@ export declare class Model implements IModel {
      */
     assignRef<T>(key: string, value: T, type?: IType): T | IModel | Array<IModel>;
     /**
+     * Unassign a property from the model
+     *
+     * @param {string} key A property to unassign
+     * @memberof Model
+     */
+    unassign(key: string): void;
+    /**
      * Convert the model into a plain JS Object in order to be serialized
      *
      * @returns {IDictionary} Plain JS Object representing the model
@@ -181,6 +196,21 @@ export declare class Model implements IModel {
      * @memberof Model
      */
     readonly snapshot: IDictionary;
+    /**
+     * Add a listener for patches
+     *
+     * @param {(data: IPatch) => void} listener A new listener
+     * @returns {() => void} Function used to remove the listener
+     * @memberof Model
+     */
+    patchListen(listener: (data: IPatch, model: IModel) => void): () => void;
+    /**
+     * Apply an existing JSONPatch on the model
+     *
+     * @param {IPatch} patch The patch object
+     * @memberof Model
+     */
+    applyPatch(patch: IPatch): void;
     /**
      * Ensure the new model has a valid id
      *
@@ -304,4 +334,14 @@ export declare class Model implements IModel {
      * @memberOf Model
      */
     private __ensureGetter(key);
+    /**
+     * Function that creates a patch object and calls all listeners
+     *
+     * @private
+     * @param {patchType} type Action type
+     * @param {string} field Field where the action was made
+     * @param {*} [value] The new value (if it applies)
+     * @memberof Model
+     */
+    private __triggerChange(type, field, value?, oldValue?);
 }

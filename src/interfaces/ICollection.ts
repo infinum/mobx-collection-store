@@ -1,5 +1,6 @@
 import IModel from './IModel';
 import IModelConstructor from './IModelConstructor';
+import IPatch from './IPatch';
 import IType from './IType';
 
 /**
@@ -96,6 +97,23 @@ interface ICollection {
    * @memberOf ICollection
    */
   toJS(): Array<object>;
+
+  /**
+   * Add a listener for patches
+   *
+   * @param {(data: IPatch) => void} listener A new listener
+   * @returns {() => void} Function used to remove the listener
+   * @memberof Collection
+   */
+  patchListen(listener: (data: IPatch, model: IModel) => void): () => void;
+
+  /**
+   * Apply an existing JSONPatch on the model
+   *
+   * @param {IPatch} patch The patch object
+   * @memberof Collection
+   */
+  applyPatch(patch: IPatch): void;
 }
 
 export default ICollection;

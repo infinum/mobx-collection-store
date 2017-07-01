@@ -4,15 +4,17 @@ import {
   observable, runInAction,
 } from 'mobx';
 
+import patchType from './enums/patchType';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
 import {Model} from './Model';
 
 import {DEFAULT_TYPE, TYPE_PROP} from './consts';
-import {first, getType, matchModel} from './utils';
+import {assign, first, getType, matchModel} from './utils';
 
 /**
  * MobX Collection class
@@ -42,6 +44,14 @@ export class Collection implements ICollection {
   private __data: IObservableArray<IModel> = observable([]);
 
   private __modelHash: IDictionary = {};
+
+  /**
+   * A list of all registered patch listeners
+   *
+   * @private
+   * @memberof Model
+   */
+  private __patchListeners: Array<(change: IPatch, model: IModel) => void> = [];
 
   /**
    * Creates an instance of Collection.
@@ -139,6 +149,7 @@ export class Collection implements ICollection {
     this.__modelHash[modelType][id] = instance;
 
     this.__data.push(instance);
+    this.__triggerChange(patchType.ADD, instance, instance);
     return instance;
   }
 
@@ -234,6 +245,40 @@ export class Collection implements ICollection {
   }
 
   /**
+   * Add a listener for patches
+   *
+   * @param {(data: IPatch) => void} listener A new listener
+   * @returns {() => void} Function used to remove the listener
+   * @memberof Collection
+   */
+  public patchListen(listener: (data: IPatch, model: IModel) => void): () => void {
+    this.__patchListeners.push(listener);
+
+    return () => {
+      this.__patchListeners = this.__patchListeners.filter((item) => item !== listener);
+    };
+  }
+
+  /**
+   * Apply an existing JSONPatch on the model
+   *
+   * @param {IPatch} patch The patch object
+   * @memberof Collection
+   */
+  public applyPatch(patch: IPatch): void {
+    const [type, id, field] = patch.path.slice(1).split('/');
+    const model = this.__modelHash && this.__modelHash[type] && this.__modelHash[type][id];
+    if (field) {
+      const modelPatch = assign({}, patch, {path: `/${field}`});
+      model.applyPatch(modelPatch);
+    } else if (patch.op === patchType.ADD) {
+      this.add(patch.value);
+    } else if (patch.op === patchType.REMOVE && model) {
+      this.remove(getType(model), model[model.static.idAttribute]);
+    }
+  }
+
+  /**
    * Get a list of the type models
    *
    * @private
@@ -273,7 +318,7 @@ export class Collection implements ICollection {
   private __initItem(item: IDictionary): IModel {
     const type: IType = item[TYPE_PROP];
     const TypeModel: IModelConstructor = this.__getModel(type);
-    return new TypeModel(item, this);
+    return new TypeModel(item, this, this.__onPatchTrigger);
   }
 
   /**
@@ -289,10 +334,13 @@ export class Collection implements ICollection {
   private __getModelInstance(model: IModel|object, type?: IType): IModel {
     if (model instanceof Model) {
       model.__collection = this;
+
+      // tslint:disable-next-line:no-string-literal
+      model['__patchListeners'].push(this.__onPatchTrigger);
       return model;
     } else {
       const TypeModel: IModelConstructor = this.__getModel(type);
-      return new TypeModel(model, this);
+      return new TypeModel(model, this, this.__onPatchTrigger);
     }
   }
 
@@ -310,7 +358,47 @@ export class Collection implements ICollection {
         this.__data.remove(model);
         this.__modelHash[getType(model)][model[model.static.idAttribute]] = null;
         model.__collection = null;
+
+        // tslint:disable-next-line:no-string-literal
+        model['__patchListeners'] = model['__patchListeners'].filter((item) => item !== this.__onPatchTrigger);
+        this.__triggerChange(patchType.REMOVE, model, undefined, model);
       }
     });
+  }
+
+  /**
+   * Function that creates a patch object and calls all listeners
+   *
+   * @private
+   * @param {patchType} type Action type
+   * @param {string} field Field where the action was made
+   * @param {*} [value] The new value (if it applies)
+   * @memberof Model
+   */
+  private __triggerChange(type: patchType, model: IModel, value?: any, oldValue?: any): void {
+    const patchObj: IPatch = {
+      oldValue,
+      op: type,
+      path: '',
+      value,
+    };
+
+    this.__onPatchTrigger(patchObj, model);
+  }
+
+  /**
+   * Pass model patches trough to the collection listeners
+   *
+   * @private
+   * @param {IPatch} patch Model patch object
+   * @param {IModel} model Updated model
+   * @memberof Collection
+   */
+  @action.bound private __onPatchTrigger(patch: IPatch, model: IModel) {
+    const collectionPatch: IPatch = assign({}, patch, {
+      path: `/${getType(model)}/${model[model.static.idAttribute]}${patch.path}`,
+    }) as IPatch;
+
+    this.__patchListeners.forEach((listener) => typeof listener === 'function' && listener(collectionPatch, model));
   }
 }

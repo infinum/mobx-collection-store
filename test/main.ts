@@ -6,7 +6,7 @@ useStrict(true);
 
 import {expect} from 'chai';
 
-import {Collection, Model} from '../src';
+import {Collection, IPatch, Model} from '../src';
 
 import {assign} from '../src/utils';
 
@@ -1038,6 +1038,449 @@ describe('MobX Collection Store', () => {
       const store = new TestCollection();
       expect(() => store.insert([raw, {id: 456}])).to.throw();
       expect(store.length).to.equal(0);
+    });
+  });
+
+  describe('patch', () => {
+    describe('model', () => {
+      it('should trigger on add, replace and remove', () => {
+        const patches = [];
+        const model = new Model({
+          name: 'Foo',
+          nick: 'Bar',
+        });
+
+        const unregister = model.patchListen((patch) => patches.push(patch));
+
+        model['name'] = 'FooBar';
+        model.assign('age', 42);
+        model.unassign('nick');
+        model.update({
+          height: 180,
+          name: 'Bar',
+        });
+
+        unregister();
+        model['height'] = 200;
+
+        expect(patches).to.eql([{
+          oldValue: 'Foo',
+          op: 'replace',
+          path: '/name',
+          value: 'FooBar',
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/age',
+          value: 42,
+        }, {
+          oldValue: 'Bar',
+          op: 'remove',
+          path: '/nick',
+          value: undefined,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/height',
+          value: 180,
+        }, {
+          oldValue: 'FooBar',
+          op: 'replace',
+          path: '/name',
+          value: 'Bar',
+        }]);
+      });
+
+      it('should be able to apply patches', () => {
+        const model = new Model({
+          name: 'Foo',
+          nick: 'Bar',
+        });
+
+        const patches = [{
+          op: 'replace',
+          path: '/name',
+          value: 'FooBar',
+        }, {
+          op: 'add',
+          path: '/age',
+          value: 42,
+        }, {
+          op: 'remove',
+          path: '/nick',
+          value: undefined,
+        }, {
+          op: 'add',
+          path: '/height',
+          value: 180,
+        }, {
+          op: 'replace',
+          path: '/name',
+          value: 'Bar',
+        }] as Array<IPatch>;
+
+        patches.map((patch: IPatch) => model.applyPatch(patch));
+
+        expect(model['name']).to.equal('Bar');
+        expect(model['height']).to.equal(180);
+        expect(model['age']).to.equal(42);
+        expect(model['nick']).to.be.an('undefined');
+      });
+    });
+
+    describe('collection', () => {
+      it('should trigger on add, replace and remove', () => {
+        const patches = [];
+        const model = new Model({
+          __type__: 'foo',
+          id: 1,
+          name: 'Foo',
+          nick: 'Bar',
+        });
+
+        const store = new Collection();
+        store.patchListen((patch) => patches.push(patch));
+
+        store.add(model);
+
+        model['name'] = 'FooBar';
+        model.assign('age', 42);
+        model.unassign('nick');
+        model.update({
+          height: 180,
+          name: 'Bar',
+        });
+
+        store.remove('foo', 1);
+
+        model['height'] = 200;
+
+        expect(patches).to.eql([{
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1',
+          value: model,
+        }, {
+          oldValue: 'Foo',
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'FooBar',
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1/age',
+          value: 42,
+        }, {
+          oldValue: 'Bar',
+          op: 'remove',
+          path: '/foo/1/nick',
+          value: undefined,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1/height',
+          value: 180,
+        }, {
+          oldValue: 'FooBar',
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'Bar',
+        }, {
+          oldValue: model,
+          op: 'remove',
+          path: '/foo/1',
+          value: undefined,
+        }]);
+      });
+
+      it('should be able to apply patches', () => {
+        const model = new Model({
+          __type__: 'foo',
+          id: 1,
+          name: 'Foo',
+          nick: 'Bar',
+        });
+
+        const store = new Collection();
+
+        const patches = [{
+          op: 'add',
+          path: '/foo/1',
+          value: model,
+        }, {
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'FooBar',
+        }, {
+          op: 'add',
+          path: '/foo/1/age',
+          value: 42,
+        }, {
+          op: 'remove',
+          path: '/foo/1/nick',
+          value: undefined,
+        }, {
+          op: 'add',
+          path: '/foo/1/height',
+          value: 180,
+        }, {
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'Bar',
+        }, {
+          op: 'remove',
+          path: '/foo/1',
+          value: undefined,
+        }] as Array<IPatch>;
+
+        patches.map((patch: IPatch) => store.applyPatch(patch));
+
+        expect(model['name']).to.equal('Bar');
+        expect(model['height']).to.equal(180);
+        expect(model['age']).to.equal(42);
+        expect(model['nick']).to.be.an('undefined');
+        expect(store.length).to.equal(0);
+      });
+    });
+
+    describe('collection with initial data', () => {
+      it('should trigger on add, replace and remove', () => {
+        const patches = [];
+
+        const store = new Collection([{
+          __type__: 'foo',
+          id: 1,
+          name: 'Foo',
+          nick: 'Bar',
+        }]);
+        store.patchListen((patch) => patches.push(patch));
+        const model = store.find('foo');
+
+        model['name'] = 'FooBar';
+        model.assign('age', 42);
+        model.unassign('nick');
+        model.update({
+          height: 180,
+          name: 'Bar',
+        });
+
+        store.remove('foo', 1);
+
+        model['height'] = 200;
+
+        expect(patches).to.eql([{
+          oldValue: 'Foo',
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'FooBar',
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1/age',
+          value: 42,
+        }, {
+          oldValue: 'Bar',
+          op: 'remove',
+          path: '/foo/1/nick',
+          value: undefined,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1/height',
+          value: 180,
+        }, {
+          oldValue: 'FooBar',
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'Bar',
+        }, {
+          oldValue: model,
+          op: 'remove',
+          path: '/foo/1',
+          value: undefined,
+        }]);
+      });
+
+      it('should be able to apply patches', () => {
+        const store = new Collection([{
+          __type__: 'foo',
+          id: 1,
+          name: 'Foo',
+          nick: 'Bar',
+        }]);
+
+        const model = store.find('foo');
+
+        const patches = [{
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'FooBar',
+        }, {
+          op: 'add',
+          path: '/foo/1/age',
+          value: 42,
+        }, {
+          op: 'remove',
+          path: '/foo/1/nick',
+          value: undefined,
+        }, {
+          op: 'add',
+          path: '/foo/1/height',
+          value: 180,
+        }, {
+          op: 'replace',
+          path: '/foo/1/name',
+          value: 'Bar',
+        }, {
+          op: 'remove',
+          path: '/foo/1',
+          value: undefined,
+        }] as Array<IPatch>;
+
+        patches.map((patch: IPatch) => store.applyPatch(patch));
+
+        expect(model['name']).to.equal('Bar');
+        expect(model['height']).to.equal(180);
+        expect(model['age']).to.equal(42);
+        expect(model['nick']).to.be.an('undefined');
+        expect(store.length).to.equal(0);
+      });
+    });
+
+    describe('references', () => {
+      it('should trigger correct patches for ref changes', () => {
+        class FooModel extends Model {
+          public static type = 'foo';
+          public static refs = {bar: 'bar'};
+
+          public id: number|string;
+          public bar: BarModel;
+        }
+
+        class BarModel extends Model {
+          public static type = 'bar';
+
+          public id: number|string;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [FooModel];
+
+          public foo: Array<FooModel>;
+        }
+
+        const bar2 = new BarModel({id: 2});
+        const bar3 = new BarModel({id: 3});
+
+        const patches = [];
+        const collection = new TestCollection();
+        collection.patchListen((patch) => patches.push(patch));
+        const model = collection.add<FooModel>({
+          bar: bar2,
+          id: 1,
+        }, 'foo');
+
+        model['bar'] = bar3;
+        model['barId'] = 2;
+        model['bar'] = null;
+        model.assignRef('bar', bar3);
+
+        expect(patches).to.eql([{
+          oldValue: undefined,
+          op: 'add',
+          path: '/bar/2',
+          value: bar2,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1',
+          value: model,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/bar/3',
+          value: bar3,
+        }, {
+          oldValue: bar2,
+          op: 'replace',
+          path: '/foo/1/bar',
+          value: bar3,
+        }, {
+          oldValue: bar3,
+          op: 'replace',
+          path: '/foo/1/bar',
+          value: bar2,
+        }, {
+          oldValue: bar2,
+          op: 'remove',
+          path: '/foo/1/bar',
+          value: undefined,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1/bar',
+          value: bar3,
+        }]);
+      });
+
+      it('should apply patches correctly for ref changes', () => {
+        class FooModel extends Model {
+          public static type = 'foo';
+          public static refs = {bar: 'bar'};
+
+          public id: number|string;
+          public bar: BarModel;
+        }
+
+        class BarModel extends Model {
+          public static type = 'bar';
+
+          public id: number|string;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [FooModel];
+
+          public foo: Array<FooModel>;
+        }
+
+        const bar2 = new BarModel({id: 2});
+        const bar3 = new BarModel({id: 3});
+        const model = new FooModel({id: 1});
+
+        const patches = [{
+          oldValue: undefined,
+          op: 'add',
+          path: '/bar/2',
+          value: bar2,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/foo/1',
+          value: model,
+        }, {
+          oldValue: undefined,
+          op: 'add',
+          path: '/bar/3',
+          value: bar3,
+        }, {
+          oldValue: null,
+          op: 'add',
+          path: '/foo/1/bar',
+          value: bar3,
+        }, {
+          oldValue: bar3,
+          op: 'replace',
+          path: '/foo/1/bar',
+          value: bar2,
+        }] as Array<IPatch>;
+
+        const collection = new TestCollection();
+        patches.map((patch: IPatch) => collection.applyPatch(patch));
+
+        expect(collection.length).to.equal(3);
+        expect(model['bar']).to.equal(bar2);
+      });
     });
   });
 });

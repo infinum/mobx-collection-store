@@ -5,11 +5,13 @@ import {
   isObservableArray, observable, toJS,
 } from 'mobx';
 
+import patchType from './enums/patchType';
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IExternalRef from './interfaces/IExternalRef';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 
@@ -154,6 +156,14 @@ export class Model implements IModel {
   private __data: IObservableObject = observable({});
 
   /**
+   * A list of all registered patch listeners
+   *
+   * @private
+   * @memberof Model
+   */
+  private __patchListeners: Array<(change: IPatch, model: IModel) => void> = [];
+
+  /**
    * Creates an instance of Model.
    *
    * @param {Object} initialData
@@ -161,16 +171,19 @@ export class Model implements IModel {
    *
    * @memberOf Model
    */
-  constructor(initialData: object = {}, collection?: ICollection) {
+  constructor(initialData: object = {}, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void) {
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
+    const idAttribute = this.static.idAttribute;
     this.__ensureId(data, collection);
+    this.assign(idAttribute, data[idAttribute]);
 
     // No need for it to be observable
     this.__collection = collection;
 
     this.__initRefGetters();
     this.update(data);
+    this.__patchListeners.push(listener);
   }
 
   /**
@@ -218,8 +231,12 @@ export class Model implements IModel {
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
+      const action = key in this.__data ? patchType.REPLACE : patchType.ADD;
+      const oldValue = this.__data[key];
       // TODO: Could be optimised based on __initializedProps?
       extendObservable(this.__data, {[key]: value});
+
+      this.__triggerChange(action, key, value, oldValue);
     }
     this.__ensureGetter(key);
     return val;
@@ -249,7 +266,20 @@ export class Model implements IModel {
     this.__refs[key] = item instanceof Model ? getType(item) : type;
     const data = this.__setRef(key, value);
     this.__initRefGetter(key, this.__refs[key]);
+    this.__triggerChange(patchType.ADD, key, data);
     return data;
+  }
+
+  /**
+   * Unassign a property from the model
+   *
+   * @param {string} key A property to unassign
+   * @memberof Model
+   */
+  @action public unassign(key: string): void {
+    const oldValue = this.__data[key];
+    delete this.__data[key];
+    this.__triggerChange(patchType.REMOVE, key, undefined, oldValue);
   }
 
   /**
@@ -273,6 +303,36 @@ export class Model implements IModel {
    */
   @computed public get snapshot() {
     return this.toJS();
+  }
+
+  /**
+   * Add a listener for patches
+   *
+   * @param {(data: IPatch) => void} listener A new listener
+   * @returns {() => void} Function used to remove the listener
+   * @memberof Model
+   */
+  public patchListen(listener: (data: IPatch, model: IModel) => void): () => void {
+    this.__patchListeners.push(listener);
+
+    return () => {
+      this.__patchListeners = this.__patchListeners.filter((item) => item !== listener);
+    };
+  }
+
+  /**
+   * Apply an existing JSONPatch on the model
+   *
+   * @param {IPatch} patch The patch object
+   * @memberof Model
+   */
+  public applyPatch(patch: IPatch): void {
+    const field = patch.path.slice(1);
+    if (patch.op === patchType.ADD || patch.op === patchType.REPLACE) {
+      this.assign(field, patch.value);
+    } else if (patch.op === patchType.REMOVE) {
+      this.unassign(field);
+    }
   }
 
   /**
@@ -485,8 +545,16 @@ export class Model implements IModel {
     const type = this.__refs[ref];
     const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
 
+    const getRef = () => this.__collection ? (this.__getReferencedModels(ref) || undefined) : undefined;
+
+    const oldValue = getRef();
+    const action = oldValue === undefined ? patchType.ADD : patchType.REPLACE;
+
     // TODO: Could be optimised based on __initializedProps?
     extendObservable(this.__data, {[ref]: refs});
+
+    const newValue = getRef();
+    this.__triggerChange(newValue === undefined ? patchType.REMOVE : action, ref, newValue, oldValue);
 
     // Handle the case when the ref is unsetted
     if (!refs) {
@@ -531,5 +599,25 @@ export class Model implements IModel {
       this.__initializedProps.push(key);
       extendObservable(this, {[key]: this.__getProp(key)});
     }
+  }
+
+  /**
+   * Function that creates a patch object and calls all listeners
+   *
+   * @private
+   * @param {patchType} type Action type
+   * @param {string} field Field where the action was made
+   * @param {*} [value] The new value (if it applies)
+   * @memberof Model
+   */
+  private __triggerChange(type: patchType, field: string, value?: any, oldValue?: any): void {
+    const patchObj: IPatch = {
+      oldValue,
+      op: type,
+      path: `/${field}`,
+      value,
+    };
+
+    this.__patchListeners.forEach((listener) => typeof listener === 'function' && listener(patchObj, this));
   }
 }

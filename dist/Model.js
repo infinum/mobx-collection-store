@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
+var patchType_1 = require("./enums/patchType");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
 /**
@@ -24,7 +25,7 @@ var Model = (function () {
      *
      * @memberOf Model
      */
-    function Model(initialData, collection) {
+    function Model(initialData, collection, listener) {
         if (initialData === void 0) { initialData = {}; }
         /**
          * Collection the model belongs to
@@ -57,12 +58,22 @@ var Model = (function () {
          * @memberOf Model
          */
         this.__data = mobx_1.observable({});
+        /**
+         * A list of all registered patch listeners
+         *
+         * @private
+         * @memberof Model
+         */
+        this.__patchListeners = [];
         var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
+        var idAttribute = this.static.idAttribute;
         this.__ensureId(data, collection);
+        this.assign(idAttribute, data[idAttribute]);
         // No need for it to be observable
         this.__collection = collection;
         this.__initRefGetters();
         this.update(data);
+        this.__patchListeners.push(listener);
     }
     /**
      * Function that can process the received data (e.g. from an API) before
@@ -137,8 +148,11 @@ var Model = (function () {
             val = this.__setRef(key, value);
         }
         else {
+            var action_1 = key in this.__data ? patchType_1.default.REPLACE : patchType_1.default.ADD;
+            var oldValue = this.__data[key];
             // TODO: Could be optimised based on __initializedProps?
             mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
+            this.__triggerChange(action_1, key, value, oldValue);
         }
         this.__ensureGetter(key);
         return val;
@@ -166,7 +180,19 @@ var Model = (function () {
         this.__refs[key] = item instanceof Model ? utils_1.getType(item) : type;
         var data = this.__setRef(key, value);
         this.__initRefGetter(key, this.__refs[key]);
+        this.__triggerChange(patchType_1.default.ADD, key, data);
         return data;
+    };
+    /**
+     * Unassign a property from the model
+     *
+     * @param {string} key A property to unassign
+     * @memberof Model
+     */
+    Model.prototype.unassign = function (key) {
+        var oldValue = this.__data[key];
+        delete this.__data[key];
+        this.__triggerChange(patchType_1.default.REMOVE, key, undefined, oldValue);
     };
     /**
      * Convert the model into a plain JS Object in order to be serialized
@@ -193,6 +219,35 @@ var Model = (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * Add a listener for patches
+     *
+     * @param {(data: IPatch) => void} listener A new listener
+     * @returns {() => void} Function used to remove the listener
+     * @memberof Model
+     */
+    Model.prototype.patchListen = function (listener) {
+        var _this = this;
+        this.__patchListeners.push(listener);
+        return function () {
+            _this.__patchListeners = _this.__patchListeners.filter(function (item) { return item !== listener; });
+        };
+    };
+    /**
+     * Apply an existing JSONPatch on the model
+     *
+     * @param {IPatch} patch The patch object
+     * @memberof Model
+     */
+    Model.prototype.applyPatch = function (patch) {
+        var field = patch.path.slice(1);
+        if (patch.op === patchType_1.default.ADD || patch.op === patchType_1.default.REPLACE) {
+            this.assign(field, patch.value);
+        }
+        else if (patch.op === patchType_1.default.REMOVE) {
+            this.unassign(field);
+        }
+    };
     /**
      * Ensure the new model has a valid id
      *
@@ -390,10 +445,16 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__setRef = function (ref, val) {
+        var _this = this;
         var type = this.__refs[ref];
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
+        var getRef = function () { return _this.__collection ? (_this.__getReferencedModels(ref) || undefined) : undefined; };
+        var oldValue = getRef();
+        var action = oldValue === undefined ? patchType_1.default.ADD : patchType_1.default.REPLACE;
         // TODO: Could be optimised based on __initializedProps?
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
+        var newValue = getRef();
+        this.__triggerChange(newValue === undefined ? patchType_1.default.REMOVE : action, ref, newValue, oldValue);
         // Handle the case when the ref is unsetted
         if (!refs) {
             return null;
@@ -436,6 +497,25 @@ var Model = (function () {
             mobx_1.extendObservable(this, (_a = {}, _a[key] = this.__getProp(key), _a));
         }
         var _a;
+    };
+    /**
+     * Function that creates a patch object and calls all listeners
+     *
+     * @private
+     * @param {patchType} type Action type
+     * @param {string} field Field where the action was made
+     * @param {*} [value] The new value (if it applies)
+     * @memberof Model
+     */
+    Model.prototype.__triggerChange = function (type, field, value, oldValue) {
+        var _this = this;
+        var patchObj = {
+            oldValue: oldValue,
+            op: type,
+            path: "/" + field,
+            value: value,
+        };
+        this.__patchListeners.forEach(function (listener) { return typeof listener === 'function' && listener(patchObj, _this); });
     };
     /**
      * The attribute that should be used as the unique identifier
@@ -503,6 +583,9 @@ var Model = (function () {
     __decorate([
         mobx_1.action
     ], Model.prototype, "assignRef", null);
+    __decorate([
+        mobx_1.action
+    ], Model.prototype, "unassign", null);
     __decorate([
         mobx_1.computed
     ], Model.prototype, "snapshot", null);

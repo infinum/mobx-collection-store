@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
+var patchType_1 = require("./enums/patchType");
 var Model_1 = require("./Model");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
@@ -36,6 +37,13 @@ var Collection = (function () {
          */
         this.__data = mobx_1.observable([]);
         this.__modelHash = {};
+        /**
+         * A list of all registered patch listeners
+         *
+         * @private
+         * @memberof Model
+         */
+        this.__patchListeners = [];
         this.insert(data);
         var computedProps = {};
         for (var _i = 0, _a = this.static.types; _i < _a.length; _i++) {
@@ -111,6 +119,7 @@ var Collection = (function () {
         this.__modelHash[modelType] = this.__modelHash[modelType] || {};
         this.__modelHash[modelType][id] = instance;
         this.__data.push(instance);
+        this.__triggerChange(patchType_1.default.ADD, instance, instance);
         return instance;
     };
     /**
@@ -202,6 +211,40 @@ var Collection = (function () {
         configurable: true
     });
     /**
+     * Add a listener for patches
+     *
+     * @param {(data: IPatch) => void} listener A new listener
+     * @returns {() => void} Function used to remove the listener
+     * @memberof Collection
+     */
+    Collection.prototype.patchListen = function (listener) {
+        var _this = this;
+        this.__patchListeners.push(listener);
+        return function () {
+            _this.__patchListeners = _this.__patchListeners.filter(function (item) { return item !== listener; });
+        };
+    };
+    /**
+     * Apply an existing JSONPatch on the model
+     *
+     * @param {IPatch} patch The patch object
+     * @memberof Collection
+     */
+    Collection.prototype.applyPatch = function (patch) {
+        var _a = patch.path.slice(1).split('/'), type = _a[0], id = _a[1], field = _a[2];
+        var model = this.__modelHash && this.__modelHash[type] && this.__modelHash[type][id];
+        if (field) {
+            var modelPatch = utils_1.assign({}, patch, { path: "/" + field });
+            model.applyPatch(modelPatch);
+        }
+        else if (patch.op === patchType_1.default.ADD) {
+            this.add(patch.value);
+        }
+        else if (patch.op === patchType_1.default.REMOVE && model) {
+            this.remove(utils_1.getType(model), model[model.static.idAttribute]);
+        }
+    };
+    /**
      * Get a list of the type models
      *
      * @private
@@ -238,7 +281,7 @@ var Collection = (function () {
     Collection.prototype.__initItem = function (item) {
         var type = item[consts_1.TYPE_PROP];
         var TypeModel = this.__getModel(type);
-        return new TypeModel(item, this);
+        return new TypeModel(item, this, this.__onPatchTrigger);
     };
     /**
      * Prepare the model instance either by finding an existing one or creating a new one
@@ -253,11 +296,13 @@ var Collection = (function () {
     Collection.prototype.__getModelInstance = function (model, type) {
         if (model instanceof Model_1.Model) {
             model.__collection = this;
+            // tslint:disable-next-line:no-string-literal
+            model['__patchListeners'].push(this.__onPatchTrigger);
             return model;
         }
         else {
             var TypeModel = this.__getModel(type);
-            return new TypeModel(model, this);
+            return new TypeModel(model, this, this.__onPatchTrigger);
         }
     };
     /**
@@ -275,8 +320,43 @@ var Collection = (function () {
                 _this.__data.remove(model);
                 _this.__modelHash[utils_1.getType(model)][model[model.static.idAttribute]] = null;
                 model.__collection = null;
+                // tslint:disable-next-line:no-string-literal
+                model['__patchListeners'] = model['__patchListeners'].filter(function (item) { return item !== _this.__onPatchTrigger; });
+                _this.__triggerChange(patchType_1.default.REMOVE, model, undefined, model);
             }
         });
+    };
+    /**
+     * Function that creates a patch object and calls all listeners
+     *
+     * @private
+     * @param {patchType} type Action type
+     * @param {string} field Field where the action was made
+     * @param {*} [value] The new value (if it applies)
+     * @memberof Model
+     */
+    Collection.prototype.__triggerChange = function (type, model, value, oldValue) {
+        var patchObj = {
+            oldValue: oldValue,
+            op: type,
+            path: '',
+            value: value,
+        };
+        this.__onPatchTrigger(patchObj, model);
+    };
+    /**
+     * Pass model patches trough to the collection listeners
+     *
+     * @private
+     * @param {IPatch} patch Model patch object
+     * @param {IModel} model Updated model
+     * @memberof Collection
+     */
+    Collection.prototype.__onPatchTrigger = function (patch, model) {
+        var collectionPatch = utils_1.assign({}, patch, {
+            path: "/" + utils_1.getType(model) + "/" + model[model.static.idAttribute] + patch.path,
+        });
+        this.__patchListeners.forEach(function (listener) { return typeof listener === 'function' && listener(collectionPatch, model); });
     };
     /**
      * List of custom model types
@@ -307,6 +387,9 @@ var Collection = (function () {
     __decorate([
         mobx_1.action
     ], Collection.prototype, "__removeModels", null);
+    __decorate([
+        mobx_1.action.bound
+    ], Collection.prototype, "__onPatchTrigger", null);
     return Collection;
 }());
 exports.Collection = Collection;
