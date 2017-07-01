@@ -27,7 +27,6 @@ var Collection = (function () {
      */
     function Collection(data) {
         if (data === void 0) { data = []; }
-        var _this = this;
         /**
          * Internal data storage
          *
@@ -37,18 +36,7 @@ var Collection = (function () {
          */
         this.__data = mobx_1.observable([]);
         this.__modelHash = {};
-        mobx_1.runInAction(function () {
-            var items = data
-                .map(_this.__initItem, _this)
-                .map(function (item) {
-                var modelType = utils_1.getType(item);
-                _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
-                _this.__modelHash[modelType][item[item.static.idAttribute]] = item;
-                return item;
-            });
-            (_a = _this.__data).push.apply(_a, items);
-            var _a;
-        });
+        this.insert(data);
         var computedProps = {};
         for (var _i = 0, _a = this.static.types; _i < _a.length; _i++) {
             var model = _a[_i];
@@ -56,6 +44,29 @@ var Collection = (function () {
         }
         mobx_1.extendObservable(this, computedProps);
     }
+    /**
+     * Insert serialized models into the store
+     *
+     * @param {(Array<object>|object)} data models to insert
+     * @memberof Collection
+     */
+    Collection.prototype.insert = function (data) {
+        var _this = this;
+        var items = [].concat(data)
+            .map(this.__initItem, this)
+            .map(function (item) {
+            var modelType = utils_1.getType(item);
+            if (!modelType) {
+                throw new Error('The input is not valid. Make sure you used model.toJS or model.snapshot to serialize it');
+            }
+            _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
+            _this.__modelHash[modelType][item[item.static.idAttribute]] = item;
+            return item;
+        });
+        (_a = this.__data).push.apply(_a, items);
+        return items;
+        var _a;
+    };
     Object.defineProperty(Collection.prototype, "static", {
         /**
          * Static model class
@@ -275,6 +286,9 @@ var Collection = (function () {
      * @memberOf Collection
      */
     Collection.types = [];
+    __decorate([
+        mobx_1.action
+    ], Collection.prototype, "insert", null);
     __decorate([
         mobx_1.computed
     ], Collection.prototype, "length", null);

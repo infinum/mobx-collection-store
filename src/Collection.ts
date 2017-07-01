@@ -51,17 +51,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   constructor(data: Array<object> = []) {
-    runInAction(() => {
-      const items = data
-        .map(this.__initItem, this)
-        .map((item) => {
-          const modelType = getType(item);
-          this.__modelHash[modelType] = this.__modelHash[modelType] || {};
-          this.__modelHash[modelType][item[item.static.idAttribute]] = item;
-          return item;
-        });
-      this.__data.push(...items);
-    });
+    this.insert(data);
 
     const computedProps: IDictionary = {};
     for (const model of this.static.types) {
@@ -69,6 +59,29 @@ export class Collection implements ICollection {
     }
 
     extendObservable(this, computedProps);
+  }
+
+  /**
+   * Insert serialized models into the store
+   *
+   * @param {(Array<object>|object)} data models to insert
+   * @memberof Collection
+   */
+  @action public insert(data: Array<object>|object): Array<IModel> {
+    const items = [].concat(data)
+      .map(this.__initItem, this)
+      .map((item) => {
+        const modelType = getType(item);
+        if (!modelType) {
+          throw new Error('The input is not valid. Make sure you used model.toJS or model.snapshot to serialize it');
+        }
+
+        this.__modelHash[modelType] = this.__modelHash[modelType] || {};
+        this.__modelHash[modelType][item[item.static.idAttribute]] = item;
+        return item;
+      });
+    this.__data.push(...items);
+    return items;
   }
 
   /**

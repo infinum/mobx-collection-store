@@ -37,6 +37,13 @@ export declare class Collection implements ICollection {
      */
     constructor(data?: Array<object>);
     /**
+     * Insert serialized models into the store
+     *
+     * @param {(Array<object>|object)} data models to insert
+     * @memberof Collection
+     */
+    insert(data: Array<object> | object): Array<IModel>;
+    /**
      * Static model class
      *
      * @readonly

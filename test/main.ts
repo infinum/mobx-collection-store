@@ -961,4 +961,83 @@ describe('MobX Collection Store', () => {
       }]);
     });
   });
+
+  describe('insert', () => {
+    it('should insert a single item', () => {
+      class FooModel extends Model {
+        public static type = 'foo';
+
+        public id: number|string;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [FooModel];
+
+        public foo: Array<FooModel>;
+      }
+
+      const model = new FooModel({id: 123});
+      const raw = model.toJS();
+
+      const store = new TestCollection();
+      const inserted = store.insert(raw) as Array<FooModel>;
+      expect(inserted[0].id).to.equal(123);
+    });
+
+    it('should insert multiple items', () => {
+      class FooModel extends Model {
+        public static type = 'foo';
+
+        public id: number|string;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [FooModel];
+
+        public foo: Array<FooModel>;
+      }
+
+      const model1 = new FooModel({id: 123});
+      const model2 = new FooModel({id: 456});
+      const raw = [model1.toJS(), model2.toJS()];
+
+      const store = new TestCollection();
+      const inserted = store.insert(raw) as Array<FooModel>;
+      expect(inserted[0].id).to.equal(123);
+      expect(inserted[1].id).to.equal(456);
+    });
+
+    it('should throw if the data is invalid for a single object', () => {
+      const store = new Collection();
+
+      expect(() => store.insert({id: 123})).to.throw();
+    });
+
+    it('should throw if the data is invalid for multiple objects', () => {
+      const store = new Collection();
+
+      expect(() => store.insert([{id: 123}, {id: 345}])).to.throw();
+    });
+
+    it('should throw and not insert anything if any input is invalid', () => {
+      class FooModel extends Model {
+        public static type = 'foo';
+
+        public id: number|string;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [FooModel];
+
+        public foo: Array<FooModel>;
+      }
+
+      const model = new FooModel({id: 123});
+      const raw = model.toJS();
+
+      const store = new TestCollection();
+      expect(() => store.insert([raw, {id: 456}])).to.throw();
+      expect(store.length).to.equal(0);
+    });
+  });
 });
