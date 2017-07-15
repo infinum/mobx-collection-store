@@ -14,7 +14,7 @@ import IType from './interfaces/IType';
 import {Model} from './Model';
 
 import {DEFAULT_TYPE, TYPE_PROP} from './consts';
-import {assign, first, getType, matchModel} from './utils';
+import {assign, first, getProp, getType, matchModel} from './utils';
 
 /**
  * MobX Collection class
@@ -90,7 +90,8 @@ export class Collection implements ICollection {
         const modelType: IType = item[TYPE_PROP];
         const type = this.__getModel(modelType);
 
-        const existing = this.__modelHash[modelType] && this.__modelHash[modelType][item[type.idAttribute]];
+        const existing = this.__modelHash[modelType] &&
+          this.__modelHash[modelType][getProp<string>(item, type.idAttribute)];
 
         /* istanbul ignore if */
         if (existing) {
@@ -104,8 +105,9 @@ export class Collection implements ICollection {
           return existing;
         } else {
           const instance = this.__initItem(item);
+          const id = getProp<string|number>(item, instance.static.idAttribute);
           this.__modelHash[modelType] = this.__modelHash[modelType] || {};
-          this.__modelHash[modelType][item[instance.static.idAttribute]] = instance;
+          this.__modelHash[modelType][id] = instance;
           this.__data.push(instance);
           return instance;
         }
@@ -158,7 +160,7 @@ export class Collection implements ICollection {
     const instance: IModel = this.__getModelInstance(model, type);
     const modelType = getType(instance);
 
-    const id = instance[instance.static.idAttribute];
+    const id = getProp<string|number>(instance, instance.static.idAttribute);
     const existing = this.find(modelType, id);
     if (existing) {
       existing.update(model);
@@ -295,7 +297,7 @@ export class Collection implements ICollection {
     } else if (patch.op === patchType.ADD) {
       this.add(patch.value);
     } else if (patch.op === patchType.REMOVE && model) {
-      this.remove(getType(model), model[model.static.idAttribute]);
+      this.remove(getType(model), getProp<string|number>(model, model.static.idAttribute));
     }
   }
 
@@ -373,8 +375,9 @@ export class Collection implements ICollection {
   @action private __removeModels(models: Array<IModel>): void {
     models.forEach((model) => {
       if (model) {
+        const id = getProp<number|string>(model, model.static.idAttribute);
         this.__data.remove(model);
-        this.__modelHash[getType(model)][model[model.static.idAttribute]] = null;
+        this.__modelHash[getType(model)][id] = null;
         model.__collection = null;
 
         // tslint:disable-next-line:no-string-literal
@@ -412,8 +415,9 @@ export class Collection implements ICollection {
    * @memberof Collection
    */
   @action.bound private __onPatchTrigger(patch: IPatch, model: IModel) {
+    const id = getProp<number|string>(model, model.static.idAttribute);
     const collectionPatch: IPatch = assign({}, patch, {
-      path: `/${getType(model)}/${model[model.static.idAttribute]}${patch.path}`,
+      path: `/${getType(model)}/${id}${patch.path}`,
     }) as IPatch;
 
     this.__patchListeners.forEach((listener) => typeof listener === 'function' && listener(collectionPatch, model));

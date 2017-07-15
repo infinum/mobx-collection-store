@@ -19,6 +19,25 @@ export declare function mapItems<T>(data: object | Array<object>, fn: (item: any
  */
 export declare function first(arr: Array<any>): any;
 /**
+ * Get the specific nested property
+ *
+ * @export
+ * @template T Type of the property value
+ * @param {object} obj Source object
+ * @param {(string|Array<string>)} key Key value
+ * @returns {T} The nested property value
+ */
+export declare function getProp<T>(obj: object, key: string | Array<string>): T;
+/**
+ * Set the specific nested property
+ *
+ * @export
+ * @param {object} obj Destination object
+ * @param {(string|Array<string>)} key Key value
+ * @param {value} any Value to be set
+ */
+export declare function setProp(obj: object, key: string | Array<string>, value: any): object;
+/**
  * Match a model to defined parameters
  *
  * @private

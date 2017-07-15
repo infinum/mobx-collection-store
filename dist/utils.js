@@ -29,6 +29,51 @@ function first(arr) {
 }
 exports.first = first;
 /**
+ * Get the specific nested property
+ *
+ * @export
+ * @template T Type of the property value
+ * @param {object} obj Source object
+ * @param {(string|Array<string>)} key Key value
+ * @returns {T} The nested property value
+ */
+function getProp(obj, key) {
+    var path = [].concat(key);
+    var val = obj;
+    for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
+        var pathKey = path_1[_i];
+        if (val[pathKey] === undefined) {
+            return undefined;
+        }
+        val = val[pathKey];
+    }
+    return val;
+}
+exports.getProp = getProp;
+/**
+ * Set the specific nested property
+ *
+ * @export
+ * @param {object} obj Destination object
+ * @param {(string|Array<string>)} key Key value
+ * @param {value} any Value to be set
+ */
+function setProp(obj, key, value) {
+    var path = [].concat(key);
+    var lastKey = path.pop();
+    var val = obj;
+    for (var _i = 0, path_2 = path; _i < path_2.length; _i++) {
+        var pathKey = path_2[_i];
+        if (typeof val[pathKey] !== 'object') {
+            val[pathKey] = {};
+        }
+        val = val[pathKey];
+    }
+    val[lastKey] = value;
+    return obj;
+}
+exports.setProp = setProp;
+/**
  * Match a model to defined parameters
  *
  * @private
@@ -41,7 +86,7 @@ exports.first = first;
  */
 function matchModel(item, type, id) {
     /* istanbul ignore next */
-    return getType(item) === type && item[item.static.idAttribute] === id;
+    return getType(item) === type && getProp(item, item.static.idAttribute) === id;
 }
 exports.matchModel = matchModel;
 /**
@@ -53,7 +98,7 @@ exports.matchModel = matchModel;
  */
 function getType(instance) {
     return instance.static.type === consts_1.DEFAULT_TYPE
-        ? instance[instance.static.typeAttribute]
+        ? getProp(instance, instance.static.typeAttribute)
         : instance.static.type;
 }
 exports.getType = getType;

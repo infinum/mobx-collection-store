@@ -15,10 +15,10 @@ export declare class Model implements IModel {
      * The attribute that should be used as the unique identifier
      *
      * @static
-     * @type {string}
+     * @type {string|Array<string>}
      * @memberOf Model
      */
-    static idAttribute: string;
+    static idAttribute: string | Array<string>;
     /**
      * The references that the model can have to other models
      *
@@ -47,10 +47,10 @@ export declare class Model implements IModel {
      * Atribute name for the type attribute
      *
      * @static
-     * @type {string}
+     * @type {string|Array<string>}
      * @memberOf Model
      */
-    static typeAttribute: string;
+    static typeAttribute: string | Array<string>;
     /**
      * Defines if the model should use autoincrement id if none is defined
      *

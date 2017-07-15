@@ -76,7 +76,7 @@ var Model = (function () {
         var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
         var idAttribute = this.static.idAttribute;
         this.__ensureId(data, collection);
-        this.assign(idAttribute, data[idAttribute]);
+        this.update(utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute)));
         // No need for it to be observable
         this.__collection = collection;
         this.__initRefGetters();
@@ -270,14 +270,17 @@ var Model = (function () {
      */
     Model.prototype.__ensureId = function (data, collection) {
         var idAttribute = this.static.idAttribute;
-        if (!data[idAttribute]) {
+        var id = utils_1.getProp(data, idAttribute);
+        if (!id) {
             if (!this.static.enableAutoId) {
                 throw new Error(idAttribute + " is required!");
             }
             else {
+                var newId = void 0;
                 do {
-                    data[idAttribute] = this.static.autoIdFunction();
-                } while (collection && collection.find(utils_1.getType(this), data[idAttribute]));
+                    newId = this.static.autoIdFunction();
+                    var idProp = utils_1.setProp(data, idAttribute, newId);
+                } while (collection && collection.find(utils_1.getType(this), newId));
             }
         }
     };
@@ -395,7 +398,7 @@ var Model = (function () {
             if (utils_1.getType(model) !== type) {
                 throw new Error("The model should be a '" + type + "'");
             }
-            return model[model.static.idAttribute];
+            return utils_1.getProp(model, model.static.idAttribute);
         }
         return item;
     };
@@ -493,7 +496,7 @@ var Model = (function () {
         if (consts_1.RESERVED_KEYS.indexOf(key) !== -1) {
             return; // Skip the key because it would override the internal key
         }
-        if (key !== idAttribute || !this.__data[idAttribute]) {
+        if (key !== idAttribute || !utils_1.getProp(this.__data, idAttribute)) {
             vals[key] = this.assign(key, data[key]);
         }
     };
@@ -545,7 +548,7 @@ var Model = (function () {
      * The attribute that should be used as the unique identifier
      *
      * @static
-     * @type {string}
+     * @type {string|Array<string>}
      * @memberOf Model
      */
     Model.idAttribute = 'id';
@@ -577,7 +580,7 @@ var Model = (function () {
      * Atribute name for the type attribute
      *
      * @static
-     * @type {string}
+     * @type {string|Array<string>}
      * @memberOf Model
      */
     Model.typeAttribute = consts_1.TYPE_PROP;

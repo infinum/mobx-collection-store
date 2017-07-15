@@ -71,7 +71,8 @@ var Collection = (function () {
             .map(function (item) {
             var modelType = item[consts_1.TYPE_PROP];
             var type = _this.__getModel(modelType);
-            var existing = _this.__modelHash[modelType] && _this.__modelHash[modelType][item[type.idAttribute]];
+            var existing = _this.__modelHash[modelType] &&
+                _this.__modelHash[modelType][utils_1.getProp(item, type.idAttribute)];
             /* istanbul ignore if */
             if (existing) {
                 // tslint:disable-next-line:no-string-literal
@@ -83,8 +84,9 @@ var Collection = (function () {
             }
             else {
                 var instance = _this.__initItem(item);
+                var id = utils_1.getProp(item, instance.static.idAttribute);
                 _this.__modelHash[modelType] = _this.__modelHash[modelType] || {};
-                _this.__modelHash[modelType][item[instance.static.idAttribute]] = instance;
+                _this.__modelHash[modelType][id] = instance;
                 _this.__data.push(instance);
                 return instance;
             }
@@ -126,7 +128,7 @@ var Collection = (function () {
         }
         var instance = this.__getModelInstance(model, type);
         var modelType = utils_1.getType(instance);
-        var id = instance[instance.static.idAttribute];
+        var id = utils_1.getProp(instance, instance.static.idAttribute);
         var existing = this.find(modelType, id);
         if (existing) {
             existing.update(model);
@@ -258,7 +260,7 @@ var Collection = (function () {
             this.add(patch.value);
         }
         else if (patch.op === patchType_1.default.REMOVE && model) {
-            this.remove(utils_1.getType(model), model[model.static.idAttribute]);
+            this.remove(utils_1.getType(model), utils_1.getProp(model, model.static.idAttribute));
         }
     };
     /**
@@ -332,8 +334,9 @@ var Collection = (function () {
         var _this = this;
         models.forEach(function (model) {
             if (model) {
+                var id = utils_1.getProp(model, model.static.idAttribute);
                 _this.__data.remove(model);
-                _this.__modelHash[utils_1.getType(model)][model[model.static.idAttribute]] = null;
+                _this.__modelHash[utils_1.getType(model)][id] = null;
                 model.__collection = null;
                 // tslint:disable-next-line:no-string-literal
                 _this.__triggerChange(patchType_1.default.REMOVE, model, undefined, model);
@@ -367,8 +370,9 @@ var Collection = (function () {
      * @memberof Collection
      */
     Collection.prototype.__onPatchTrigger = function (patch, model) {
+        var id = utils_1.getProp(model, model.static.idAttribute);
         var collectionPatch = utils_1.assign({}, patch, {
-            path: "/" + utils_1.getType(model) + "/" + model[model.static.idAttribute] + patch.path,
+            path: "/" + utils_1.getType(model) + "/" + id + patch.path,
         });
         this.__patchListeners.forEach(function (listener) { return typeof listener === 'function' && listener(collectionPatch, model); });
     };

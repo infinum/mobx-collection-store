@@ -22,18 +22,18 @@ interface IModelConstructor {
   /**
    * Atribute name for the type attribute
    *
-   * @type {string}
+   * @type {string|Array<string>}
    * @memberOf IModelConstructor
    */
-  typeAttribute: string;
+  typeAttribute: string|Array<string>;
 
   /**
    * The attribute that should be used as the unique identifier
    *
-   * @type {string}
+   * @type {string|Array<string>}
    * @memberOf IModelConstructor
    */
-  idAttribute: string;
+  idAttribute: string|Array<string>;
 
   /**
    * Default values of model props

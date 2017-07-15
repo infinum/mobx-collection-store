@@ -31,6 +31,49 @@ export function first(arr: Array<any>): any {
 }
 
 /**
+ * Get the specific nested property
+ *
+ * @export
+ * @template T Type of the property value
+ * @param {object} obj Source object
+ * @param {(string|Array<string>)} key Key value
+ * @returns {T} The nested property value
+ */
+export function getProp<T>(obj: object, key: string|Array<string>): T {
+  const path = [].concat(key);
+  let val: object|T = obj;
+  for (const pathKey of path) {
+    if (val[pathKey] === undefined) {
+      return undefined;
+    }
+    val = val[pathKey];
+  }
+  return val as T;
+}
+
+/**
+ * Set the specific nested property
+ *
+ * @export
+ * @param {object} obj Destination object
+ * @param {(string|Array<string>)} key Key value
+ * @param {value} any Value to be set
+ */
+export function setProp(obj: object, key: string|Array<string>, value: any): object {
+  const path = [].concat(key);
+  const lastKey = path.pop();
+  let val: object = obj;
+  for (const pathKey of path) {
+    if (typeof val[pathKey] !== 'object') {
+      val[pathKey] = {};
+    }
+    val = val[pathKey];
+  }
+  val[lastKey] = value;
+  return obj;
+}
+
+/**
  * Match a model to defined parameters
  *
  * @private
@@ -44,7 +87,7 @@ export function first(arr: Array<any>): any {
 export function matchModel(item: IModel, type: IType, id: string|number): boolean {
 
   /* istanbul ignore next */
-  return getType(item) === type && item[item.static.idAttribute] === id;
+  return getType(item) === type && getProp<string|number>(item, item.static.idAttribute) === id;
 }
 
 /**
@@ -56,7 +99,7 @@ export function matchModel(item: IModel, type: IType, id: string|number): boolea
  */
 export function getType(instance: IModel): IType {
   return instance.static.type === DEFAULT_TYPE
-    ? instance[instance.static.typeAttribute]
+    ? getProp<IType>(instance, instance.static.typeAttribute)
     : instance.static.type;
 }
 

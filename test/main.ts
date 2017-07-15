@@ -54,6 +54,47 @@ describe('MobX Collection Store', () => {
     expect(model2.id).to.not.be.an('undefined');
   });
 
+  it('should support nested ids', () => {
+    class FooModel extends Model {
+      public static type = 'foo';
+      public static idAttribute = ['test', 'id'];
+
+      public test: {id: number|string};
+      public foo: number;
+      public bar: number;
+    }
+
+    class TestCollection extends Collection {
+      public static types = [FooModel];
+
+      public foo: Array<FooModel>;
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<FooModel>({
+      bar: 0,
+      foo: 1,
+      fooBar: 0.5,
+      test: {
+        id: 1,
+      },
+    }, 'foo');
+
+    expect(collection.length).to.equal(1);
+    expect(collection.foo.length).to.equal(1);
+    expect(collection.find<FooModel>('foo', 1)).to.equal(model);
+    expect(model.foo).to.equal(1);
+    expect(model.bar).to.equal(0);
+    expect(model.static.type).to.equal('foo');
+
+    const model2 = new FooModel({
+      bar: 1,
+    });
+
+    expect(model2.bar).to.equal(1);
+    expect(model2.test.id).to.not.be.an('undefined');
+  });
+
   it('should support enums for types', () => {
     enum type {
       FOO,

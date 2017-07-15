@@ -1,3 +1,6 @@
+/** @private @const ID_PROP {string} - Name of the id property when the model is converted into POJO */
+export const ID_PROP: string = '__id__';
+
 /** @private @const TYPE_PROP {string} - Name of the type property when the model is converted into POJO */
 export const TYPE_PROP: string = '__type__';
 

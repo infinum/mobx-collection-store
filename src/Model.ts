@@ -16,7 +16,7 @@ import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
-import {assign, first, getType, mapItems} from './utils';
+import {assign, first, getProp, getType, mapItems, setProp} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 
@@ -32,10 +32,10 @@ export class Model implements IModel {
    * The attribute that should be used as the unique identifier
    *
    * @static
-   * @type {string}
+   * @type {string|Array<string>}
    * @memberOf Model
    */
-  public static idAttribute: string = 'id';
+  public static idAttribute: string|Array<string> = 'id';
 
   /**
    * The references that the model can have to other models
@@ -68,10 +68,10 @@ export class Model implements IModel {
    * Atribute name for the type attribute
    *
    * @static
-   * @type {string}
+   * @type {string|Array<string>}
    * @memberOf Model
    */
-  public static typeAttribute: string = TYPE_PROP;
+  public static typeAttribute: string|Array<string> = TYPE_PROP;
 
   /**
    * Defines if the model should use autoincrement id if none is defined
@@ -185,7 +185,8 @@ export class Model implements IModel {
 
     const idAttribute = this.static.idAttribute;
     this.__ensureId(data, collection);
-    this.assign(idAttribute, data[idAttribute]);
+
+    this.update(setProp({}, idAttribute, getProp<string|number>(data, idAttribute)));
 
     // No need for it to be observable
     this.__collection = collection;
@@ -360,16 +361,18 @@ export class Model implements IModel {
    */
   private __ensureId(data: IDictionary, collection?: ICollection) {
     const idAttribute = this.static.idAttribute;
-    if (!data[idAttribute]) {
+    const id = getProp<string|number>(data, idAttribute);
+    if (!id) {
       if (!this.static.enableAutoId) {
         throw new Error(`${idAttribute} is required!`);
       } else {
+        let newId;
         do {
-          data[idAttribute] = this.static.autoIdFunction();
-        } while (collection && collection.find(getType(this), data[idAttribute]));
+          newId = this.static.autoIdFunction();
+          const idProp = setProp(data, idAttribute, newId);
+        } while (collection && collection.find(getType(this), newId));
       }
     }
-
   }
 
   /**
@@ -495,7 +498,7 @@ export class Model implements IModel {
       if (getType(model) !== type) {
         throw new Error(`The model should be a '${type}'`);
       }
-      return model[model.static.idAttribute];
+      return getProp<string|number>(model, model.static.idAttribute);
     }
     return item;
   }
@@ -602,7 +605,7 @@ export class Model implements IModel {
     if (RESERVED_KEYS.indexOf(key) !== -1) {
       return; // Skip the key because it would override the internal key
     }
-    if (key !== idAttribute || !this.__data[idAttribute]) {
+    if (key !== idAttribute || !getProp<string|number>(this.__data, idAttribute)) {
       vals[key] = this.assign(key, data[key]);
     }
   }
