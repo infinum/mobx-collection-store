@@ -1483,4 +1483,65 @@ describe('MobX Collection Store', () => {
       });
     });
   });
+
+  describe('editing reference arrays', () => {
+    it('should be possible to push to a ref array', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        public static refs = {bar: 'bar'};
+        public id: number;
+        public bar: Array<Bar>;
+        public barId: Array<number>;
+      }
+
+      class Bar extends Model {
+        public static type = 'bar';
+        public id: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo, Bar];
+      }
+
+      const store = new Store();
+
+      const foo = store.add<Foo>({id: 1, bar: [{id: 1}, {id: 2}]}, 'foo');
+
+      expect(foo.bar).to.have.length(2);
+
+      const bar3 = store.add<Bar>({id: 3}, 'bar');
+
+      foo.bar.push(bar3);
+
+      expect(foo.bar).to.have.length(3);
+      expect(foo.barId).to.have.length(3);
+      expect(foo.barId[2]).to.equal(3);
+      expect(foo.bar[2].id).to.equal(3);
+
+      const bar4 = store.add<Bar>({id: 4}, 'bar');
+
+      foo.barId.push(4);
+
+      expect(foo.bar).to.have.length(4);
+      expect(foo.barId).to.have.length(4);
+      expect(foo.bar[3]).to.equal(bar4);
+
+      foo.bar['remove'](bar4);
+
+      expect(foo.bar).to.have.length(3);
+      expect(foo.barId).to.have.length(3);
+      expect(foo.barId[2]).to.equal(3);
+
+      foo.barId['remove'](3);
+
+      expect(foo.bar).to.have.length(2);
+
+      foo.bar.push({} as Bar);
+
+      expect(foo.bar).to.have.length(3);
+      expect(foo.barId).to.have.length(3);
+      expect(foo.barId[2]).to.equal(5);
+      expect(foo.bar[2].id).to.equal(5);
+    });
+  });
 });

@@ -157,11 +157,11 @@ var Model = (function () {
             val = this.__setRef(key, value);
         }
         else {
-            var action_1 = key in this.__data ? patchType_1.default.REPLACE : patchType_1.default.ADD;
+            var patchAction = key in this.__data ? patchType_1.default.REPLACE : patchType_1.default.ADD;
             var oldValue = this.__data[key];
             // TODO: Could be optimised based on __initializedProps?
             mobx_1.extendObservable(this.__data, (_a = {}, _a[key] = value, _a));
-            this.__triggerChange(action_1, key, value, oldValue);
+            this.__triggerChange(patchAction, key, value, oldValue);
         }
         this.__ensureGetter(key);
         return val;
@@ -459,11 +459,11 @@ var Model = (function () {
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
         var getRef = function () { return _this.__collection ? (_this.__getReferencedModels(ref) || undefined) : undefined; };
         var oldValue = getRef();
-        var action = oldValue === undefined ? patchType_1.default.ADD : patchType_1.default.REPLACE;
+        var patchAction = oldValue === undefined ? patchType_1.default.ADD : patchType_1.default.REPLACE;
         // TODO: Could be optimised based on __initializedProps?
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
         var newValue = getRef();
-        this.__triggerChange(newValue === undefined ? patchType_1.default.REMOVE : action, ref, newValue, oldValue);
+        this.__triggerChange(newValue === undefined ? patchType_1.default.REMOVE : patchAction, ref, newValue, oldValue);
         // Handle the case when the ref is unsetted
         if (!refs) {
             return null;
