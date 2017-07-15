@@ -40,6 +40,7 @@ exports.first = first;
  * @memberOf Collection
  */
 function matchModel(item, type, id) {
+    /* istanbul ignore next */
     return getType(item) === type && item[item.static.idAttribute] === id;
 }
 exports.matchModel = matchModel;
@@ -72,8 +73,10 @@ function assign(target) {
         args[_i - 1] = arguments[_i];
     }
     args.forEach(function (nextSource) {
+        /* istanbul ignore else */
         if (nextSource != null) {
             for (var nextKey in nextSource) {
+                /* istanbul ignore else */
                 if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
                     target[nextKey] = nextSource[nextKey];
                 }

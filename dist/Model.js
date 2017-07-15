@@ -179,6 +179,7 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.assignRef = function (key, value, type) {
+        /* istanbul ignore next */
         if (typeof this.static.refs[key] === 'object') {
             throw new Error(key + ' is an external reference');
         }
@@ -250,6 +251,7 @@ var Model = (function () {
      */
     Model.prototype.applyPatch = function (patch) {
         var field = patch.path.slice(1);
+        /* istanbul ignore else */
         if (patch.op === patchType_1.default.ADD || patch.op === patchType_1.default.REPLACE) {
             this.assign(field, patch.value);
         }
@@ -384,6 +386,7 @@ var Model = (function () {
      * @memberOf Model
      */
     Model.prototype.__getValueRefs = function (type, item) {
+        /* istanbul ignore next */
         if (!item) {
             return null;
         }
@@ -408,6 +411,7 @@ var Model = (function () {
      */
     Model.prototype.__partialRefUpdate = function (ref, change) {
         var type = this.__refs[ref];
+        /* istanbul ignore else */
         if (change.type === 'splice') {
             var added = change.added.map(this.__getValueRefs.bind(this, type));
             (_a = this.__data[ref]).splice.apply(_a, [change.index, change.removedCount].concat(added));
@@ -418,6 +422,7 @@ var Model = (function () {
             this.__data[ref][change.index] = newValue;
             return null;
         }
+        /* istanbul ignore next */
         return change;
         var _a;
     };

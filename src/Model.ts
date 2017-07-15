@@ -264,6 +264,8 @@ export class Model implements IModel {
    * @memberOf Model
    */
   @action public assignRef<T>(key: string, value: T, type?: IType): T|IModel|Array<IModel> {
+
+    /* istanbul ignore next */
     if (typeof this.static.refs[key] === 'object') {
       throw new Error(key + ' is an external reference');
     }
@@ -338,6 +340,8 @@ export class Model implements IModel {
    */
   public applyPatch(patch: IPatch): void {
     const field = patch.path.slice(1);
+
+    /* istanbul ignore else */
     if (patch.op === patchType.ADD || patch.op === patchType.REPLACE) {
       this.assign(field, patch.value);
     } else if (patch.op === patchType.REMOVE) {
@@ -480,9 +484,12 @@ export class Model implements IModel {
    * @memberOf Model
    */
   private __getValueRefs(type: IType, item: IModel | object): number|string {
+
+    /* istanbul ignore next */
     if (!item) { // Handle case when the ref is unsetted
       return null;
     }
+
     if (typeof item === 'object') {
       const model = this.__collection.add(item, type);
       if (getType(model) !== type) {
@@ -505,6 +512,8 @@ export class Model implements IModel {
    */
   @action private __partialRefUpdate(ref: IType, change: IChange): IChange {
     const type = this.__refs[ref];
+
+    /* istanbul ignore else */
     if (change.type === 'splice') {
       const added = change.added.map(this.__getValueRefs.bind(this, type));
       this.__data[ref].splice(change.index, change.removedCount, ...added);
@@ -514,6 +523,8 @@ export class Model implements IModel {
       this.__data[ref][change.index] = newValue;
       return null;
     }
+
+    /* istanbul ignore next */
     return change;
   }
 

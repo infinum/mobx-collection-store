@@ -92,6 +92,7 @@ export class Collection implements ICollection {
 
         const existing = this.__modelHash[modelType] && this.__modelHash[modelType][item[type.idAttribute]];
 
+        /* istanbul ignore if */
         if (existing) {
           // tslint:disable-next-line:no-string-literal
           existing['__silent'] = true;
@@ -274,6 +275,7 @@ export class Collection implements ICollection {
     this.__patchListeners.push(listener);
 
     return () => {
+      /* istanbul ignore next */
       this.__patchListeners = this.__patchListeners.filter((item) => item !== listener);
     };
   }

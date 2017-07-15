@@ -42,6 +42,8 @@ export function first(arr: Array<any>): any {
  * @memberOf Collection
  */
 export function matchModel(item: IModel, type: IType, id: string|number): boolean {
+
+  /* istanbul ignore next */
   return getType(item) === type && item[item.static.idAttribute] === id;
 }
 
@@ -70,8 +72,12 @@ export function getType(instance: IModel): IType {
  */
 export function assign(target: object, ...args: Array<object>) {
   args.forEach((nextSource) => {
+
+    /* istanbul ignore else */
     if (nextSource != null) {
       for (const nextKey in nextSource) {
+
+        /* istanbul ignore else */
         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
           target[nextKey] = nextSource[nextKey];
         }

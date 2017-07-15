@@ -72,6 +72,7 @@ var Collection = (function () {
             var modelType = item[consts_1.TYPE_PROP];
             var type = _this.__getModel(modelType);
             var existing = _this.__modelHash[modelType] && _this.__modelHash[modelType][item[type.idAttribute]];
+            /* istanbul ignore if */
             if (existing) {
                 // tslint:disable-next-line:no-string-literal
                 existing['__silent'] = true;
@@ -236,6 +237,7 @@ var Collection = (function () {
         var _this = this;
         this.__patchListeners.push(listener);
         return function () {
+            /* istanbul ignore next */
             _this.__patchListeners = _this.__patchListeners.filter(function (item) { return item !== listener; });
         };
     };
