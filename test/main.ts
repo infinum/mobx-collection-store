@@ -105,6 +105,14 @@ describe('MobX Collection Store', () => {
     const model5 = new FooModel({bar: 654}, {id: 456, type: 'bar'});
     expect(model5.getRecordId()).to.equal(456);
     expect(model5.getRecordType()).to.equal('bar');
+
+    const model6 = collection.add<FooModel>({bar: 987}, {id: 789, type: 'foo'});
+    expect(model6.getRecordId()).to.equal(789);
+    expect(model6.getRecordType()).to.equal('foo');
+
+    const model7 = collection.add<FooModel>({bar: 987}, {id: 0, type: 'baz'});
+    expect(model7.getRecordId()).to.equal(0);
+    expect(model7.getRecordType()).to.equal('baz');
   });
 
   it('should support enums for types', () => {

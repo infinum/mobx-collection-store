@@ -307,7 +307,7 @@ var Collection = (function () {
      *
      * @private
      * @param {IModel|Object} model - Model data
-     * @param {IType} [type] - Model type
+     * @param {IOpts} [type] - Model type
      * @returns {IModel} - Model instance
      *
      * @memberOf Collection
@@ -318,8 +318,9 @@ var Collection = (function () {
             return model;
         }
         else {
-            var TypeModel = this.__getModel(type);
-            return new TypeModel(model, this);
+            var typeName = typeof type === 'object' ? type.type : type;
+            var TypeModel = this.__getModel(typeName);
+            return new TypeModel(model, type, this);
         }
     };
     /**

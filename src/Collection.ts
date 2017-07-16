@@ -9,6 +9,7 @@ import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
 import {Model} from './Model';
@@ -143,16 +144,16 @@ export class Collection implements ICollection {
    *
    * @template T
    * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported
-   * @argument {IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)
+   * @argument {IOpts} [type] - The model type to be imported (not relevant if the model is an instance of Model)
    * @returns {IModel|Array<IModel>|T|Array<T>} Model instance(s)
    *
    * @memberOf Collection
    */
   public add<T extends IModel>(model: Array<IModel>): Array<T>;
   public add<T extends IModel>(model: IModel): T;
-  public add<T extends IModel>(model: Array<object>, type?: IType): Array<T>;
-  public add<T extends IModel>(model: object, type?: IType): T;
-  @action public add(model: any, type?: IType) {
+  public add<T extends IModel>(model: Array<object>, type?: IOpts): Array<T>;
+  public add<T extends IModel>(model: object, type?: IOpts): T;
+  @action public add(model: any, type?: IOpts) {
     if (model instanceof Array) {
       return model.map((item: IModel|object) => this.add(item, type));
     }
@@ -349,18 +350,19 @@ export class Collection implements ICollection {
    *
    * @private
    * @param {IModel|Object} model - Model data
-   * @param {IType} [type] - Model type
+   * @param {IOpts} [type] - Model type
    * @returns {IModel} - Model instance
    *
    * @memberOf Collection
    */
-  private __getModelInstance(model: IModel|object, type?: IType): IModel {
+  private __getModelInstance(model: IModel|object, type?: IOpts): IModel {
     if (model instanceof Model) {
       model.__collection = this;
       return model;
     } else {
-      const TypeModel: IModelConstructor = this.__getModel(type);
-      return new TypeModel(model, this);
+      const typeName: IType = typeof type === 'object' ? type.type : type;
+      const TypeModel: IModelConstructor = this.__getModel(typeName);
+      return new TypeModel(model, type, this);
     }
   }
 

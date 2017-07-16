@@ -2,6 +2,7 @@ import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
 /**
@@ -72,15 +73,15 @@ export declare class Collection implements ICollection {
      *
      * @template T
      * @argument {object|IModel|Array<object>|Array<IModel>} model - The model or array of models to be imported
-     * @argument {IType} [type] - The model type to be imported (not relevant if the model is an instance of Model)
+     * @argument {IOpts} [type] - The model type to be imported (not relevant if the model is an instance of Model)
      * @returns {IModel|Array<IModel>|T|Array<T>} Model instance(s)
      *
      * @memberOf Collection
      */
     add<T extends IModel>(model: Array<IModel>): Array<T>;
     add<T extends IModel>(model: IModel): T;
-    add<T extends IModel>(model: Array<object>, type?: IType): Array<T>;
-    add<T extends IModel>(model: object, type?: IType): T;
+    add<T extends IModel>(model: Array<object>, type?: IOpts): Array<T>;
+    add<T extends IModel>(model: object, type?: IOpts): T;
     /**
      * Find a specific model
      *
@@ -194,7 +195,7 @@ export declare class Collection implements ICollection {
      *
      * @private
      * @param {IModel|Object} model - Model data
-     * @param {IType} [type] - Model type
+     * @param {IOpts} [type] - Model type
      * @returns {IModel} - Model instance
      *
      * @memberOf Collection
