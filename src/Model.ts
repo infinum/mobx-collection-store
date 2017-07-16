@@ -11,10 +11,12 @@ import IDictionary from './interfaces/IDictionary';
 import IExternalRef from './interfaces/IExternalRef';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 
+import {Collection} from './Collection';
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
 import {assign, first, getProp, getType, mapItems, setProp} from './utils';
 
@@ -176,24 +178,43 @@ export class Model implements IModel {
    * Creates an instance of Model.
    *
    * @param {Object} initialData
-   * @param {ICollection} [collection]
+   * @param {Collection} [collection]
    *
    * @memberOf Model
    */
-  constructor(initialData: object = {}, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void) {
+  constructor(initialData?: object, opts?: IOpts, collection?: Collection);
+  constructor(initialData?: object, collection?: Collection);
+  constructor(initialData: object = {}, opts?: IOpts|Collection, collection?: Collection) {
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
+    let idSet = false;
+    let collectionInstance = collection;
     const idAttribute = this.static.idAttribute;
-    this.__ensureId(data, collection);
 
-    this.update(setProp({}, idAttribute, getProp<string|number>(data, idAttribute)));
+    if (opts instanceof Collection) {
+      collectionInstance = opts;
+    } else if (typeof opts === 'string') {
+      this.update(setProp({}, this.static.typeAttribute, opts));
+    } else if (opts && typeof opts === 'object') {
+      if (opts.type) {
+        this.update(setProp({}, this.static.typeAttribute, opts.type));
+      }
+      if (opts.id || opts.id === 0) {
+        this.update(setProp({}, idAttribute, opts.id));
+        idSet = true;
+      }
+    }
+
+    if (!idSet) {
+      this.__ensureId(data, collectionInstance);
+      this.update(setProp({}, idAttribute, getProp<string|number>(data, idAttribute)));
+    }
 
     // No need for it to be observable
-    this.__collection = collection;
+    this.__collection = collectionInstance;
 
     this.__initRefGetters();
     this.update(data);
-    this.__patchListeners.push(listener);
     this.__silent = false;
   }
 
@@ -348,6 +369,14 @@ export class Model implements IModel {
     } else if (patch.op === patchType.REMOVE) {
       this.unassign(field);
     }
+  }
+
+  public getRecordId(): number|string {
+    return getProp<number|string>(this, this.static.idAttribute);
+  }
+
+  public getRecordType(): IType {
+    return getProp<IType>(this, this.static.typeAttribute) || this.static.type;
   }
 
   /**

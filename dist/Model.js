@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
 var patchType_1 = require("./enums/patchType");
+var Collection_1 = require("./Collection");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
 /**
@@ -17,15 +18,7 @@ var utils_1 = require("./utils");
  * @implements {IModel}
  */
 var Model = (function () {
-    /**
-     * Creates an instance of Model.
-     *
-     * @param {Object} initialData
-     * @param {ICollection} [collection]
-     *
-     * @memberOf Model
-     */
-    function Model(initialData, collection, listener) {
+    function Model(initialData, opts, collection) {
         if (initialData === void 0) { initialData = {}; }
         /**
          * Collection the model belongs to
@@ -74,14 +67,32 @@ var Model = (function () {
          */
         this.__silent = true;
         var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
+        var idSet = false;
+        var collectionInstance = collection;
         var idAttribute = this.static.idAttribute;
-        this.__ensureId(data, collection);
-        this.update(utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute)));
+        if (opts instanceof Collection_1.Collection) {
+            collectionInstance = opts;
+        }
+        else if (typeof opts === 'string') {
+            this.update(utils_1.setProp({}, this.static.typeAttribute, opts));
+        }
+        else if (opts && typeof opts === 'object') {
+            if (opts.type) {
+                this.update(utils_1.setProp({}, this.static.typeAttribute, opts.type));
+            }
+            if (opts.id || opts.id === 0) {
+                this.update(utils_1.setProp({}, idAttribute, opts.id));
+                idSet = true;
+            }
+        }
+        if (!idSet) {
+            this.__ensureId(data, collectionInstance);
+            this.update(utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute)));
+        }
         // No need for it to be observable
-        this.__collection = collection;
+        this.__collection = collectionInstance;
         this.__initRefGetters();
         this.update(data);
-        this.__patchListeners.push(listener);
         this.__silent = false;
     }
     /**
@@ -258,6 +269,12 @@ var Model = (function () {
         else if (patch.op === patchType_1.default.REMOVE) {
             this.unassign(field);
         }
+    };
+    Model.prototype.getRecordId = function () {
+        return utils_1.getProp(this, this.static.idAttribute);
+    };
+    Model.prototype.getRecordType = function () {
+        return utils_1.getProp(this, this.static.typeAttribute) || this.static.type;
     };
     /**
      * Ensure the new model has a valid id

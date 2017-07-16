@@ -1,9 +1,11 @@
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
+import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
+import { Collection } from './Collection';
 /**
  * MobX Collection Model class
  *
@@ -138,11 +140,12 @@ export declare class Model implements IModel {
      * Creates an instance of Model.
      *
      * @param {Object} initialData
-     * @param {ICollection} [collection]
+     * @param {Collection} [collection]
      *
      * @memberOf Model
      */
-    constructor(initialData?: object, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void);
+    constructor(initialData?: object, opts?: IOpts, collection?: Collection);
+    constructor(initialData?: object, collection?: Collection);
     /**
      * Static model class
      *
@@ -219,6 +222,8 @@ export declare class Model implements IModel {
      * @memberof Model
      */
     applyPatch(patch: IPatch): void;
+    getRecordId(): number | string;
+    getRecordType(): IType;
     /**
      * Ensure the new model has a valid id
      *

@@ -1,7 +1,7 @@
 import ICollection from './ICollection';
 import IDictionary from './IDictionary';
 import IModel from './IModel';
-import IPatch from './IPatch';
+import IOpts from './IOpts';
 import IType from './IType';
 /**
  * MobX Collection Model constructor interface
@@ -44,7 +44,8 @@ interface IModelConstructor {
      * @memberOf IModelConstructor
      */
     enableAutoId: boolean;
-    new (initialData?: object, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void): IModel;
+    new (initialData?: object, opts?: IOpts, collection?: ICollection): IModel;
+    new (initialData?: object, collection?: ICollection): IModel;
     /**
      * Function used for generating the autoincrement IDs
      *

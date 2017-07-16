@@ -87,12 +87,24 @@ describe('MobX Collection Store', () => {
     expect(model.bar).to.equal(0);
     expect(model.static.type).to.equal('foo');
 
-    const model2 = new FooModel({
+    const model2 = collection.add<FooModel>({
       bar: 1,
-    });
+    }, 'foo');
 
     expect(model2.bar).to.equal(1);
     expect(model2.test.id).to.not.be.an('undefined');
+    expect(model2.test.id).to.not.equal(model.test.id);
+
+    const model3 = collection.find('foo', model2.test.id);
+    expect(model3).to.equal(model2);
+
+    const model4 = new FooModel({bar: 321}, {id: 123});
+    expect(model4.getRecordId()).to.equal(123);
+    expect(model4.getRecordType()).to.equal('foo');
+
+    const model5 = new FooModel({bar: 654}, {id: 456, type: 'bar'});
+    expect(model5.getRecordId()).to.equal(456);
+    expect(model5.getRecordType()).to.equal('bar');
   });
 
   it('should support enums for types', () => {

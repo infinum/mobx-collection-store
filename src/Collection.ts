@@ -91,7 +91,7 @@ export class Collection implements ICollection {
         const type = this.__getModel(modelType);
 
         const existing = this.__modelHash[modelType] &&
-          this.__modelHash[modelType][getProp<string>(item, type.idAttribute)];
+          this.__modelHash[modelType][getProp<string|number>(item, type.idAttribute)];
 
         /* istanbul ignore if */
         if (existing) {

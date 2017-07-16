@@ -1,6 +1,7 @@
 import ICollection from './ICollection';
 import IDictionary from './IDictionary';
 import IModel from './IModel';
+import IOpts from './IOpts';
 import IPatch from './IPatch';
 import IType from './IType';
 
@@ -51,7 +52,8 @@ interface IModelConstructor {
    */
   enableAutoId: boolean;
 
-  new (initialData?: object, collection?: ICollection, listener?: (data: IPatch, model: IModel) => void): IModel;
+  new (initialData?: object, opts?: IOpts, collection?: ICollection): IModel;
+  new (initialData?: object, collection?: ICollection): IModel;
 
   /**
    * Function used for generating the autoincrement IDs
