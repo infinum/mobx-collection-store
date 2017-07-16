@@ -52,6 +52,16 @@ interface IModelConstructor {
    */
   enableAutoId: boolean;
 
+  /**
+   * Autoincrement counter used for the builtin function
+   *
+   * @public
+   * @static
+   *
+   * @memberOf Model
+   */
+  autoincrementValue: any;
+
   new (initialData?: object, opts?: IOpts, collection?: ICollection): IModel;
   new (initialData?: object, collection?: ICollection): IModel;
 

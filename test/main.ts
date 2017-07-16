@@ -11,6 +11,10 @@ import {Collection, IPatch, Model} from '../src';
 import {assign} from '../src/utils';
 
 describe('MobX Collection Store', () => {
+  beforeEach(() => {
+    Model.autoincrementValue = 1;
+  });
+
   it('should do the basic init', () => {
     const collection = new Collection();
     expect(collection.find).to.be.a('function');
@@ -113,6 +117,10 @@ describe('MobX Collection Store', () => {
     const model7 = collection.add<FooModel>({bar: 987}, {id: 0, type: 'baz'});
     expect(model7.getRecordId()).to.equal(0);
     expect(model7.getRecordType()).to.equal('baz');
+
+    const model8 = collection.add<FooModel>({bar: 987}, {type: 'baz'});
+    expect(model8.getRecordId()).to.not.be.an('undefined');
+    expect(model8.getRecordType()).to.equal('baz');
   });
 
   it('should support enums for types', () => {
@@ -532,7 +540,7 @@ describe('MobX Collection Store', () => {
 
     class Baz extends Model {
       public static type = 'baz';
-      public static autoId() {
+      public static autoIdFunction() {
         return Math.random();
       }
       public id: number;
@@ -552,16 +560,18 @@ describe('MobX Collection Store', () => {
     const foo4 = collection.add<Foo>({myID: 4, bar: 1}, 'foo');
     const foo5 = collection.add<Foo>({bar: 1}, 'foo');
 
-    expect(collection.foo.length).to.equal(6);
+    expect(foo1.myID).to.equal(1);
     expect(foo5.myID).to.equal(5);
+    expect(foo4.myID).to.equal(4);
     expect(foo10.myID).to.equal(10);
+    expect(collection.foo.length).to.equal(6);
 
     const bar5 = collection.add<Bar>({id: 5}, 'bar');
-    expect(bar5.id).to.equal(5);
+    expect(bar5.getRecordId()).to.equal(5);
     expect(() => collection.add<Bar>({foo: 1}, 'bar')).to.throw();
 
     const baz1 = collection.add<Baz>({}, 'baz');
-    expect(baz1.id).to.be.within(0, 1);
+    expect(baz1.getRecordId()).to.be.within(0, 1);
   });
 
   it('should support typeAttribute', () => {

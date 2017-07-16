@@ -85,6 +85,16 @@ export class Model implements IModel {
   public static enableAutoId: boolean = true;
 
   /**
+   * Autoincrement counter used for the builtin function
+   *
+   * @public
+   * @static
+   *
+   * @memberOf Model
+   */
+  public static autoincrementValue = 1;
+
+  /**
    * Function that can process the received data (e.g. from an API) before
    * it's transformed into a model
    *
@@ -111,16 +121,6 @@ export class Model implements IModel {
     this.autoincrementValue++;
     return id;
   }
-
-  /**
-   * Autoincrement counter used for the builtin function
-   *
-   * @private
-   * @static
-   *
-   * @memberOf Model
-   */
-  private static autoincrementValue = 1;
 
   /**
    * Collection the model belongs to
@@ -187,27 +187,27 @@ export class Model implements IModel {
   constructor(initialData: object = {}, opts?: IOpts|Collection, collection?: Collection) {
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
-    let idSet = false;
     let collectionInstance = collection;
     const idAttribute = this.static.idAttribute;
+    let idSet = false;
 
     if (opts instanceof Collection) {
       collectionInstance = opts;
-    } else if (typeof opts === 'string') {
-      this.update(setProp({}, this.static.typeAttribute, opts));
+    } else if (typeof opts === 'string' || typeof opts === 'number') {
+      setProp(data, this.static.typeAttribute, opts);
     } else if (opts && typeof opts === 'object') {
       if (opts.type) {
-        this.update(setProp({}, this.static.typeAttribute, opts.type));
+        setProp(data, this.static.typeAttribute, opts.type);
       }
       if (opts.id || opts.id === 0) {
-        this.update(setProp({}, idAttribute, opts.id));
+        setProp(data, idAttribute, opts.id);
         idSet = true;
       }
     }
 
     if (!idSet) {
       this.__ensureId(data, collectionInstance);
-      this.update(setProp({}, idAttribute, getProp<string|number>(data, idAttribute)));
+      setProp({}, idAttribute, getProp<string|number>(data, idAttribute));
     }
 
     // No need for it to be observable

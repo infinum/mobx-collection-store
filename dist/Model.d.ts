@@ -62,6 +62,15 @@ export declare class Model implements IModel {
      */
     static enableAutoId: boolean;
     /**
+     * Autoincrement counter used for the builtin function
+     *
+     * @public
+     * @static
+     *
+     * @memberOf Model
+     */
+    static autoincrementValue: number;
+    /**
      * Function that can process the received data (e.g. from an API) before
      * it's transformed into a model
      *
@@ -81,15 +90,6 @@ export declare class Model implements IModel {
      * @memberOf Model
      */
     static autoIdFunction(): number | string;
-    /**
-     * Autoincrement counter used for the builtin function
-     *
-     * @private
-     * @static
-     *
-     * @memberOf Model
-     */
-    private static autoincrementValue;
     /**
      * Collection the model belongs to
      *

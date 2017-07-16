@@ -67,27 +67,27 @@ var Model = (function () {
          */
         this.__silent = true;
         var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
-        var idSet = false;
         var collectionInstance = collection;
         var idAttribute = this.static.idAttribute;
+        var idSet = false;
         if (opts instanceof Collection_1.Collection) {
             collectionInstance = opts;
         }
-        else if (typeof opts === 'string') {
-            this.update(utils_1.setProp({}, this.static.typeAttribute, opts));
+        else if (typeof opts === 'string' || typeof opts === 'number') {
+            utils_1.setProp(data, this.static.typeAttribute, opts);
         }
         else if (opts && typeof opts === 'object') {
             if (opts.type) {
-                this.update(utils_1.setProp({}, this.static.typeAttribute, opts.type));
+                utils_1.setProp(data, this.static.typeAttribute, opts.type);
             }
             if (opts.id || opts.id === 0) {
-                this.update(utils_1.setProp({}, idAttribute, opts.id));
+                utils_1.setProp(data, idAttribute, opts.id);
                 idSet = true;
             }
         }
         if (!idSet) {
             this.__ensureId(data, collectionInstance);
-            this.update(utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute)));
+            utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute));
         }
         // No need for it to be observable
         this.__collection = collectionInstance;
@@ -612,7 +612,7 @@ var Model = (function () {
     /**
      * Autoincrement counter used for the builtin function
      *
-     * @private
+     * @public
      * @static
      *
      * @memberOf Model
