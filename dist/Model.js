@@ -342,7 +342,7 @@ var Model = (function () {
     Model.prototype.__getExternalRef = function (ref) {
         var _this = this;
         return mobx_1.computed(function () {
-            return _this.__collection.findAll(ref.model)
+            return !_this.__collection ? [] : _this.__collection.findAll(ref.model)
                 .filter(function (model) {
                 var prop = model[ref.property];
                 if (prop instanceof Array || mobx_1.isObservableArray(prop)) {

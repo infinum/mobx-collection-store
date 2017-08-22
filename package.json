@@ -56,18 +56,17 @@
     ]
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.13",
-    "chai": "^4.1.0",
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^8.0.24",
+    "chai": "^4.1.1",
     "husky": "^0.14.3",
-    "mobx": "^3.2.1",
-    "mocha": "^3.4.2",
+    "mobx": "^3.2.2",
+    "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
-    "nyc": "^11.0.3",
-    "ts-node": "^3.2.0",
-    "tslint": "^5.5.0",
-    "typedoc": "^0.7.1",
-    "typescript": "^2.4.1"
+    "nyc": "^11.1.0",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.6.0",
+    "typescript": "^2.4.2"
   },
   "peerDependencies": {
     "mobx": "^3.0.0"
