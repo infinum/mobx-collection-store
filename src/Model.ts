@@ -445,7 +445,7 @@ export class Model implements IModel {
    */
   private __getExternalRef(ref: IExternalRef): IComputedValue<IModel|Array<IModel>> {
     return computed(() => {
-      return this.__collection.findAll(ref.model)
+      return !this.__collection ? [] : this.__collection.findAll(ref.model)
         .filter((model: IModel) => {
           const prop = model[ref.property];
           if (prop instanceof Array || isObservableArray(prop)) {
