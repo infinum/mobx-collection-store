@@ -17,7 +17,7 @@ interface IModelConstructor {
      */
     type: IType;
     /**
-     * Atribute name for the type attribute
+     * Attribute name for the type attribute
      *
      * @type {string}
      * @memberOf IModelConstructor

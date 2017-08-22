@@ -22,7 +22,7 @@ export declare function first(arr: Array<any>): any;
  * Match a model to defined parameters
  *
  * @private
- * @param {IModel} item - Model that's beeing matched
+ * @param {IModel} item - Model that's being matched
  * @param {IType} type - Model type to match
  * @param {(string|number)} id - Model ID to match
  * @returns {boolean} True if the model matches the parameters

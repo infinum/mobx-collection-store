@@ -460,7 +460,7 @@ var Model = (function () {
         var getRef = function () { return _this.__collection ? (_this.__getReferencedModels(ref) || undefined) : undefined; };
         var oldValue = getRef();
         var patchAction = oldValue === undefined ? patchType_1.default.ADD : patchType_1.default.REPLACE;
-        // TODO: Could be optimised based on __initializedProps?
+        // TODO: Could be optimized based on __initializedProps?
         mobx_1.extendObservable(this.__data, (_a = {}, _a[ref] = refs, _a));
         var newValue = getRef();
         this.__triggerChange(newValue === undefined ? patchType_1.default.REMOVE : patchAction, ref, newValue, oldValue);
@@ -569,7 +569,7 @@ var Model = (function () {
      */
     Model.type = consts_1.DEFAULT_TYPE;
     /**
-     * Atribute name for the type attribute
+     * Attribute name for the type attribute
      *
      * @static
      * @type {string}

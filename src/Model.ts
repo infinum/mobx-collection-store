@@ -65,7 +65,7 @@ export class Model implements IModel {
   public static type: IType = DEFAULT_TYPE;
 
   /**
-   * Atribute name for the type attribute
+   * Attribute name for the type attribute
    *
    * @static
    * @type {string}
@@ -560,7 +560,7 @@ export class Model implements IModel {
     const oldValue = getRef();
     const patchAction = oldValue === undefined ? patchType.ADD : patchType.REPLACE;
 
-    // TODO: Could be optimised based on __initializedProps?
+    // TODO: Could be optimized based on __initializedProps?
     extendObservable(this.__data, {[ref]: refs});
 
     const newValue = getRef();

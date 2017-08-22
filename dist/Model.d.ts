@@ -44,7 +44,7 @@ export declare class Model implements IModel {
      */
     static type: IType;
     /**
-     * Atribute name for the type attribute
+     * Attribute name for the type attribute
      *
      * @static
      * @type {string}

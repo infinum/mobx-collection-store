@@ -13,7 +13,7 @@ class Person extends Model {
     });
   }
 
-  // Cleaner synthax if you're using decorators
+  // Cleaner syntax if you're using decorators
   // @computed get fullName() {
   //   return `${this.attrs.firstName} ${this.attrs.lastName}`;
   // }

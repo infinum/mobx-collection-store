@@ -308,7 +308,7 @@ describe('MobX Collection Store', () => {
     expect(model2.foo).to.equal(4);
   });
 
-  it('should support array refereces', action(() => {
+  it('should support array references', action(() => {
     class FooModel extends Model {
       public static type = 'foo';
 
@@ -762,7 +762,7 @@ describe('MobX Collection Store', () => {
     expect(model.foo).to.equal(3);
   });
 
-  it('should suport updating the array items in the reference', action(() => {
+  it('should support updating the array items in the reference', action(() => {
     class Foo extends Model {
       public static type = 'foo';
       public static refs = {bar: 'foo'};
