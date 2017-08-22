@@ -241,12 +241,12 @@ export class Model implements IModel {
     if (isRef) {
       val = this.__setRef(key, value);
     } else {
-      const action = key in this.__data ? patchType.REPLACE : patchType.ADD;
+      const patchAction = key in this.__data ? patchType.REPLACE : patchType.ADD;
       const oldValue = this.__data[key];
       // TODO: Could be optimised based on __initializedProps?
       extendObservable(this.__data, {[key]: value});
 
-      this.__triggerChange(action, key, value, oldValue);
+      this.__triggerChange(patchAction, key, value, oldValue);
     }
     this.__ensureGetter(key);
     return val;
@@ -558,13 +558,13 @@ export class Model implements IModel {
     const getRef = () => this.__collection ? (this.__getReferencedModels(ref) || undefined) : undefined;
 
     const oldValue = getRef();
-    const action = oldValue === undefined ? patchType.ADD : patchType.REPLACE;
+    const patchAction = oldValue === undefined ? patchType.ADD : patchType.REPLACE;
 
     // TODO: Could be optimised based on __initializedProps?
     extendObservable(this.__data, {[ref]: refs});
 
     const newValue = getRef();
-    this.__triggerChange(newValue === undefined ? patchType.REMOVE : action, ref, newValue, oldValue);
+    this.__triggerChange(newValue === undefined ? patchType.REMOVE : patchAction, ref, newValue, oldValue);
 
     // Handle the case when the ref is unsetted
     if (!refs) {
