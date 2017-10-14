@@ -5,6 +5,7 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
+import { MixinTarget } from './MixinTarget';
 /**
  * MobX Collection class
  *
@@ -12,7 +13,7 @@ import IType from './interfaces/IType';
  * @class Collection
  * @implements {ICollection}
  */
-export declare class Collection implements ICollection {
+export declare class Collection extends MixinTarget implements ICollection {
     /**
      * List of custom model types
      *

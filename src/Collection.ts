@@ -12,6 +12,7 @@ import IModelConstructor from './interfaces/IModelConstructor';
 import IOpts from './interfaces/IOpts';
 import IPatch from './interfaces/IPatch';
 import IType from './interfaces/IType';
+import {MixinTarget} from './MixinTarget';
 import {Model} from './Model';
 
 import {DEFAULT_TYPE, TYPE_PROP} from './consts';
@@ -24,7 +25,7 @@ import {assign, first, getProp, getType, matchModel} from './utils';
  * @class Collection
  * @implements {ICollection}
  */
-export class Collection implements ICollection {
+export class Collection extends MixinTarget implements ICollection {
 
   /**
    * List of custom model types
@@ -62,6 +63,7 @@ export class Collection implements ICollection {
    * @memberOf Collection
    */
   constructor(data: Array<object> = []) {
+    super();
     this.insert(data);
 
     const computedProps: IDictionary = {};

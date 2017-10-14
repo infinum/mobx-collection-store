@@ -1615,4 +1615,32 @@ describe('MobX Collection Store', () => {
       expect(foo.bar[2].id).to.equal(5);
     });
   });
+
+  describe('Mixins', () => {
+    class GetType extends Model {
+      public getType(): string|number {
+        return this.getRecordType();
+      }
+    }
+    class GetID extends Model {
+      public get id(): string|number {
+        return this.getRecordId();
+      }
+    }
+
+    class CustomModel extends Model {
+      public static type = 'foo';
+      public static mixins = [GetType, GetID];
+    }
+
+    interface IWithTypes {
+      new(): CustomModel & GetType & GetID;
+    }
+
+    const MyModel = CustomModel as IWithTypes & typeof CustomModel;
+
+    const model = new MyModel();
+    expect(model.getType()).to.equal('foo');
+    expect(model.id).to.not.be.an('undefined');
+  });
 });

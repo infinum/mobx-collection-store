@@ -18,6 +18,7 @@ import IType from './interfaces/IType';
 
 import {Collection} from './Collection';
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
+import {MixinTarget} from './MixinTarget';
 import {assign, first, getProp, getType, mapItems, setProp} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
@@ -28,7 +29,7 @@ type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
  * @class Model
  * @implements {IModel}
  */
-export class Model implements IModel {
+export class Model extends MixinTarget implements IModel {
 
   /**
    * The attribute that should be used as the unique identifier
@@ -185,6 +186,7 @@ export class Model implements IModel {
   constructor(initialData?: object, opts?: IOpts, collection?: Collection);
   constructor(initialData?: object, collection?: Collection);
   constructor(initialData: object = {}, opts?: IOpts|Collection, collection?: Collection) {
+    super();
     const data = assign({}, this.static.defaults, this.static.preprocess(initialData));
 
     let collectionInstance = collection;

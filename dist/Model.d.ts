@@ -6,13 +6,14 @@ import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 import { Collection } from './Collection';
+import { MixinTarget } from './MixinTarget';
 /**
  * MobX Collection Model class
  *
  * @class Model
  * @implements {IModel}
  */
-export declare class Model implements IModel {
+export declare class Model extends MixinTarget implements IModel {
     /**
      * The attribute that should be used as the unique identifier
      *

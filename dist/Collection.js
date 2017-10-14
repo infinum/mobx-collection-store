@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,6 +18,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = require("mobx");
 var patchType_1 = require("./enums/patchType");
+var MixinTarget_1 = require("./MixinTarget");
 var Model_1 = require("./Model");
 var consts_1 = require("./consts");
 var utils_1 = require("./utils");
@@ -18,7 +29,8 @@ var utils_1 = require("./utils");
  * @class Collection
  * @implements {ICollection}
  */
-var Collection = (function () {
+var Collection = (function (_super) {
+    __extends(Collection, _super);
     /**
      * Creates an instance of Collection.
      *
@@ -28,6 +40,7 @@ var Collection = (function () {
      */
     function Collection(data) {
         if (data === void 0) { data = []; }
+        var _this = _super.call(this) || this;
         /**
          * Internal data storage
          *
@@ -35,22 +48,23 @@ var Collection = (function () {
          * @type {IObservableArray<IModel>}
          * @memberOf Collection
          */
-        this.__data = mobx_1.observable([]);
-        this.__modelHash = {};
+        _this.__data = mobx_1.observable([]);
+        _this.__modelHash = {};
         /**
          * A list of all registered patch listeners
          *
          * @private
          * @memberof Model
          */
-        this.__patchListeners = [];
-        this.insert(data);
+        _this.__patchListeners = [];
+        _this.insert(data);
         var computedProps = {};
-        for (var _i = 0, _a = this.static.types; _i < _a.length; _i++) {
+        for (var _i = 0, _a = _this.static.types; _i < _a.length; _i++) {
             var model = _a[_i];
-            computedProps[model.type] = this.__getByType(model.type);
+            computedProps[model.type] = _this.__getByType(model.type);
         }
-        mobx_1.extendObservable(this, computedProps);
+        mobx_1.extendObservable(_this, computedProps);
+        return _this;
     }
     /**
      * Insert serialized models into the store
@@ -410,5 +424,5 @@ var Collection = (function () {
         mobx_1.action.bound
     ], Collection.prototype, "__onPatchTrigger", null);
     return Collection;
-}());
+}(MixinTarget_1.MixinTarget));
 exports.Collection = Collection;

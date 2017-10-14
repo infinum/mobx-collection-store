@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,6 +20,7 @@ var mobx_1 = require("mobx");
 var patchType_1 = require("./enums/patchType");
 var Collection_1 = require("./Collection");
 var consts_1 = require("./consts");
+var MixinTarget_1 = require("./MixinTarget");
 var utils_1 = require("./utils");
 /**
  * MobX Collection Model class
@@ -17,16 +28,18 @@ var utils_1 = require("./utils");
  * @class Model
  * @implements {IModel}
  */
-var Model = (function () {
+var Model = (function (_super) {
+    __extends(Model, _super);
     function Model(initialData, opts, collection) {
         if (initialData === void 0) { initialData = {}; }
+        var _this = _super.call(this) || this;
         /**
          * Collection the model belongs to
          *
          * @type {ICollection}
          * @memberOf Model
          */
-        this.__collection = null;
+        _this.__collection = null;
         /**
          * List of properties that were initialized on the model
          *
@@ -34,7 +47,7 @@ var Model = (function () {
          * @type {Array<string>}
          * @memberOf Model
          */
-        this.__initializedProps = [];
+        _this.__initializedProps = [];
         /**
          * The model references
          *
@@ -42,7 +55,7 @@ var Model = (function () {
          * @type {IReferences}
          * @memberOf Model
          */
-        this.__refs = {};
+        _this.__refs = {};
         /**
          * Internal data storage
          *
@@ -50,14 +63,14 @@ var Model = (function () {
          * @type {IObservableObject}
          * @memberOf Model
          */
-        this.__data = mobx_1.observable({});
+        _this.__data = mobx_1.observable({});
         /**
          * A list of all registered patch listeners
          *
          * @private
          * @memberof Model
          */
-        this.__patchListeners = [];
+        _this.__patchListeners = [];
         /**
          * Determines if the patch listeners should be called on change
          *
@@ -65,20 +78,20 @@ var Model = (function () {
          * @type {boolean}
          * @memberof Model
          */
-        this.__silent = true;
-        var data = utils_1.assign({}, this.static.defaults, this.static.preprocess(initialData));
+        _this.__silent = true;
+        var data = utils_1.assign({}, _this.static.defaults, _this.static.preprocess(initialData));
         var collectionInstance = collection;
-        var idAttribute = this.static.idAttribute;
+        var idAttribute = _this.static.idAttribute;
         var idSet = false;
         if (opts instanceof Collection_1.Collection) {
             collectionInstance = opts;
         }
         else if (typeof opts === 'string' || typeof opts === 'number') {
-            utils_1.setProp(data, this.static.typeAttribute, opts);
+            utils_1.setProp(data, _this.static.typeAttribute, opts);
         }
         else if (opts && typeof opts === 'object') {
             if (opts.type) {
-                utils_1.setProp(data, this.static.typeAttribute, opts.type);
+                utils_1.setProp(data, _this.static.typeAttribute, opts.type);
             }
             if (opts.id || opts.id === 0) {
                 utils_1.setProp(data, idAttribute, opts.id);
@@ -86,14 +99,15 @@ var Model = (function () {
             }
         }
         if (!idSet) {
-            this.__ensureId(data, collectionInstance);
+            _this.__ensureId(data, collectionInstance);
             utils_1.setProp({}, idAttribute, utils_1.getProp(data, idAttribute));
         }
         // No need for it to be observable
-        this.__collection = collectionInstance;
-        this.__initRefGetters();
-        this.update(data);
-        this.__silent = false;
+        _this.__collection = collectionInstance;
+        _this.__initRefGetters();
+        _this.update(data);
+        _this.__silent = false;
+        return _this;
     }
     /**
      * Function that can process the received data (e.g. from an API) before
@@ -637,5 +651,5 @@ var Model = (function () {
         mobx_1.action
     ], Model.prototype, "__partialRefUpdate", null);
     return Model;
-}());
+}(MixinTarget_1.MixinTarget));
 exports.Model = Model;
