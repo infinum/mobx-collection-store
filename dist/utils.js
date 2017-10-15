@@ -83,3 +83,29 @@ function assign(target) {
     return target;
 }
 exports.assign = assign;
+/**
+ * Omits properties from an object
+ *
+ * @private
+ * @param {object} target - Target object
+ * @param {Array<string>} paths - Paths to be ommited
+ * @returns {object} A new object without paths speciefied in paths argument
+ */
+function omit(target, paths) {
+    if (!paths.length) {
+        return target;
+    }
+    var remainingKeys = Object
+        .keys(target)
+        .filter(function (key) { return paths.indexOf(key) < 0; });
+    return remainingKeys.reduce(function (acc, val) {
+        if (target.hasOwnProperty(val)) {
+            return assign({}, acc, (_a = {},
+                _a[val] = target[val],
+                _a));
+        }
+        return val;
+        var _a;
+    }, {});
+}
+exports.omit = omit;

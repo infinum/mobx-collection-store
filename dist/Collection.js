@@ -18,7 +18,7 @@ var utils_1 = require("./utils");
  * @class Collection
  * @implements {ICollection}
  */
-var Collection = (function () {
+var Collection = /** @class */ (function () {
     /**
      * Creates an instance of Collection.
      *

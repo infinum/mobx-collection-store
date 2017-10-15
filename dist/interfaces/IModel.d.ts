@@ -1,5 +1,6 @@
 import ICollection from './ICollection';
 import IModelConstructor from './IModelConstructor';
+import IModelIsEqualParams from './IModelIsEqualParams';
 import IPatch from './IPatch';
 import IType from './IType';
 /**
@@ -90,5 +91,14 @@ interface IModel {
      * @memberof Model
      */
     applyPatch(patch: IPatch): void;
+    /**
+     * Compares a regular object to a model.
+     *
+     * @param {object} comparingObject Object that will be compared to the model
+     * @param {IModelIsEqualParams} params Options for comparison
+     * @returns {boolean} Is the object equal to the model
+     * @memberof Model
+     */
+    isEqual(comparingObject: object, params: IModelIsEqualParams): boolean;
 }
 export default IModel;

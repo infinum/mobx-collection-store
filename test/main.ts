@@ -1483,4 +1483,60 @@ describe('MobX Collection Store', () => {
       });
     });
   });
+
+  describe('model should know if it\'s equal', () => {
+    const foo = {
+      age: 25,
+      name: 'mia',
+      occupation: 'engineer',
+    };
+    class DeveloperModel extends Model {
+      public static type = 'developer';
+
+      public age: number;
+      public name: string;
+      public occupation: string;
+    }
+    const devMia = new DeveloperModel(foo);
+    expect(devMia.isEqual(foo)).to.equal(true);
+  });
+
+  describe('model should know if it\'s not equal', () => {
+    const foo = {
+      age: 25,
+      name: 'mia',
+      occupation: 'engineer',
+    };
+    const bar = {
+      age: 22,
+      name: 'sarah',
+      occupation: 'engineer',
+    };
+    class DeveloperModel extends Model {
+      public static type = 'developer';
+
+      public age: number;
+      public name: string;
+      public occupation: string;
+    }
+    const devMia = new DeveloperModel(foo);
+    expect(devMia.isEqual(bar)).to.equal(false);
+  });
+
+  describe('should take id into consideration when comparing', () => {
+    const foo = {
+      age: 25,
+      name: 'mia',
+      occupation: 'engineer',
+    };
+    class DeveloperModel extends Model {
+      public static type = 'developer';
+
+      public age: number;
+      public name: string;
+      public occupation: string;
+    }
+    const devMia = new DeveloperModel(foo);
+    expect(devMia.isEqual(foo, {ignoreId: false})).to.equal(false);
+  });
 });
