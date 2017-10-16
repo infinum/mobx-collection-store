@@ -94,15 +94,11 @@ export function omit(target: object, paths: Array<string>) {
     return target;
   }
 
-  return Object
-    .keys(target)
-    .filter((key) => paths.indexOf(key) < 0)
-    .reduce((acc, val) => {
-      if (target.hasOwnProperty(val)) {
-        return assign({}, acc, {
-          [val]: target[val],
-        });
-      }
-      return val;
-    }, {});
+  const clonedObject = assign({}, target);
+
+  paths
+    .filter((prop) => target.hasOwnProperty(prop))
+    .forEach((prop) => void delete clonedObject[prop]);
+
+  return clonedObject;
 }

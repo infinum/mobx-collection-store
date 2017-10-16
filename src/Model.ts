@@ -355,20 +355,12 @@ export class Model implements IModel {
    * @returns {boolean} Is the object equal to the model
    * @memberof Model
    */
-  public isEqual(comparingObject: object, params?: IModelIsEqualParams): boolean {
-    if (!params) {
-      params = {
-        ignoreId: true,
-      };
+  public isEqual(comparingObject: object, params: IModelIsEqualParams = {ignoreId: true}): boolean {
+    const propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+    if (params.ignoreId) {
+      propsToOmit.push(this.static.idAttribute);
     }
-
-    const runParams: IModelIsEqualParams = assign({}, params, {
-      ommitPaths: params.ommitPaths || ['__type__'],
-    });
-    if (runParams.ignoreId) {
-      runParams.ommitPaths.push('id');
-    }
-    const nativeObject = omit(this.toJS(), runParams.ommitPaths);
+    const nativeObject = omit(this.toJS(), propsToOmit);
     return isEqual(comparingObject, nativeObject);
   }
 

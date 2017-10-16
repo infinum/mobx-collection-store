@@ -138,12 +138,12 @@ var Collection = /** @class */ (function () {
         return instance;
     };
     Collection.prototype.find = function (type, searchPredicate, searchParams) {
-        if (!searchPredicate || typeof searchPredicate !== 'object') {
-            return searchPredicate
-                ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate]) || null)
-                : this.__data.find(function (item) { return utils_1.getType(item) === type; }) || null;
+        if (searchPredicate && typeof searchPredicate === 'object') {
+            return this.__data.find(function (item) { return item.isEqual(searchPredicate, searchParams); }) || null;
         }
-        return this.__data.find(function (item) { return item.isEqual(searchPredicate, searchParams); }) || null;
+        return searchPredicate
+            ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate]) || null)
+            : this.__data.find(function (item) { return utils_1.getType(item) === type; }) || null;
     };
     /**
      * Find all models of the specified type

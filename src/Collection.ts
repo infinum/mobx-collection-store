@@ -185,13 +185,13 @@ export class Collection implements ICollection {
   public find<T extends IModel>(type: IType, id?: string|number): T;
   public find<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): T;
   public find<T extends IModel>(type: IType, searchPredicate?: string|number|object, searchParams?: object): T {
-    if (!searchPredicate || typeof searchPredicate !== 'object') {
-      return searchPredicate
-        ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate as string|number]) || null)
-        : (this.__data.find((item) => getType(item) === type) as T) || null;
+    if (searchPredicate && typeof searchPredicate === 'object') {
+      return (this.__data.find((item: T) => item.isEqual(searchPredicate, searchParams)) as T) || null;
     }
 
-    return (this.__data.find((item: T) => item.isEqual(searchPredicate as object, searchParams)) as T) || null;
+    return searchPredicate
+      ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate as string|number]) || null)
+      : (this.__data.find((item) => getType(item) === type) as T) || null;
   }
 
   /**

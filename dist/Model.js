@@ -267,18 +267,12 @@ var Model = /** @class */ (function () {
      * @memberof Model
      */
     Model.prototype.isEqual = function (comparingObject, params) {
-        if (!params) {
-            params = {
-                ignoreId: true,
-            };
+        if (params === void 0) { params = { ignoreId: true }; }
+        var propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+        if (params.ignoreId) {
+            propsToOmit.push(this.static.idAttribute);
         }
-        var runParams = utils_1.assign({}, params, {
-            ommitPaths: params.ommitPaths || ['__type__'],
-        });
-        if (runParams.ignoreId) {
-            runParams.ommitPaths.push('id');
-        }
-        var nativeObject = utils_1.omit(this.toJS(), runParams.ommitPaths);
+        var nativeObject = utils_1.omit(this.toJS(), propsToOmit);
         return isEqual(comparingObject, nativeObject);
     };
     /**

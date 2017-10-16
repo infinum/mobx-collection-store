@@ -95,17 +95,10 @@ function omit(target, paths) {
     if (!paths.length) {
         return target;
     }
-    return Object
-        .keys(target)
-        .filter(function (key) { return paths.indexOf(key) < 0; })
-        .reduce(function (acc, val) {
-        if (target.hasOwnProperty(val)) {
-            return assign({}, acc, (_a = {},
-                _a[val] = target[val],
-                _a));
-        }
-        return val;
-        var _a;
-    }, {});
+    var clonedObject = assign({}, target);
+    paths
+        .filter(function (prop) { return target.hasOwnProperty(prop); })
+        .forEach(function (prop) { return void delete clonedObject[prop]; });
+    return clonedObject;
 }
 exports.omit = omit;
