@@ -94,16 +94,15 @@ export function omit(target: object, paths: Array<string>) {
     return target;
   }
 
-  const remainingKeys = Object
+  return Object
     .keys(target)
-    .filter((key) => paths.indexOf(key) < 0);
-
-  return remainingKeys.reduce((acc, val) => {
-    if (target.hasOwnProperty(val)) {
-      return assign({}, acc, {
-        [val]: target[val],
-      });
-    }
-    return val;
-  }, {});
+    .filter((key) => paths.indexOf(key) < 0)
+    .reduce((acc, val) => {
+      if (target.hasOwnProperty(val)) {
+        return assign({}, acc, {
+          [val]: target[val],
+        });
+      }
+      return val;
+    }, {});
 }
