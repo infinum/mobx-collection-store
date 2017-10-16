@@ -92,6 +92,7 @@ export declare class Collection implements ICollection {
      * @memberOf Collection
      */
     find<T extends IModel>(type: IType, id?: string | number): T;
+    find<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): T;
     /**
      * Find all models of the specified type
      *
@@ -101,7 +102,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    findAll<T extends IModel>(type: IType): Array<T>;
+    findAll<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): Array<T>;
     /**
      * Remove a specific model from the collection
      *

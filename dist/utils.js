@@ -95,10 +95,10 @@ function omit(target, paths) {
     if (!paths.length) {
         return target;
     }
-    var remainingKeys = Object
+    return Object
         .keys(target)
-        .filter(function (key) { return paths.indexOf(key) < 0; });
-    return remainingKeys.reduce(function (acc, val) {
+        .filter(function (key) { return paths.indexOf(key) < 0; })
+        .reduce(function (acc, val) {
         if (target.hasOwnProperty(val)) {
             return assign({}, acc, (_a = {},
                 _a[val] = target[val],

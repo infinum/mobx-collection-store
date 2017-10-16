@@ -137,20 +137,13 @@ var Collection = /** @class */ (function () {
         this.__triggerChange(patchType_1.default.ADD, instance, instance);
         return instance;
     };
-    /**
-     * Find a specific model
-     *
-     * @template T
-     * @argument {IType} type - Type of the model that will be searched for
-     * @argument {string|number} [id] - ID of the model (if none is defined, the first result will be returned)
-     * @returns {T} Found model
-     *
-     * @memberOf Collection
-     */
-    Collection.prototype.find = function (type, id) {
-        return id
-            ? ((this.__modelHash[type] && this.__modelHash[type][id]) || null)
-            : this.__data.find(function (item) { return utils_1.getType(item) === type; }) || null;
+    Collection.prototype.find = function (type, searchPredicate, searchParams) {
+        if (!searchPredicate || typeof searchPredicate !== 'object') {
+            return searchPredicate
+                ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate]) || null)
+                : this.__data.find(function (item) { return utils_1.getType(item) === type; }) || null;
+        }
+        return this.__data.find(function (item) { return item.isEqual(searchPredicate, searchParams); }) || null;
     };
     /**
      * Find all models of the specified type
@@ -161,8 +154,12 @@ var Collection = /** @class */ (function () {
      *
      * @memberOf Collection
      */
-    Collection.prototype.findAll = function (type) {
-        return this.__data.filter(function (item) { return utils_1.getType(item) === type; });
+    Collection.prototype.findAll = function (type, searchObject, searchParams) {
+        var models = this.__data.filter(function (item) { return utils_1.getType(item) === type; });
+        if (!searchObject) {
+            return models;
+        }
+        return models.filter(function (model) { return model.isEqual(searchObject, searchParams); });
     };
     /**
      * Remove a specific model from the collection

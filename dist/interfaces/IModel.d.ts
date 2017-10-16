@@ -99,6 +99,6 @@ interface IModel {
      * @returns {boolean} Is the object equal to the model
      * @memberof Model
      */
-    isEqual(comparingObject: object, params: IModelIsEqualParams): boolean;
+    isEqual(comparingObject: object, params?: IModelIsEqualParams): boolean;
 }
 export default IModel;
