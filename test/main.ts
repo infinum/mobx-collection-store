@@ -1539,4 +1539,69 @@ describe('MobX Collection Store', () => {
     const devMia = new DeveloperModel(foo);
     expect(devMia.isEqual(foo, {ignoreId: false})).to.equal(false);
   });
+
+  describe('should find a all models by plain object', () => {
+    const MODEL_TYPE = 'developer';
+    const foo = {
+      age: 25,
+      name: 'mia',
+      occupation: 'engineer',
+    };
+    class DeveloperModel extends Model {
+      public static type = MODEL_TYPE;
+
+      public age: number;
+      public name: string;
+      public occupation: string;
+    }
+    class DeveloperCollection extends Collection {
+      public static types = [DeveloperModel];
+
+      public developers: Array<DeveloperModel>;
+    }
+
+    const collection = new DeveloperCollection();
+    collection.add([foo, foo, {
+      age: 24,
+      name: 'dave',
+      occupation: 'engineer',
+    }], MODEL_TYPE);
+
+    const models = collection.findAll<DeveloperModel>(MODEL_TYPE, foo);
+    expect(models).to.have.length(2);
+    expect(models[0].name).to.equal(foo.name);
+    expect(models[1].name).to.equal(foo.name);
+  });
+
+  describe('should find a model by plain object', () => {
+    const MODEL_TYPE = 'developer';
+    const foo = {
+      age: 25,
+      name: 'mia',
+      occupation: 'engineer',
+    };
+    class DeveloperModel extends Model {
+      public static type = MODEL_TYPE;
+
+      public age: number;
+      public name: string;
+      public occupation: string;
+    }
+    class DeveloperCollection extends Collection {
+      public static types = [DeveloperModel];
+
+      public developers: Array<DeveloperModel>;
+    }
+
+    const collection = new DeveloperCollection();
+    collection.add([foo, foo, {
+      age: 24,
+      name: 'dave',
+      occupation: 'engineer',
+    }], MODEL_TYPE);
+
+    const model = collection.find<DeveloperModel>(MODEL_TYPE, foo);
+    console.log(model);
+    expect(model.name).to.equal(foo.name);
+  });
 });
