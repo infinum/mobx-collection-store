@@ -58,6 +58,7 @@ interface ICollection {
    * @memberOf ICollection
    */
   find(type: IType, id?: string | number): IModel;
+  find(type: IType, searchObject?: object, searchParams?: object): IModel;
 
   /**
    * Find all models of the specified type

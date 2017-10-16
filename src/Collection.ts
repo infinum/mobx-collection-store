@@ -182,10 +182,16 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  public find<T extends IModel>(type: IType, id?: string|number): T {
-    return id
-      ? ((this.__modelHash[type] && this.__modelHash[type][id]) || null)
-      : (this.__data.find((item) => getType(item) === type) as T) || null;
+  public find<T extends IModel>(type: IType, id?: string|number): T;
+  public find<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): T;
+  public find<T extends IModel>(type: IType, searchPredicate?: string|number|object, searchParams?: object): T {
+    if (!searchPredicate || typeof searchPredicate !== 'object') {
+      return searchPredicate
+        ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate as string|number]) || null)
+        : (this.__data.find((item) => getType(item) === type) as T) || null;
+    }
+
+    return (this.__data.find((item: T) => item.isEqual(searchPredicate as object, searchParams)) as T) || null;
   }
 
   /**
