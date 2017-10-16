@@ -58,6 +58,7 @@ interface ICollection {
    * @memberOf ICollection
    */
   find(type: IType, id?: string | number): IModel;
+  find(type: IType, searchObject?: object, searchParams?: object): IModel;
 
   /**
    * Find all models of the specified type
@@ -67,7 +68,7 @@ interface ICollection {
    *
    * @memberOf ICollection
    */
-  findAll(type: IType): Array<IModel>;
+  findAll(type: IType, searchObject?: object, searchParams?: object): Array<IModel>;
 
   /**
    * Remove a specific model from the collection

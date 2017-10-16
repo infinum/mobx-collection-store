@@ -1,6 +1,7 @@
 import ICollection from './interfaces/ICollection';
 import IDictionary from './interfaces/IDictionary';
 import IModel from './interfaces/IModel';
+import IModelIsEqualParams from './interfaces/IModelIsEqualParams';
 import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
@@ -219,6 +220,15 @@ export declare class Model implements IModel {
      * @memberof Model
      */
     applyPatch(patch: IPatch): void;
+    /**
+     * Compares a regular object to a model.
+     *
+     * @param {object} comparingObject Object that will be compared to the model
+     * @param {IModelIsEqualParams} params Options for comparison
+     * @returns {boolean} Is the object equal to the model
+     * @memberof Model
+     */
+    isEqual(comparingObject: object, params?: IModelIsEqualParams): boolean;
     /**
      * Ensure the new model has a valid id
      *

@@ -49,3 +49,12 @@ export declare function getType(instance: IModel): IType;
  * @returns
  */
 export declare function assign(target: object, ...args: Array<object>): object;
+/**
+ * Omits properties from an object
+ *
+ * @private
+ * @param {object} target - Target object
+ * @param {Array<string>} paths - Paths to be ommited
+ * @returns {object} A new object without paths speciefied in paths argument
+ */
+export declare function omit(target: object, paths: Array<string>): object;

@@ -83,3 +83,22 @@ function assign(target) {
     return target;
 }
 exports.assign = assign;
+/**
+ * Omits properties from an object
+ *
+ * @private
+ * @param {object} target - Target object
+ * @param {Array<string>} paths - Paths to be ommited
+ * @returns {object} A new object without paths speciefied in paths argument
+ */
+function omit(target, paths) {
+    if (!paths.length) {
+        return target;
+    }
+    var clonedObject = assign({}, target);
+    paths
+        .filter(function (prop) { return target.hasOwnProperty(prop); })
+        .forEach(function (prop) { return void delete clonedObject[prop]; });
+    return clonedObject;
+}
+exports.omit = omit;

@@ -182,9 +182,15 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  public find<T extends IModel>(type: IType, id?: string|number): T {
-    return id
-      ? ((this.__modelHash[type] && this.__modelHash[type][id]) || null)
+  public find<T extends IModel>(type: IType, id?: string|number): T;
+  public find<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): T;
+  public find<T extends IModel>(type: IType, searchPredicate?: string|number|object, searchParams?: object): T {
+    if (searchPredicate && typeof searchPredicate === 'object') {
+      return (this.__data.find((item: T) => item.isEqual(searchPredicate, searchParams)) as T) || null;
+    }
+
+    return searchPredicate
+      ? ((this.__modelHash[type] && this.__modelHash[type][searchPredicate as string|number]) || null)
       : (this.__data.find((item) => getType(item) === type) as T) || null;
   }
 
@@ -197,8 +203,14 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  public findAll<T extends IModel>(type: IType): Array<T> {
-    return this.__data.filter((item) => getType(item) === type) as Array<T>;
+  public findAll<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): Array<T> {
+    const models = this.__data.filter((item) => getType(item) === type) as Array<T>;
+
+    if (!searchObject) {
+      return models;
+    }
+
+    return models.filter((model: T) => model.isEqual(searchObject, searchParams));
   }
 
   /**

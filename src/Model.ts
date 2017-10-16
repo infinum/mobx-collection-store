@@ -1,3 +1,4 @@
+import * as isEqual from 'lodash.isequal';
 import {
   action, computed, extendObservable,
   IArrayChange, IArraySplice, IComputedValue,
@@ -11,12 +12,13 @@ import IDictionary from './interfaces/IDictionary';
 import IExternalRef from './interfaces/IExternalRef';
 import IModel from './interfaces/IModel';
 import IModelConstructor from './interfaces/IModelConstructor';
+import IModelIsEqualParams from './interfaces/IModelIsEqualParams';
 import IPatch from './interfaces/IPatch';
 import IReferences from './interfaces/IReferences';
 import IType from './interfaces/IType';
 
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
-import {assign, first, getType, mapItems} from './utils';
+import {assign, first, getType, mapItems, omit} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 
@@ -343,6 +345,23 @@ export class Model implements IModel {
     } else if (patch.op === patchType.REMOVE) {
       this.unassign(field);
     }
+  }
+
+  /**
+   * Compares a regular object to a model.
+   *
+   * @param {object} comparingObject Object that will be compared to the model
+   * @param {IModelIsEqualParams} params Options for comparison
+   * @returns {boolean} Is the object equal to the model
+   * @memberof Model
+   */
+  public isEqual(comparingObject: object, params: IModelIsEqualParams = {ignoreId: true}): boolean {
+    const propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+    if (params.ignoreId) {
+      propsToOmit.push(this.static.idAttribute);
+    }
+    const nativeObject = omit(this.toJS(), propsToOmit);
+    return isEqual(comparingObject, nativeObject);
   }
 
   /**

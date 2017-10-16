@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var isEqual = require("lodash.isequal");
 var mobx_1 = require("mobx");
 var patchType_1 = require("./enums/patchType");
 var consts_1 = require("./consts");
@@ -16,7 +17,7 @@ var utils_1 = require("./utils");
  * @class Model
  * @implements {IModel}
  */
-var Model = (function () {
+var Model = /** @class */ (function () {
     /**
      * Creates an instance of Model.
      *
@@ -256,6 +257,23 @@ var Model = (function () {
         else if (patch.op === patchType_1.default.REMOVE) {
             this.unassign(field);
         }
+    };
+    /**
+     * Compares a regular object to a model.
+     *
+     * @param {object} comparingObject Object that will be compared to the model
+     * @param {IModelIsEqualParams} params Options for comparison
+     * @returns {boolean} Is the object equal to the model
+     * @memberof Model
+     */
+    Model.prototype.isEqual = function (comparingObject, params) {
+        if (params === void 0) { params = { ignoreId: true }; }
+        var propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+        if (params.ignoreId) {
+            propsToOmit.push(this.static.idAttribute);
+        }
+        var nativeObject = utils_1.omit(this.toJS(), propsToOmit);
+        return isEqual(comparingObject, nativeObject);
     };
     /**
      * Ensure the new model has a valid id
