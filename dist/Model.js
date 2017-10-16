@@ -268,7 +268,7 @@ var Model = /** @class */ (function () {
      */
     Model.prototype.isEqual = function (comparingObject, params) {
         if (params === void 0) { params = { ignoreId: true }; }
-        var propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+        var propsToOmit = params.omitPaths || [this.static.typeAttribute];
         if (params.ignoreId) {
             propsToOmit.push(this.static.idAttribute);
         }

@@ -1,5 +1,5 @@
 interface IModelIsEqualParams {
     ignoreId?: boolean;
-    ommitPaths?: Array<string>;
+    omitPaths?: Array<string>;
 }
 export default IModelIsEqualParams;

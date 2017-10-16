@@ -356,7 +356,7 @@ export class Model implements IModel {
    * @memberof Model
    */
   public isEqual(comparingObject: object, params: IModelIsEqualParams = {ignoreId: true}): boolean {
-    const propsToOmit = params.ommitPaths || [this.static.typeAttribute];
+    const propsToOmit = params.omitPaths || [this.static.typeAttribute];
     if (params.ignoreId) {
       propsToOmit.push(this.static.idAttribute);
     }
