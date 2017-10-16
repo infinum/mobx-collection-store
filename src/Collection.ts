@@ -197,8 +197,14 @@ export class Collection implements ICollection {
    *
    * @memberOf Collection
    */
-  public findAll<T extends IModel>(type: IType): Array<T> {
-    return this.__data.filter((item) => getType(item) === type) as Array<T>;
+  public findAll<T extends IModel>(type: IType, searchObject?: object, searchParams?: object): Array<T> {
+    const models = this.__data.filter((item) => getType(item) === type) as Array<T>;
+
+    if (!searchObject) {
+      return models;
+    }
+
+    return models.filter((model: T) => model.isEqual(searchObject, searchParams));
   }
 
   /**

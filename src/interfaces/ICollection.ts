@@ -67,7 +67,7 @@ interface ICollection {
    *
    * @memberOf ICollection
    */
-  findAll(type: IType): Array<IModel>;
+  findAll(type: IType, searchObject?: object, searchParams?: object): Array<IModel>;
 
   /**
    * Remove a specific model from the collection
