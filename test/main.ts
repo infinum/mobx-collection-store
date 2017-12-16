@@ -1615,4 +1615,29 @@ describe('MobX Collection Store', () => {
       expect(foo.bar[2].id).to.equal(5);
     });
   });
+
+  describe('Error handling', () => {
+    it('Should throw when setting references on a model not in a collection', () => {
+      class FooModel extends Model {
+        public static type = 'foo';
+        public static refs = {bar: 'bar'};
+
+        public id: number|string;
+        public bar: BarModel;
+      }
+
+      class BarModel extends Model {
+        public static type = 'bar';
+
+        public id: number|string;
+      }
+
+      const bar = new BarModel({id: 1});
+
+      const foo1 = new FooModel({id: 1});
+      expect(foo1).to.be.an('object');
+
+      expect(() => new FooModel({id: 2, bar})).to.throw(Error, 'Model needs to be in a collection to set a reference');
+    });
+  });
 });

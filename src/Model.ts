@@ -595,6 +595,14 @@ export class Model implements IModel {
    * @memberOf Model
    */
   private __setRef<T>(ref: string, val: T|Array<T>): IModel|Array<IModel> {
+    const isArray = val instanceof Array || isObservableArray(val);
+    const hasModelInstances = isArray
+      ? (val as Array<T>).some((item) => item instanceof Model)
+      : val instanceof Model;
+
+    if (!this.__collection && hasModelInstances) {
+      throw new Error('Model needs to be in a collection to set a reference');
+    }
     const type = this.__refs[ref];
     const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
 

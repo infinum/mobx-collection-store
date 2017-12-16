@@ -480,6 +480,13 @@ var Model = /** @class */ (function () {
      */
     Model.prototype.__setRef = function (ref, val) {
         var _this = this;
+        var isArray = val instanceof Array || mobx_1.isObservableArray(val);
+        var hasModelInstances = isArray
+            ? val.some(function (item) { return item instanceof Model; })
+            : val instanceof Model;
+        if (!this.__collection && hasModelInstances) {
+            throw new Error('Model needs to be in a collection to set a reference');
+        }
         var type = this.__refs[ref];
         var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
         var getRef = function () { return _this.__collection ? (_this.__getReferencedModels(ref) || undefined) : undefined; };
