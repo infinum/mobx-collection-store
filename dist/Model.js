@@ -17,7 +17,7 @@ var utils_1 = require("./utils");
  * @class Model
  * @implements {IModel}
  */
-var Model = (function () {
+var Model = /** @class */ (function () {
     function Model(initialData, opts, collection) {
         if (initialData === void 0) { initialData = {}; }
         /**
