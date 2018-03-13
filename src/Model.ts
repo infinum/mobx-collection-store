@@ -18,7 +18,7 @@ import IType from './interfaces/IType';
 
 import {Collection} from './Collection';
 import {DEFAULT_TYPE, RESERVED_KEYS, TYPE_PROP} from './consts';
-import {assign, first, getProp, getType, mapItems, setProp} from './utils';
+import {assign, extendComputed, first, getProp, getType, mapItems, setProp} from './utils';
 
 type IChange = IArraySplice<IModel> | IArrayChange<IModel>;
 
@@ -415,7 +415,7 @@ export class Model implements IModel {
   private __initRefGetter(ref: string, type?: IType) {
     const staticRef = this.static.refs[ref];
     if (typeof staticRef === 'object') {
-      extendObservable(this, {
+      extendComputed(this, {
         [ref]: this.__getExternalRef(staticRef),
       });
     } else {
@@ -427,7 +427,7 @@ export class Model implements IModel {
         extendObservable(this.__data, {[ref]: null});
       }
 
-      extendObservable(this, {
+      extendComputed(this, {
         [ref]: this.__getRef(ref),
         [`${ref}Id`]: this.__getProp(ref),
       });
@@ -658,7 +658,7 @@ export class Model implements IModel {
   private __ensureGetter(key: string) {
     if (this.__initializedProps.indexOf(key) === -1) {
       this.__initializedProps.push(key);
-      extendObservable(this, {[key]: this.__getProp(key)});
+      extendComputed(this, {[key]: this.__getProp(key)});
     }
   }
 

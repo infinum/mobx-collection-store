@@ -1,8 +1,16 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:no-string-literal
 
-import {action, autorun, computed, extendObservable, toJS, useStrict} from 'mobx';
-useStrict(true);
+import {action, autorun, computed, configure, extendObservable, toJS} from 'mobx';
+
+// Workaround for bot MobX 3 and MobX 4 support
+if (configure) {
+  configure({enforceActions: true});
+} else {
+  // tslint:disable-next-line:no-var-requires
+  const {useStrict} = require('mobx');
+  useStrict(true);
+}
 
 import {expect} from 'chai';
 

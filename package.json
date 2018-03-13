@@ -69,6 +69,6 @@
     "typescript": "^2.6.2"
   },
   "peerDependencies": {
-    "mobx": "^3.0.0"
+    "mobx": "^3.0.0|^4.0.0"
   }
 }
