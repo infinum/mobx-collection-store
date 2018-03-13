@@ -1,5 +1,5 @@
 import {
-  action, computed, extendObservable,
+  action, computed, decorate,
   IComputedValue, IObservableArray,
   observable, runInAction,
 } from 'mobx';
@@ -15,7 +15,7 @@ import IType from './interfaces/IType';
 import {Model} from './Model';
 
 import {DEFAULT_TYPE, TYPE_PROP} from './consts';
-import {assign, first, getProp, getType, matchModel} from './utils';
+import {assign, extendComputed, first, getProp, getType, matchModel} from './utils';
 
 /**
  * MobX Collection class
@@ -69,7 +69,7 @@ export class Collection implements ICollection {
       computedProps[model.type] = this.__getByType(model.type);
     }
 
-    extendObservable(this, computedProps);
+    extendComputed(this, computedProps);
   }
 
   /**

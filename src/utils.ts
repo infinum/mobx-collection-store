@@ -1,3 +1,5 @@
+import {computed, decorate, extendObservable} from 'mobx';
+
 import IModel from './interfaces/IModel';
 import IType from './interfaces/IType';
 
@@ -128,4 +130,20 @@ export function assign(target: object, ...args: Array<object>) {
     }
   });
   return target;
+}
+
+export function extendComputed(obj, extendable) {
+  if (decorate) {
+    const decorators = {};
+    Object.keys(extendable).forEach((key) => {
+      if (typeof extendable[key] === 'function') {
+        decorators[key] = computed;
+      }
+    });
+
+    assign(obj, extendable);
+    decorate(obj, decorators);
+  } else {
+    extendObservable(obj, extendable);
+  }
 }
