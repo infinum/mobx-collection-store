@@ -9,7 +9,7 @@ import IType from './interfaces/IType';
  * @param {Function} fn - Function to call for every item
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
-export declare function mapItems<T>(data: object | Array<object>, fn: (item: any) => T): T | Array<T>;
+export declare function mapItems<T>(data: object | Array<object> | null, fn: (item: any) => T): T | Array<T>;
 /**
  * Get the first array item
  *

@@ -4,6 +4,6 @@ declare enum patchType {
     REPLACE = "replace",
     COPY = "copy",
     MOVE = "move",
-    TEST = "test",
+    TEST = "test"
 }
 export default patchType;

@@ -603,8 +603,10 @@ export class Model implements IModel {
     if (!this.__collection && hasModelInstances) {
       throw new Error('Model needs to be in a collection to set a reference');
     }
+    // @ts-ignore
+    const data: object|Array<object>|null = val;
     const type = this.__refs[ref];
-    const refs = mapItems<number|string>(val, this.__getValueRefs.bind(this, type));
+    const refs = mapItems<number|string>(data, this.__getValueRefs.bind(this, type));
 
     const getRef = () => this.__collection ? (this.__getReferencedModels(ref) || undefined) : undefined;
 

@@ -233,7 +233,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __ensureId(data, collection?);
+    private __ensureId;
     /**
      * Add new reference getter/setter to the model
      *
@@ -242,7 +242,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __initRefGetter(ref, type?);
+    private __initRefGetter;
     /**
      * An calculated external reference getter
      *
@@ -252,7 +252,7 @@ export declare class Model implements IModel {
      *
      * @memberof Model
      */
-    private __getExternalRef(ref);
+    private __getExternalRef;
     /**
      * Initialize the reference getters based on the static refs property
      *
@@ -260,7 +260,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __initRefGetters();
+    private __initRefGetters;
     /**
      * Getter for the computed referenced model
      *
@@ -270,7 +270,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __getRef(ref);
+    private __getRef;
     /**
      * Getter for the computed property value
      *
@@ -280,7 +280,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __getProp(key);
+    private __getProp;
     /**
      * Get the reference id
      *
@@ -292,7 +292,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __getValueRefs(type, item);
+    private __getValueRefs;
     /**
      * Update the referenced array on push/pull/update
      *
@@ -303,7 +303,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __partialRefUpdate(ref, change);
+    private __partialRefUpdate;
     /**
      * Get the model(s) referenced by a key
      *
@@ -313,7 +313,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __getReferencedModels(key);
+    private __getReferencedModels;
     /**
      * Setter for the referenced model
      * If the value is an object it will be upserted into the collection
@@ -325,7 +325,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __setRef<T>(ref, val);
+    private __setRef;
     /**
      * Update the model property
      *
@@ -337,7 +337,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __updateKey(vals, data, key);
+    private __updateKey;
     /**
      * Add getter if it doesn't exist yet
      *
@@ -346,7 +346,7 @@ export declare class Model implements IModel {
      *
      * @memberOf Model
      */
-    private __ensureGetter(key);
+    private __ensureGetter;
     /**
      * Function that creates a patch object and calls all listeners
      *
@@ -356,5 +356,5 @@ export declare class Model implements IModel {
      * @param {*} [value] The new value (if it applies)
      * @memberof Model
      */
-    private __triggerChange(type, field, value?, oldValue?);
+    private __triggerChange;
 }

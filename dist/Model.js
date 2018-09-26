@@ -162,6 +162,7 @@ var Model = /** @class */ (function () {
      * @memberOf Model
      */
     Model.prototype.assign = function (key, value) {
+        var _a;
         var val = value;
         var isRef = key in this.__refs;
         if (isRef) {
@@ -176,7 +177,6 @@ var Model = /** @class */ (function () {
         }
         this.__ensureGetter(key);
         return val;
-        var _a;
     };
     /**
      * Assign a new reference to the model
@@ -194,7 +194,7 @@ var Model = /** @class */ (function () {
         if (typeof this.static.refs[key] === 'object') {
             throw new Error(key + ' is an external reference');
         }
-        if (key in this.__refs) {
+        if (key in this.__refs) { // Is already a reference
             return this.assign(key, value);
         }
         var item = value instanceof Array ? utils_1.first(value) : value;
@@ -310,6 +310,7 @@ var Model = /** @class */ (function () {
      * @memberOf Model
      */
     Model.prototype.__initRefGetter = function (ref, type) {
+        var _a, _b, _c;
         var staticRef = this.static.refs[ref];
         if (typeof staticRef === 'object') {
             mobx_1.extendObservable(this, (_a = {},
@@ -328,7 +329,6 @@ var Model = /** @class */ (function () {
                 _c[ref + "Id"] = this.__getProp(ref),
                 _c));
         }
-        var _a, _b, _c;
     };
     /**
      * An calculated external reference getter
@@ -407,7 +407,7 @@ var Model = /** @class */ (function () {
      */
     Model.prototype.__getValueRefs = function (type, item) {
         /* istanbul ignore next */
-        if (!item) {
+        if (!item) { // Handle case when the ref is unsetted
             return null;
         }
         if (typeof item === 'object') {
@@ -430,6 +430,7 @@ var Model = /** @class */ (function () {
      * @memberOf Model
      */
     Model.prototype.__partialRefUpdate = function (ref, change) {
+        var _a;
         var type = this.__refs[ref];
         /* istanbul ignore else */
         if (change.type === 'splice') {
@@ -444,7 +445,6 @@ var Model = /** @class */ (function () {
         }
         /* istanbul ignore next */
         return change;
-        var _a;
     };
     /**
      * Get the model(s) referenced by a key
@@ -480,6 +480,7 @@ var Model = /** @class */ (function () {
      */
     Model.prototype.__setRef = function (ref, val) {
         var _this = this;
+        var _a;
         var isArray = val instanceof Array || mobx_1.isObservableArray(val);
         var hasModelInstances = isArray
             ? val.some(function (item) { return item instanceof Model; })
@@ -487,8 +488,10 @@ var Model = /** @class */ (function () {
         if (!this.__collection && hasModelInstances) {
             throw new Error('Model needs to be in a collection to set a reference');
         }
+        // @ts-ignore
+        var data = val;
         var type = this.__refs[ref];
-        var refs = utils_1.mapItems(val, this.__getValueRefs.bind(this, type));
+        var refs = utils_1.mapItems(data, this.__getValueRefs.bind(this, type));
         var getRef = function () { return _this.__collection ? (_this.__getReferencedModels(ref) || undefined) : undefined; };
         var oldValue = getRef();
         var patchAction = oldValue === undefined ? patchType_1.default.ADD : patchType_1.default.REPLACE;
@@ -502,7 +505,6 @@ var Model = /** @class */ (function () {
         }
         // Find the referenced model(s) in collection
         return this.__collection ? this.__getReferencedModels(ref) : null;
-        var _a;
     };
     /**
      * Update the model property
@@ -533,11 +535,11 @@ var Model = /** @class */ (function () {
      * @memberOf Model
      */
     Model.prototype.__ensureGetter = function (key) {
+        var _a;
         if (this.__initializedProps.indexOf(key) === -1) {
             this.__initializedProps.push(key);
             mobx_1.extendObservable(this, (_a = {}, _a[key] = this.__getProp(key), _a));
         }
-        var _a;
     };
     /**
      * Function that creates a patch object and calls all listeners

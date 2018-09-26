@@ -169,7 +169,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    private __getByType(type);
+    private __getByType;
     /**
      * Get the model constructor for a given model type
      *
@@ -179,7 +179,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    private __getModel(type);
+    private __getModel;
     /**
      * Initialize a model based on an imported Object
      *
@@ -189,7 +189,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    private __initItem(item);
+    private __initItem;
     /**
      * Prepare the model instance either by finding an existing one or creating a new one
      *
@@ -200,7 +200,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    private __getModelInstance(model, type?);
+    private __getModelInstance;
     /**
      * Remove models from the collection
      *
@@ -209,7 +209,7 @@ export declare class Collection implements ICollection {
      *
      * @memberOf Collection
      */
-    private __removeModels(models);
+    private __removeModels;
     /**
      * Function that creates a patch object and calls all listeners
      *
@@ -219,7 +219,7 @@ export declare class Collection implements ICollection {
      * @param {*} [value] The new value (if it applies)
      * @memberof Model
      */
-    private __triggerChange(type, model, value?, oldValue?);
+    private __triggerChange;
     /**
      * Pass model patches trough to the collection listeners
      *
@@ -228,5 +228,5 @@ export declare class Collection implements ICollection {
      * @param {IModel} model Updated model
      * @memberof Collection
      */
-    private __onPatchTrigger(patch, model);
+    private __onPatchTrigger;
 }

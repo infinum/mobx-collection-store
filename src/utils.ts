@@ -12,7 +12,7 @@ import {DEFAULT_TYPE} from './consts';
  * @param {Function} fn - Function to call for every item
  * @returns {(T|Array<T>)} - Result of the iteration (function return value)
  */
-export function mapItems<T>(data: object|Array<object>, fn: (item: any) => T): T|Array<T> {
+export function mapItems<T>(data: object|Array<object>|null, fn: (item: any) => T): T|Array<T> {
   if (data instanceof Array) {
     return data.map((item) => fn(item));
   }
