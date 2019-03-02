@@ -2,6 +2,16 @@
 
 Structured data store for MobX. Partially influenced by [Backbone Collections](http://backbonejs.org/#Collection).
 
+## Deprecation and migration
+
+`mobx-jsonapi-store` and `mobx-collection-store` are deprecated in favor of [`datx`](https://github.com/infinum/datx) - it follows the same concepts, but adds support for MobX 4 and 5, better TypeScript support and more extensibility.
+
+If you're new to the libraries, check out the datx [examples](https://github.com/infinum/datx/tree/master/examples) and [docs](https://github.com/infinum/datx/wiki).
+
+If you already use `mobx-collection-store`, check out the [migration guide](https://github.com/infinum/datx/wiki/Migration-from-mobx-collection-store).
+
+-------
+
 **Using [JSON API](http://jsonapi.org/)?** Check out [mobx-jsonapi-store](https://github.com/infinum/mobx-jsonapi-store) - All mobx-collection-store features, and JSON API helpers in one place.
 
 **Can be used with [Redux DevTools](https://github.com/infinum/mobx-collection-store/wiki/Redux-DevTools).**
